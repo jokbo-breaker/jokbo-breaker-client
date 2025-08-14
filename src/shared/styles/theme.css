@@ -1,0 +1,76 @@
+@theme {
+  /* Brand (primary) */
+  --color-primary-900: #4b0082;
+  --color-primary-800: #5e0ea1;
+  --color-primary-700: #711ebf;
+  --color-primary-600: #853fd6;
+  --color-primary-500: #9961e8;
+  --color-primary-400: #b48cf0;
+  --color-primary-300: #d0b5f6;
+  --color-primary-200: #e5d8fb;
+  --color-primary-100: #f3ecfe;
+
+  /* Accent (포인트/하이라이트) */
+  --color-accent-900: #5a7a17;
+  --color-accent-800: #6f9620;
+  --color-accent-700: #86ad2c;
+  --color-accent-600: #9ec63a;
+  --color-accent-500: #b6db4a;
+  --color-accent-400: #ccea7b;
+  --color-accent-300: #def2a6;
+  --color-accent-200: #eef7cf;
+  --color-accent-100: #f8fbeb;
+
+  /* Gray scale */
+  --color-gray-900: #1f2937;
+  --color-gray-800: #374151;
+  --color-gray-700: #4b5563;
+  --color-gray-600: #6b7280;
+  --color-gray-500: #9ca3af;
+  --color-gray-400: #cbd5e1;
+  --color-gray-300: #e5e7eb;
+  --color-gray-200: #f1f5f9;
+  --color-gray-100: #f8fafc;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Surface / Background */
+  --color-surface: #ffffff;
+  --color-background: #f7f8fa;
+  --color-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Brands */
+  --color-kakao: #fee500;
+
+  /* Z-Index */
+  --z-header: 5;
+  --z-overlay: 6;
+  --z-bottom-nav: 7;
+
+  /* Radius / Shadow */
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+@layer utilities {
+  /* Shadow */
+  .u-shadow-md { box-shadow: var(--shadow-md); }
+  .u-shadow-lg { box-shadow: var(--shadow-lg); }
+
+  /* Typography */
+  .text-title-lg { font-weight: 700; font-size: 2.4rem; line-height: 1.4; letter-spacing: -0.01em; }
+  .text-title-md { font-weight: 600; font-size: 2.0rem; line-height: 1.4; }
+  .text-subtitle  { font-weight: 600; font-size: 1.8rem; line-height: 1.5; }
+  .text-body-b    { font-weight: 700; font-size: 1.6rem; line-height: 1.5; }
+  .text-body      { font-weight: 500; font-size: 1.6rem; line-height: 1.5; }
+  .text-caption   { font-weight: 500; font-size: 1.4rem; line-height: 1.5; }
+  .text-mini      { font-weight: 500; font-size: 1.2rem; line-height: 1.5; }
+
+  /* Scrollbar helper */
+  .u-scrollbar-hide {
+    &::-webkit-scrollbar { display: none; }
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,32 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"formatter": {
+		"enabled": true,
+		"indentWidth": 2,
+		"lineWidth": 100,
+		"lineEnding": "lf"
+	},
+	"linter": { "enabled": true, "rules": { "recommended": true } },
+	"files": { "includes": ["**/*.{js,jsx,cjs,mjs,json}"] },
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							":URL:",
+							":PACKAGE_WITH_PROTOCOL:",
+							":NODE:",
+							":PACKAGE:",
+							":ALIAS:",
+							":PATH:"
+						]
+					}
+				}
+			}
+		}
+	},
+
+	"javascript": { "jsxRuntime": "transparent" }
+}
