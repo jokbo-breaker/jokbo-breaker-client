@@ -1,12 +1,16 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "react-router-dom";
-import queryClient from "@/shared/libs/query-client";
-import { router } from "@/shared/routes/router";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import LoopLoading from '@/shared/components/common/loop-loading';
+import queryClient from '@/shared/libs/query-client';
+import { router } from '@/shared/routes/router';
 
 export default function App() {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-		</QueryClientProvider>
-	);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<LoopLoading />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </QueryClientProvider>
+  );
 }

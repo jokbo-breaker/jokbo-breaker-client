@@ -1,10 +1,10 @@
-import Icon from "@/shared/components/Icon";
+import Icon from '@/shared/components/common/icon';
 
 export default function Example() {
-	return (
-		<div className="flex gap-4 p-4">
-			<h1 className="text-title-lg text-primary-900">Main</h1>
-			<Icon name="home" size={2.4} className="text-purple-500" />
-		</div>
-	);
+  return (
+    <div className="flex gap-4 p-4">
+      <h1 className="text-primary-900 text-title-lg">Main</h1>
+      <Icon name="home" size={2.4} className="text-purple-500" />
+    </div>
+  );
 }

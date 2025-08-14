@@ -1,4 +1,6 @@
-import { createBrowserRouter } from "react-router-dom";
-import Main from "@/pages/Main/MainPage";
+import { lazy } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
-export const router = createBrowserRouter([{ path: "/", element: <Main /> }]);
+const Main = lazy(() => import('@/pages/Main/MainPage.jsx'));
+
+export const router = createBrowserRouter([{ path: '/', element: <Main /> }]);
