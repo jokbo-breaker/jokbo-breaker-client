@@ -10,7 +10,8 @@
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
 		"preview": "vite preview",
-		"prepare": "husky"
+		"prepare": "husky",
+		"icons:gen": "node src/shared/scripts/gen-icons-list.js"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.85.0",
@@ -29,9 +30,11 @@
 		"@types/react-dom": "^19.1.7",
 		"@vitejs/plugin-react": "^5.0.0",
 		"eslint": "^9.33.0",
+		"fast-glob": "^3.3.3",
 		"globals": "^16.3.0",
 		"husky": "^9.1.7",
 		"tailwindcss": "^4.1.11",
-		"vite": "^7.1.2"
+		"vite": "^7.1.2",
+		"vite-plugin-svg-icons": "^2.0.1"
 	}
 }
