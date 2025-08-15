@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const iconsDir = path.resolve(__dirname, '../../assets/icons');
 const outDir = path.resolve(__dirname, '../constants');
-const outFile = path.join(outDir, 'icons.js');
+const outFile = path.join(outDir, 'icons.ts');
 
 if (!fs.existsSync(iconsDir)) {
   console.error(`❌ icons directory not found: ${iconsDir}`);
@@ -19,11 +19,11 @@ if (!fs.existsSync(outDir)) {
 
 const files = fs
   .readdirSync(iconsDir)
-  .filter((f) => f.toLowerCase().endsWith('.svg'))
-  .map((f) => path.basename(f, '.svg'))
+  .filter((f: string) => f.toLowerCase().endsWith('.svg'))
+  .map((f: string) => path.basename(f, '.svg'))
   .sort();
 
-const content = `export const ICONS = ${JSON.stringify(files, null, 2)};\n`;
+const content = `export const ICONS = ${JSON.stringify(files, null, 2)} as const;\n`;
 
 fs.writeFileSync(outFile, content, 'utf8');
 console.log(`🎨 Generated ${outFile} with ${files.length} icons`);
