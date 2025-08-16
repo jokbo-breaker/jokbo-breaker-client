@@ -9,7 +9,6 @@ type TopBarProps = {
   onClose?: () => void;
   className?: string;
   sticky?: boolean;
-  shadow?: boolean;
   leftSlot?: React.ReactNode;
   rightSlot?: React.ReactNode;
 };
@@ -32,7 +31,7 @@ export default function TopBar({
         'px-[0.8rem]',
         'h-[4.4rem]',
         'grid items-center',
-        'grid-cols-[3.2rem_1fr_3.2rem]',
+        'grid-cols-[4.4rem_1fr_4.4rem]',
         sticky ? 'sticky top-0 z-[var(--z-header)]' : '',
         className,
       ].join(' ')}
@@ -50,7 +49,7 @@ export default function TopBar({
               <Icon name="back" size={4.4} ariaHidden />
             </button>
           ) : (
-            <span aria-hidden className="block w-[3.2rem]" />
+            <span aria-hidden className="block w-[4.4rem]" />
           ))}
       </div>
 
