@@ -1,46 +1,28 @@
 @theme {
-  /* Brand (primary) */
-  --color-primary-900: #4b0082;
-  --color-primary-800: #5e0ea1;
-  --color-primary-700: #711ebf;
-  --color-primary-600: #853fd6;
-  --color-primary-500: #9961e8;
-  --color-primary-400: #b48cf0;
-  --color-primary-300: #d0b5f6;
-  --color-primary-200: #e5d8fb;
-  --color-primary-100: #f3ecfe;
-
-  /* Accent (포인트/하이라이트) */
-  --color-accent-900: #5a7a17;
-  --color-accent-800: #6f9620;
-  --color-accent-700: #86ad2c;
-  --color-accent-600: #9ec63a;
-  --color-accent-500: #b6db4a;
-  --color-accent-400: #ccea7b;
-  --color-accent-300: #def2a6;
-  --color-accent-200: #eef7cf;
-  --color-accent-100: #f8fbeb;
-
-  /* Gray scale */
-  --color-gray-900: #1f2937;
-  --color-gray-800: #374151;
-  --color-gray-700: #4b5563;
-  --color-gray-600: #6b7280;
-  --color-gray-500: #9ca3af;
-  --color-gray-400: #cbd5e1;
-  --color-gray-300: #e5e7eb;
-  --color-gray-200: #f1f5f9;
-  --color-gray-100: #f8fafc;
+  /* ===== Base ===== */
   --color-white: #ffffff;
-  --color-black: #000000;
+  --color-black: #1a1a1b;
+  --color-red: #ff4141;
+  --color-blue: #3d69ff;
 
-  /* Surface / Background */
-  --color-surface: #ffffff;
-  --color-background: #f7f8fa;
+  /* Orange */
+  --color-primary: #ff5735;
+  --color-secondary: #ffebe3;
+
+  /* ===== Gray ===== */
+  --color-gray-50: #f0f4f8;
+  --color-gray-100: #e2e6ea;
+  --color-gray-200: #c9cdd1;
+  --color-gray-300: #b0b4b8;
+  --color-gray-400: #979b9f;
+  --color-gray-500: #7e8286;
+  --color-gray-600: #65696d;
+  --color-gray-700: #4c5054;
+  --color-gray-800: #33373b;
+  --color-gray-900: #1a1e22;
+
+  /* ===== Overlay ===== */
   --color-overlay: rgba(0, 0, 0, 0.4);
-
-  /* Brands */
-  --color-kakao: #fee500;
 
   /* Z-Index */
   --z-header: 5;
@@ -65,7 +47,7 @@
 
   /* =========================================
    Typography — Font Guide (Pretendard)
-   1rem = 10px (html { font-size: 62.5% } 가정)
+   1rem = 10px (html { font-size: 62.5% })
    Line-height: 1.5 (150%)
    Letter-spacing: -0.025em (-2.5%)
    ========================================= */
