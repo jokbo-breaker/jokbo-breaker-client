@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from '@/shared/components/icon';
-import SearchTextField from '@/shared/components/search-text-field';
+import SearchTextField from '@/shared/components/text-field/search-text-field';
+import TopBar from '@/shared/layouts/top-bar';
 
 export default function MainPage() {
   const [q, setQ] = useState('');
@@ -11,11 +12,14 @@ export default function MainPage() {
       <h2 className="text-head2 text-secondary">헤드2 20/SB</h2>
 
       <Icon name="home" size={2.4} className="text-black" />
+      <TopBar title="타이틀" showBack onBack={() => history.back()} />
 
+      <TopBar title="타이틀" showClose onClose={() => console.log('close')} />
       <SearchTextField
         defaultValue="초기값"
         onSubmit={(v) => console.log('submit(uncontrolled):', v)}
         className="mt-2"
+        showBackButton={false}
       />
       <SearchTextField
         defaultValue="초기값"
