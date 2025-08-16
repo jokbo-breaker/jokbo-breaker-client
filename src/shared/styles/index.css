@@ -7,6 +7,11 @@
   :root {
     --min-width: 370px;
     --max-width: 430px;
+    --lh: 1.5;
+    --ls: -0.025em;
+    --font-sans:
+      'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
   }
 
   #root {

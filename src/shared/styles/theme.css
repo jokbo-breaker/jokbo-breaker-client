@@ -56,21 +56,119 @@
 
 @layer utilities {
   /* Shadow */
-  .u-shadow-md { box-shadow: var(--shadow-md); }
-  .u-shadow-lg { box-shadow: var(--shadow-lg); }
+  .u-shadow-md {
+    box-shadow: var(--shadow-md);
+  }
+  .u-shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
 
-  /* Typography */
-  .text-title-lg { font-weight: 700; font-size: 2.4rem; line-height: 1.4; letter-spacing: -0.01em; }
-  .text-title-md { font-weight: 600; font-size: 2.0rem; line-height: 1.4; }
-  .text-subtitle  { font-weight: 600; font-size: 1.8rem; line-height: 1.5; }
-  .text-body-b    { font-weight: 700; font-size: 1.6rem; line-height: 1.5; }
-  .text-body      { font-weight: 500; font-size: 1.6rem; line-height: 1.5; }
-  .text-caption   { font-weight: 500; font-size: 1.4rem; line-height: 1.5; }
-  .text-mini      { font-weight: 500; font-size: 1.2rem; line-height: 1.5; }
+  /* =========================================
+   Typography — Font Guide (Pretendard)
+   1rem = 10px (html { font-size: 62.5% } 가정)
+   Line-height: 1.5 (150%)
+   Letter-spacing: -0.025em (-2.5%)
+   ========================================= */
+
+  /* ===== Headings ===== */
+  .text-head1 {
+    /* 22px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 2.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-head2 {
+    /* 20px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-head3 {
+    /* 18px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+
+  /* ===== Body ===== */
+  .text-body1 {
+    /* 16px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-body2 {
+    /* 16px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-body3 {
+    /* 14px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-body4 {
+    /* 14px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+
+  /* ===== Captions ===== */
+  .text-caption1 {
+    /* 12px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-caption2 {
+    /* 12px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-caption3 {
+    /* 10px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .text-caption4 {
+    /* 10px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
 
   /* Scrollbar helper */
   .u-scrollbar-hide {
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+      display: none;
+    }
     scrollbar-width: none;
   }
 }
