@@ -1,1 +1,3 @@
-export const ICONS = ['home'];
+export const ICONS = [
+  "home"
+] as const;

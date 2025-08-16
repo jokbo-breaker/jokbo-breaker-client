@@ -11,7 +11,7 @@
     "format": "biome format --write .",
     "preview": "vite preview",
     "prepare": "husky",
-    "icons:gen": "node src/shared/scripts/gen-icons-list.js"
+    "icons:gen": "tsx src/shared/scripts/gen-icons-list.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.85.0",
