@@ -6,27 +6,22 @@ export default function MainPage() {
   const [q, setQ] = useState('');
 
   return (
-    <div className="mx-auto flex max-w-[430px] flex-col gap-4 p-4">
+    <div className="w-full flex-col gap-4 bg-gray-100">
       <h1 className="text-head1 text-primary">헤드1 22/SB</h1>
       <h2 className="text-head2 text-secondary">헤드2 20/SB</h2>
 
       <Icon name="home" size={2.4} className="text-black" />
 
       <SearchTextField
-        value={q}
-        onChange={setQ}
-        placeholder="검색어를 입력해주세요."
-        onSubmit={(v) => console.log('submit:', v)}
-        onBack={() => history.back()}
-        onClear={() => setQ('')}
-        autoFocus
+        defaultValue="초기값"
+        onSubmit={(v) => console.log('submit(uncontrolled):', v)}
+        className="mt-2"
       />
-
       <SearchTextField
         defaultValue="초기값"
         onSubmit={(v) => console.log('submit(uncontrolled):', v)}
-        showBackButton={false}
         className="mt-2"
+        showSearchIcon={false}
       />
 
       <div className="text-caption2 text-gray-600">

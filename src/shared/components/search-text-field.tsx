@@ -13,6 +13,7 @@ type Props = {
   autoFocus?: boolean;
   disabled?: boolean;
   showBackButton?: boolean;
+  showSearchIcon?: boolean;
   name?: string;
   id?: string;
 };
@@ -29,6 +30,7 @@ export default function SearchTextField({
   autoFocus,
   disabled,
   showBackButton = true,
+  showSearchIcon = true,
   name,
   id,
 }: Props) {
@@ -78,7 +80,11 @@ export default function SearchTextField({
     'flex-1 bg-transparent outline-none placeholder:text-gray-400 text-body2 text-gray-900';
 
   return (
-    <form onSubmit={onFormSubmit} className={['w-full', className].join(' ')} role="search">
+    <form
+      onSubmit={onFormSubmit}
+      className={['w-full bg-white px-[1.6rem] py-[1rem]', className].join(' ')}
+      role="search"
+    >
       <div className="flex-row-center gap-[1.2rem]">
         {showBackButton && (
           <button
@@ -94,13 +100,20 @@ export default function SearchTextField({
 
         <div
           className={[
-            'flex w-full items-center gap-2',
-            'h-[44px] rounded-[12px] bg-gray-50 px-4',
-            'ring-1 ring-gray-100 focus-within:ring-gray-300',
+            'flex-row-center w-full gap-[0.4rem]',
+            'h-[4rem] rounded-[8px] bg-gray-50 px-[1.6rem]',
+            'ring-1 ring-transparent',
             disabled ? 'opacity-60' : '',
           ].join(' ')}
         >
-          <Icon name="search" size={2} ariaHidden className="shrink-0 text-gray-400" />
+          {showSearchIcon && (
+            <Icon
+              name="search"
+              size={2}
+              ariaHidden
+              className="shrink-0 text-gray-400"
+            />
+          )}
 
           <input
             ref={inputRef}
@@ -124,9 +137,14 @@ export default function SearchTextField({
               type="submit"
               onClick={handleClear}
               aria-label="입력 지우기"
-              className="grid shrink-0 place-items-center text-black hover:text-black/80"
+              className="place-items-center"
             >
-              <Icon name="x-icon" size={2} ariaHidden />
+              <Icon
+                className="text-gray-300"
+                name="x-icon"
+                size={2.4}
+                ariaHidden
+              />
             </button>
           )}
         </div>
