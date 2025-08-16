@@ -1,10 +1,29 @@
-import Icon from '@/shared/components/common/icon';
-
-export default function Example() {
+import { useEffect, useState } from 'react';
+import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps';
+export default function MainPage() {
+  const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
+  useEffect(() => {
+    navigator.geolocation?.getCurrentPosition(
+      ({ coords }) => setLoc({ lat: coords.latitude, lng: coords.longitude }),
+      console.error,
+    );
+  }, []);
+  const fallback = { lat: 37.5665, lng: 126.978 };
   return (
-    <div className="flex gap-4 p-4">
-      <h1 className="text-primary-900 text-title-lg">Main</h1>
-      <Icon name="home" size={2.4} className="text-accent-500" />
+    <div className="flex h-dvh w-[100%] max-w-[43rem]">
+      <MapDiv
+        className="flex-1"
+        style={{ width: '100%', height: '100dvh' }}
+        innerStyle={{ width: '100%', height: '100%' }}
+      >
+        <NaverMap
+          defaultCenter={fallback}
+          center={loc ?? fallback}
+          defaultZoom={16}
+        >
+          {loc && <Marker position={loc} />}
+        </NaverMap>
+      </MapDiv>
     </div>
   );
 }
