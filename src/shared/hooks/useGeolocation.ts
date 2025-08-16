@@ -8,11 +8,7 @@ type Opts = {
   immediate?: boolean;
 };
 
-export function useGeolocation({
-  watch = false,
-  options,
-  immediate = true,
-}: Opts = {}) {
+export function useGeolocation({ watch = false, options, immediate = true }: Opts = {}) {
   const [loc, setLoc] = useState<LatLng | null>(null);
   const [error, setError] = useState<GeolocationPositionError | null>(null);
   const [loading, setLoading] = useState(false);

@@ -1,3 +1,6 @@
 export const ICONS = [
-  "home"
+  "arrow",
+  "home",
+  "search",
+  "x-icon"
 ] as const;
