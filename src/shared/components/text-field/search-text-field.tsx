@@ -77,7 +77,7 @@ export default function SearchTextField({
   );
 
   const inputClass =
-    'flex-1 bg-transparent outline-none placeholder:text-gray-400 text-body2 text-gray-900';
+    'flex-1 bg-transparent outline-none placeholder:text-gray-400 text-body4 text-gray-900';
 
   return (
     <form
@@ -140,7 +140,7 @@ export default function SearchTextField({
             >
               <Icon
                 className="text-gray-300"
-                name="x-icon"
+                name="clear"
                 size={2.4}
                 ariaHidden
               />
