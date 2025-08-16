@@ -36,22 +36,12 @@ export default function Icon({
           ? 'rotate-270'
           : '';
 
-  const combinedClass = ['inline-block', rotateClass, className]
-    .filter(Boolean)
-    .join(' ');
+  const combinedClass = ['inline-block', rotateClass, className].filter(Boolean).join(' ');
 
   return (
     <svg
-      width={
-        typeof computedWidth === 'number'
-          ? `${computedWidth}rem`
-          : computedWidth
-      }
-      height={
-        typeof computedHeight === 'number'
-          ? `${computedHeight}rem`
-          : computedHeight
-      }
+      width={typeof computedWidth === 'number' ? `${computedWidth}rem` : computedWidth}
+      height={typeof computedHeight === 'number' ? `${computedHeight}rem` : computedHeight}
       className={combinedClass}
       fill={fill}
       aria-hidden={ariaHidden}
