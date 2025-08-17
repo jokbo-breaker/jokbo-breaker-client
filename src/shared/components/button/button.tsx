@@ -3,7 +3,6 @@ import { cn } from '@/shared/libs/cn';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary';
-  size?: 'md';
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -11,7 +10,6 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export default function Button({
   variant = 'primary',
-  size = 'md',
   loading = false,
   leftIcon,
   rightIcon,
@@ -22,12 +20,7 @@ export default function Button({
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
-  const base =
-    'inline-flex items-center justify-center select-none rounded-[10px] text-body3 gap-[1rem] ';
-
-  const sizes = {
-    md: 'h-[5rem] px-4',
-  } as const;
+  const base = 'flex-row-center select-none rounded-[10px] py-[1.6rem]';
 
   const variants = {
     primary: 'bg-gray-900 text-white',
@@ -40,7 +33,6 @@ export default function Button({
     <button
       className={cn(
         base,
-        sizes[size],
         variants[variant],
         isDisabled && disabledCls,
         className,
@@ -49,7 +41,7 @@ export default function Button({
       {...props}
     >
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
-      <span>{children}</span>
+      <span className="text-body3">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
     </button>
   );
