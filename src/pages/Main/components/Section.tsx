@@ -13,7 +13,7 @@ type Props = {
 function Section({
   title,
   children,
-  itemWidthClass = 'w-[16.5rem]',
+  itemWidthClass,
   className,
   listClassName,
 }: Props) {

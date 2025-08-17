@@ -23,13 +23,13 @@ function ProductCard({
   } = product;
 
   const Price = () => (
-    <div className="mt-1 flex items-baseline gap-1">
+    <div className="flex items-center gap-[0.4rem]">
       {discount > 0 && (
-        <span className="text-sm font-bold text-rose-600">{discount}%</span>
+        <span className="text-caption1 text-primary">{discount}%</span>
       )}
-      <span className="text-lg font-bold">{formatKRW(price)}</span>
+      <span className="text-body3 text-black">{formatKRW(price)}</span>
       {originalPrice && (
-        <span className="text-sm text-neutral-400 line-through">
+        <span className="text-caption2 text-gray-300">
           {formatKRW(originalPrice)}
         </span>
       )}
@@ -37,32 +37,32 @@ function ProductCard({
   );
 
   const Meta = () => (
-    <div className="mt-2 flex items-center gap-2 text-[12px] text-neutral-600">
-      <Icon name="cart" size={1.2} />
-      <span>
+    <div className="text-caption4 flex items-center gap-[0.4rem] text-gray-600">
+      <div className="flex gap-[0.2rem]">
+        <Icon name="cart" size={1.2} />
         {hours}
-        <span className="mx-1">|</span>
-        {distanceKm.toFixed(1)}km
-      </span>
+      </div>
+      <span>|</span>
+      <span>{distanceKm.toFixed(1)}km</span>
     </div>
   );
 
   if (variant === 'wide') {
     return (
-      <article className="group relative w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200">
+      <article className="relative w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200">
         <div className="relative">
           <img
             src={image}
             alt={name}
-            className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            className="h-[14rem] w-[14rem] rounded-[4px] object-cover"
           />
           {remainingBadge && <Badge>{remainingBadge}</Badge>}
         </div>
-        <div className="px-4 pt-3 pb-4">
-          <h4 className="text-[13px] text-neutral-700">{store}</h4>
-          <h3 className="mt-0.5 line-clamp-1 text-[15px] font-semibold">
-            {name}
-          </h3>
+        <div className="flex-col gap-[0.2rem]">
+          <div className="flex-col">
+            <h4 className="text-caption3 text-black">{store}</h4>
+            <h3 className="text-caption2 text-black">{name}</h3>
+          </div>
           <Price />
           <Meta />
         </div>
@@ -70,22 +70,21 @@ function ProductCard({
     );
   }
 
-  // compact
   return (
-    <article className="group relative w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200">
+    <article className="relative w-full flex-col gap-[1rem] overflow-hidden">
       <div className="relative">
         <img
           src={image}
           alt={name}
-          className="h-36 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          className="h-[14rem] w-[14rem] rounded-[4px] object-cover"
         />
         {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
-      <div className="px-3 pt-2 pb-3">
-        <h4 className="text-[12px] text-neutral-700">{store}</h4>
-        <h3 className="mt-0.5 line-clamp-1 text-[14px] font-semibold">
-          {name}
-        </h3>
+      <div className="flex-col gap-[0.2rem]">
+        <div className="flex-col">
+          <h4 className="text-caption3 text-black">{store}</h4>
+          <h3 className="text-caption2 text-black">{name}</h3>
+        </div>
         <Price />
         <Meta />
       </div>

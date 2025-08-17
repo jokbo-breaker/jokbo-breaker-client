@@ -48,17 +48,17 @@ const sample: Product[] = [
 ];
 export default function MainPage() {
   return (
-    <div className="h-full w-full bg-white">
+    <div className="h-full w-full bg-white pb-[2.8rem]">
       <Header />
-      <div className="px-[2rem]">
-        <div className="flex-col gap-[1.6rem] pt-[1.6rem]">
+      <div className="space-y-[2.4rem]">
+        <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
           <div className="flex items-center gap-[0.4rem]">
             <Icon name="location" size={2.4} className="text-primary" />
             <span className="text-body3 text-black">서울시 동작구</span>
           </div>
           <HeroBanner />
         </div>
-        <div className="flex-col gap-[2.8rem]">
+        <div className="flex-col gap-[2.8rem] pl-[2rem]">
           <Section title="내 주변 상점을 둘러보세요">
             {sample.map((p) => (
               <ProductCard key={p.id} product={p} variant="compact" />
