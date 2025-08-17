@@ -9,4 +9,8 @@ export type Product = {
   remainingBadge?: string;
   hours: string;
   distanceKm: number;
+  address?: string;
+  phone?: string;
+  pickupPrice?: number;
+  teamDeliveryAfter?: string;
 };

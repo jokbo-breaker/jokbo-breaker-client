@@ -6,6 +6,9 @@ const MainPage = lazy(() => import('@/pages/main/main-page'));
 const SectionListPage = lazy(
   () => import('@/pages/main/section-list/section-list-page'),
 );
+const ProductDetailPage = lazy(
+  () => import('@/pages/main/product-detail/product-detail-page'),
+);
 const MapPage = lazy(() => import('@/pages/map/map-page'));
 
 export const router = createBrowserRouter([
@@ -14,6 +17,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <MainPage /> },
       { path: '/main/:section', element: <SectionListPage /> },
+      { path: '/product/:id', element: <ProductDetailPage /> },
       { path: 'map', element: <MapPage /> },
     ],
   },
