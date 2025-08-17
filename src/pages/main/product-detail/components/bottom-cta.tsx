@@ -1,7 +1,7 @@
 function BottomCTA({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[var(--z-bottom-nav)] bg-white/90 backdrop-blur">
-      <div className="mx-auto w-full max-w-[420px] px-5 py-3">
+    <div className="fixed inset-x-0 bottom-0 z-[var(--z-bottom-nav)] bg-white">
+      <div className="mx-auto w-full max-w-[430px] px-5 py-3">
         <button
           type="button"
           onClick={onClick}

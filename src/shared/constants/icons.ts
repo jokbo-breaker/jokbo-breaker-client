@@ -1,1 +1,12 @@
-export const ICONS = ['arrow', 'clear', 'home', 'search', 'x-icon'] as const;
+export const ICONS = [
+  "arrow",
+  "back",
+  "cart",
+  "clear",
+  "clock",
+  "home",
+  "location",
+  "phone",
+  "search",
+  "x-icon"
+] as const;

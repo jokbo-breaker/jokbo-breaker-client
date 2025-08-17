@@ -50,77 +50,72 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="bg-white">
-      <TopBar
-        title={name}
-        showBack
-        onBack={() => navigate(-1)}
-        sticky
-        className="border-b border-gray-100"
-      />
+    <>
+      <TopBar title={name} showBack onBack={() => navigate(-1)} sticky />
 
-      <div className="px-5 pt-4">
+      <div
+        className="relative overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <div
-          className="relative overflow-hidden rounded-[12px]"
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
+          className="flex transition-transform duration-300"
+          style={{ transform: `translateX(${-idx * 100}%)` }}
         >
-          <div
-            className="flex transition-transform duration-300"
-            style={{ transform: `translateX(${-idx * 100}%)` }}
-          >
-            {images.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt={`${name} ${i + 1}`}
-                className="aspect-[4/3] w-full shrink-0 object-cover"
-              />
-            ))}
-          </div>
-
-          {images.length > 1 && (
-            <div className="absolute inset-x-0 bottom-2 flex justify-center">
-              <Indicator
-                total={images.length}
-                index={idx}
-                onSelect={setIdx}
-                className="bg-transparent"
-              />
-            </div>
-          )}
+          {images.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`${name} ${i + 1}`}
+              className="aspect-square w-full object-cover pt-[0.8rem]"
+            />
+          ))}
         </div>
+
+        {images.length > 1 && (
+          <div className="absolute inset-x-0 bottom-2 flex justify-center">
+            <Indicator
+              total={images.length}
+              index={idx}
+              onSelect={setIdx}
+              className="bg-transparent"
+            />
+          </div>
+        )}
       </div>
 
       <div className="space-y-16 px-5 pt-7 pb-28">
         <section className="space-y-2">
-          <div className="text-caption3 text-gray-800">{store}</div>
-          <h1 className="text-[20px] font-semibold">{name}</h1>
+          <div className="flex-col gap-[0.2rem]">
+            <div className="text-body3 text-black">{store}</div>
+            <h1 className="text-body3 text-black">{name}</h1>
+          </div>
+          <div className="flex-col gap-[0.8rem]">
+            <div className="flex items-center gap-[0.4rem]">
+              {discount > 0 && (
+                <span className="text-primary text-[16px] font-bold">
+                  {discount}%
+                </span>
+              )}
+              <span className="text-[20px] font-bold">{formatKRW(price)}</span>
+              {originalPrice && (
+                <span className="text-[16px] text-gray-300 line-through">
+                  {formatKRW(originalPrice)}
+                </span>
+              )}
+            </div>
 
-          <div className="mt-1 flex items-baseline gap-2">
-            {discount > 0 && (
-              <span className="text-primary text-[16px] font-bold">
-                {discount}%
-              </span>
-            )}
-            <span className="text-[20px] font-bold">{formatKRW(price)}</span>
-            {originalPrice && (
-              <span className="text-[16px] text-gray-300 line-through">
-                {formatKRW(originalPrice)}
-              </span>
+            {pickupPrice && (
+              <div className="text-[16px] font-semibold text-blue-600">
+                픽업 시 {formatKRW(pickupPrice)}
+              </div>
             )}
           </div>
-
-          {pickupPrice && (
-            <div className="text-[16px] font-semibold text-blue-600">
-              픽업 시 {formatKRW(pickupPrice)}
-            </div>
-          )}
         </section>
 
         <section className="space-y-4">
           <InfoRow
-            icon="pin"
+            icon="location"
             text={address}
             trailing={<button className="text-red-500">지도에서 보기</button>}
           />
@@ -154,6 +149,6 @@ export default function ProductDetailPage() {
         label={`주문하기 · ${remainingBadge}`}
         onClick={() => alert('주문하기')}
       />
-    </div>
+    </>
   );
 }
