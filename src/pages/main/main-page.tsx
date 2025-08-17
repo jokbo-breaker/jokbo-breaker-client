@@ -5,14 +5,29 @@ import ProductCard from '@/pages/main/components/product-card';
 import Section from '@/pages/main/components/section-list';
 import HeroBanner from '@/pages/main/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
+import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
 
 export default function MainPage() {
   const [mode, setMode] = useState<Mode>('delivery');
 
-  const current = useMemo(
+  const data = useMemo(
     () => (mode === 'delivery' ? mockDeliveryProducts : mockPickupProducts),
     [mode],
   );
+
+  const ordered: SectionKey[] = [
+    'nearby',
+    'new',
+    'lastcall',
+    'breakfast',
+    'dessert',
+    'now',
+  ];
+
+  const getTitle = (key: SectionKey) => {
+    const t = SECTION_META[key].title;
+    return typeof t === 'string' ? t : t[mode];
+  };
 
   return (
     <div className="h-full w-full bg-white pb-[2.8rem]">
@@ -28,43 +43,23 @@ export default function MainPage() {
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
-          <Section title="내 주변 상점을 둘러보세요">
-            {current.map((p) => (
-              <ProductCard key={`s1-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
-
-          <Section title="새로 입점했어요">
-            {current.map((p) => (
-              <ProductCard key={`s2-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
-
-          <Section title="곧 품절이에요">
-            {current.map((p) => (
-              <ProductCard key={`s3-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
-
-          <Section title="아침 드실 시간이에요">
-            {current.map((p) => (
-              <ProductCard key={`s4-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
-
-          <Section title="달달한 게 땡길 때">
-            {current.map((p) => (
-              <ProductCard key={`s5-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
-
-          <Section
-            title={mode === 'delivery' ? '지금 바로 배달 받아보세요' : '지금 바로 픽업 가능해요'}
-          >
-            {current.map((p) => (
-              <ProductCard key={`s6-${p.id}`} product={p} variant="compact" />
-            ))}
-          </Section>
+          {ordered.map((key) => (
+            <Section
+              key={key}
+              sectionKey={key}
+              title={getTitle(key)}
+              mode={mode}
+              itemWidthClass="w-[16.5rem]"
+            >
+              {data.map((p) => (
+                <ProductCard
+                  key={`${key}-${p.id}`}
+                  product={p}
+                  variant="compact"
+                />
+              ))}
+            </Section>
+          ))}
         </div>
       </div>
     </div>
