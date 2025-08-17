@@ -47,18 +47,17 @@ export default function RadioTileGroup({
 
             <div
               className={cn(
-                'flex items-center justify-between rounded-[4px] border px-4 py-4 transition-colors',
-                'border-neutral-200 bg-white',
-                'peer-hover:border-neutral-300',
+                'flex items-center justify-between rounded-[4px] border p-[1.6rem] transition-colors',
+                'border-gray-200 bg-white',
                 'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-200',
-                'peer-checked:border-orange-500 peer-checked:bg-orange-50',
+                'peer-checked:bg-secondary peer-checked:border-primary peer-checked:[&>span:first-child]:text-primary',
                 opt.disabled && 'pointer-events-none opacity-60',
               )}
             >
               <span
                 className={cn(
-                  'text-body3 text-neutral-800',
-                  'peer-checked:text-orange-600',
+                  'text-body3 text-black',
+                  'text-body3 peer-checked:text-primary',
                 )}
               >
                 {opt.label}
@@ -67,8 +66,8 @@ export default function RadioTileGroup({
               {opt.right && (
                 <span
                   className={cn(
-                    'text-body4 text-neutral-500',
-                    'peer-checked:text-orange-600',
+                    'text-body4 text-black',
+                    'text-body4 peer-checked:text-primary',
                   )}
                 >
                   {opt.right}
