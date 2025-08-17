@@ -1,35 +1,75 @@
-import { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Icon from '@/shared/components/icon';
-import SearchTextField from '@/shared/components/text-field/search-text-field';
-import TopBar from '@/shared/layouts/top-bar';
+import Header, { type Mode } from '@/pages/Main/components/Header';
+import ProductCard from '@/pages/Main/components/ProductCard';
+import Section from '@/pages/Main/components/Section';
+import HeroBanner from '@/pages/Main/components/HeroBanner';
+import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 
 export default function MainPage() {
-  const [q, setQ] = useState('');
+  const [mode, setMode] = useState<Mode>('delivery');
+
+  const current = useMemo(
+    () => (mode === 'delivery' ? mockDeliveryProducts : mockPickupProducts),
+    [mode],
+  );
 
   return (
-    <div className="w-full flex-col gap-4 bg-gray-100">
-      <h1 className="text-head1 text-primary">헤드1 22/SB</h1>
-      <h2 className="text-head2 text-secondary">헤드2 20/SB</h2>
+    <div className="h-full w-full bg-white pb-[2.8rem]">
+      <Header mode={mode} onModeChange={setMode} />
 
-      <Icon name="home" size={2.4} className="text-black" />
-      <TopBar title="타이틀" showBack onBack={() => history.back()} />
+      <div className="space-y-[2.4rem]">
+        <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
+          <div className="flex items-center gap-[0.4rem]">
+            <Icon name="location" size={2.4} className="text-primary" />
+            <span className="text-body3 text-black">서울시 동작구</span>
+          </div>
+          <HeroBanner />
+        </div>
 
-      <TopBar title="타이틀" showClose onClose={() => console.log('close')} />
-      <SearchTextField
-        defaultValue="초기값"
-        onSubmit={(v) => console.log('submit(uncontrolled):', v)}
-        className="mt-2"
-        showBackButton={false}
-      />
-      <SearchTextField
-        defaultValue="초기값"
-        onSubmit={(v) => console.log('submit(uncontrolled):', v)}
-        className="mt-2"
-        showSearchIcon={false}
-      />
+        <div className="flex-col gap-[2.8rem] pl-[2rem]">
+          <Section title="내 주변 상점을 둘러보세요">
+            {current.map((p) => (
+              <ProductCard key={`s1-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
 
-      <div className="text-caption2 text-gray-600">
-        현재 값: <span className="text-gray-900">{q || '(비어있음)'}</span>
+          <Section title="새로 입점했어요">
+            {current.map((p) => (
+              <ProductCard key={`s2-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
+
+          <Section title="곧 품절이에요">
+            {current.map((p) => (
+              <ProductCard key={`s3-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
+
+          <Section title="아침 드실 시간이에요">
+            {current.map((p) => (
+              <ProductCard key={`s4-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
+
+          <Section title="달달한 게 땡길 때">
+            {current.map((p) => (
+              <ProductCard key={`s5-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
+
+          <Section
+            title={
+              mode === 'delivery'
+                ? '지금 바로 배달 받아보세요'
+                : '지금 바로 픽업 가능해요'
+            }
+          >
+            {current.map((p) => (
+              <ProductCard key={`s6-${p.id}`} product={p} variant="compact" />
+            ))}
+          </Section>
+        </div>
       </div>
     </div>
   );

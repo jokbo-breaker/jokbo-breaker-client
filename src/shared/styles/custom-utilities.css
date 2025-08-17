@@ -5,15 +5,15 @@
   }
 
   .flex-row-center {
-    @apply flex flex-row justify-center items-center;
+    @apply flex flex-row items-center justify-center;
   }
 
   .flex-row-between {
-    @apply flex flex-row justify-between items-center;
+    @apply flex flex-row items-center justify-between;
   }
 
   .flex-row-end {
-    @apply flex flex-row justify-end items-center;
+    @apply flex flex-row items-center justify-end;
   }
 
   .flex-row-items-start {
@@ -30,15 +30,15 @@
   }
 
   .flex-col-center {
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col items-center justify-center;
   }
 
   .flex-col-between {
-    @apply flex flex-col justify-between items-center;
+    @apply flex flex-col items-center justify-between;
   }
 
   .flex-col-end {
-    @apply flex flex-col justify-end items-center;
+    @apply flex flex-col items-center justify-end;
   }
 
   .flex-col-items-start {
@@ -51,5 +51,12 @@
 
   .header-layout {
     @apply sticky top-0 z-[var(--z-header)] h-[5.6rem] py-[1.55rem] pl-[2rem];
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

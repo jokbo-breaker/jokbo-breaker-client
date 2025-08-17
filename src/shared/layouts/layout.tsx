@@ -2,8 +2,8 @@ import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <main className="mx-auto min-h-0 w-full flex-1">
+    <div className="scrollbar-hide flex max-h-dvh flex-col overflow-y-auto">
+      <main className="mx-auto min-h-dvh w-full flex-1">
         <Outlet />
       </main>
       {/* 푸터 */}
