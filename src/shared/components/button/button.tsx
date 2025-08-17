@@ -2,14 +2,14 @@ import * as React from 'react';
 import { cn } from '@/shared/libs/cn';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary';
+  variant?: 'black' | 'white' | 'gray';
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 };
 
 export default function Button({
-  variant = 'primary',
+  variant = 'black',
   loading = false,
   leftIcon,
   rightIcon,
@@ -23,20 +23,14 @@ export default function Button({
   const base = 'flex-row-center select-none rounded-[10px] py-[1.6rem]';
 
   const variants = {
-    primary: 'bg-gray-900 text-white',
-    secondary: 'bg-gray-100 text-gray-700',
+    black: 'bg-gray-900 text-white',
+    white: 'bg-gray-100 text-gray-700',
+    gray: 'bg-gray-900 text-white opacity-50',
   } as const;
-
-  const disabledCls = 'opacity-50 pointer-events-none';
 
   return (
     <button
-      className={cn(
-        base,
-        variants[variant],
-        isDisabled && disabledCls,
-        className,
-      )}
+      className={cn(base, variants[variant], className)}
       disabled={isDisabled}
       {...props}
     >
