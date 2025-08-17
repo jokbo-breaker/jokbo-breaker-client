@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import Icon from '@/shared/components/icon';
-import Header, { type Mode } from '@/pages/Main/components/Header';
-import ProductCard from '@/pages/Main/components/ProductCard';
-import Section from '@/pages/Main/components/Section';
-import HeroBanner from '@/pages/Main/components/HeroBanner';
+import Header, { type Mode } from '@/pages/main/components/main-header';
+import ProductCard from '@/pages/main/components/product-card';
+import Section from '@/pages/main/components/section-list';
+import HeroBanner from '@/pages/main/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 
 export default function MainPage() {
@@ -59,11 +59,7 @@ export default function MainPage() {
           </Section>
 
           <Section
-            title={
-              mode === 'delivery'
-                ? '지금 바로 배달 받아보세요'
-                : '지금 바로 픽업 가능해요'
-            }
+            title={mode === 'delivery' ? '지금 바로 배달 받아보세요' : '지금 바로 픽업 가능해요'}
           >
             {current.map((p) => (
               <ProductCard key={`s6-${p.id}`} product={p} variant="compact" />

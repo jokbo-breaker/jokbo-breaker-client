@@ -1,5 +1,5 @@
 import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps';
-import { useGeolocation } from '@/shared/hooks/useGeolocation';
+import { useGeolocation } from '@/shared/hooks/use-geolocation';
 
 export default function MapPage() {
   const { loc, loading, error, request } = useGeolocation({
