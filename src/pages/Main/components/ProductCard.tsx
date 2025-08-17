@@ -1,6 +1,6 @@
 import { Product } from '@/shared/types';
 import Icon from '@/shared/components/icon';
-import Ribbon from '@/pages/Main/components/Ribbon';
+import Badge from '@/pages/Main/components/Badge';
 import { formatKRW } from '@/shared/utils/format-krw';
 
 function ProductCard({
@@ -56,7 +56,7 @@ function ProductCard({
             alt={name}
             className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           />
-          {remainingBadge && <Ribbon>{remainingBadge}</Ribbon>}
+          {remainingBadge && <Badge>{remainingBadge}</Badge>}
         </div>
         <div className="px-4 pt-3 pb-4">
           <h4 className="text-[13px] text-neutral-700">{store}</h4>
@@ -79,7 +79,7 @@ function ProductCard({
           alt={name}
           className="h-36 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
         />
-        {remainingBadge && <Ribbon>{remainingBadge}</Ribbon>}
+        {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
       <div className="px-3 pt-2 pb-3">
         <h4 className="text-[12px] text-neutral-700">{store}</h4>
