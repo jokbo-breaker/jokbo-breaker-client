@@ -1,15 +1,17 @@
 import { Product } from '@/shared/types';
 import Icon from '@/shared/components/icon';
-import Badge from '@/pages/Main/components/Badge';
+import Badge from '@/pages/main_tmp/components/count-badge';
 import { formatKRW } from '@/shared/utils/format-krw';
+import { cn } from '@/shared/libs/cn';
+import React from 'react';
 
-function ProductCard({
-  product,
-  variant = 'compact',
-}: {
+type Props = {
   product: Product;
   variant?: 'compact' | 'wide';
-}) {
+  className?: string;
+};
+
+function ProductCard({ product, variant = 'compact', className }: Props) {
   const {
     image,
     store,
@@ -38,30 +40,30 @@ function ProductCard({
 
   const Meta = () => (
     <div className="text-caption4 flex items-center gap-[0.4rem] text-gray-600">
-      <div className="flex gap-[0.2rem]">
+      <span className="flex items-center gap-[0.2rem]">
         <Icon name="cart" size={1.2} />
         {hours}
-      </div>
-      <span>|</span>
+      </span>
+      <span aria-hidden>|</span>
       <span>{distanceKm.toFixed(1)}km</span>
     </div>
   );
 
   if (variant === 'wide') {
     return (
-      <article className="relative w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200">
+      <article className={cn('relative w-full overflow-hidden', className)}>
         <div className="relative">
           <img
             src={image}
             alt={name}
-            className="h-[14rem] w-[14rem] rounded-[4px] object-cover"
+            className="h-[14rem] w-full rounded-[4px] object-cover"
           />
           {remainingBadge && <Badge>{remainingBadge}</Badge>}
         </div>
         <div className="flex-col gap-[0.2rem]">
           <div className="flex-col">
             <h4 className="text-caption3 text-black">{store}</h4>
-            <h3 className="text-caption2 text-black">{name}</h3>
+            <h3 className="text-caption2 line-clamp-1 text-black">{name}</h3>
           </div>
           <Price />
           <Meta />
@@ -70,20 +72,21 @@ function ProductCard({
     );
   }
 
+  // compact
   return (
-    <article className="relative w-full flex-col gap-[1rem] overflow-hidden">
+    <article className={cn('relative w-full overflow-hidden', className)}>
       <div className="relative">
         <img
           src={image}
           alt={name}
-          className="h-[14rem] w-[14rem] rounded-[4px] object-cover"
+          className="h-[14rem] w-full rounded-[4px] object-cover"
         />
         {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
-      <div className="flex-col gap-[0.2rem]">
-        <div className="flex-col">
+      <div className="mt-[1rem] flex flex-col gap-[0.2rem]">
+        <div className="flex flex-col">
           <h4 className="text-caption3 text-black">{store}</h4>
-          <h3 className="text-caption2 text-black">{name}</h3>
+          <h3 className="text-caption2 line-clamp-1 text-black">{name}</h3>
         </div>
         <Price />
         <Meta />
@@ -92,4 +95,4 @@ function ProductCard({
   );
 }
 
-export default ProductCard;
+export default React.memo(ProductCard);

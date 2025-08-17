@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import Icon from '@/shared/components/icon';
-import Header, { type Mode } from '@/pages/Main/components/Header';
-import ProductCard from '@/pages/Main/components/ProductCard';
-import Section from '@/pages/Main/components/Section';
-import HeroBanner from '@/pages/Main/components/HeroBanner';
+import Header, { type Mode } from '@/pages/main_tmp/components/main-header';
+import ProductCard from '@/pages/main_tmp/components/product-card';
+import Section from '@/pages/main_tmp/components/section-list';
+import HeroBanner from '@/pages/main_tmp/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 
 export default function MainPage() {

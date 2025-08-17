@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionHeader from '@/pages/Main/components/SectionHeader';
+import SectionHeader from '@/pages/main_tmp/components/section-header';
 import { cn } from '@/shared/libs/cn';
 
 type Props = {
