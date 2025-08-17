@@ -66,7 +66,7 @@ export default function Header({
 
         <div className="flex items-center">
           {rightSlot ?? (
-            <button aria-label="검색" className="text-black">
+            <button aria-label="검색" className="cursor-pointer text-black">
               <Icon name="search" width={2.4} />
             </button>
           )}

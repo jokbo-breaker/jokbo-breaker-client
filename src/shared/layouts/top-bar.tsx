@@ -40,7 +40,12 @@ export default function TopBar({
       <div className="justify-self-start">
         {leftSlot ??
           (showBack ? (
-            <button type="button" aria-label="뒤로가기" onClick={onBack} className="text-black">
+            <button
+              type="button"
+              aria-label="뒤로가기"
+              onClick={onBack}
+              className="cursor-pointer text-black"
+            >
               <Icon name="back" size={4.4} ariaHidden />
             </button>
           ) : (
@@ -53,7 +58,12 @@ export default function TopBar({
       <div className="justify-self-end">
         {rightSlot ??
           (showClose ? (
-            <button type="button" aria-label="닫기" onClick={onClose} className="text-gray-500">
+            <button
+              type="button"
+              aria-label="닫기"
+              onClick={onClose}
+              className="cursor-pointer text-gray-500"
+            >
               <Icon name="x-icon" size={4.4} ariaHidden />
             </button>
           ) : (

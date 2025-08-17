@@ -12,15 +12,28 @@ type Props = {
 };
 
 function ProductCard({ product, variant = 'compact', className }: Props) {
-  const { image, store, name, discount, price, originalPrice, remainingBadge, hours, distanceKm } =
-    product;
+  const {
+    image,
+    store,
+    name,
+    discount,
+    price,
+    originalPrice,
+    remainingBadge,
+    hours,
+    distanceKm,
+  } = product;
 
   const Price = () => (
     <div className="flex items-center gap-[0.4rem]">
-      {discount > 0 && <span className="text-caption1 text-primary">{discount}%</span>}
+      {discount > 0 && (
+        <span className="text-caption1 text-primary">{discount}%</span>
+      )}
       <span className="text-body3 text-black">{formatKRW(price)}</span>
       {originalPrice && (
-        <span className="text-caption2 text-gray-300">{formatKRW(originalPrice)}</span>
+        <span className="text-caption2 text-gray-300">
+          {formatKRW(originalPrice)}
+        </span>
       )}
     </div>
   );
@@ -38,15 +51,24 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
 
   if (variant === 'wide') {
     return (
-      <article className={cn('relative w-full overflow-hidden', className)}>
+      <article
+        className={cn(
+          'relative w-full flex-col gap-[1rem] overflow-hidden',
+          className,
+        )}
+      >
         <div className="relative">
-          <img src={image} alt={name} className="h-[14rem] w-full rounded-[4px] object-cover" />
+          <img
+            src={image}
+            alt={name}
+            className="h-[16rem] w-full rounded-[4px] object-cover"
+          />
           {remainingBadge && <Badge>{remainingBadge}</Badge>}
         </div>
         <div className="flex-col gap-[0.2rem]">
           <div className="flex-col">
-            <h4 className="text-caption3 text-black">{store}</h4>
-            <h3 className="text-caption2 line-clamp-1 text-black">{name}</h3>
+            <h4 className="text-caption1 text-black">{store}</h4>
+            <h3 className="text-body3 text-black">{name}</h3>
           </div>
           <Price />
           <Meta />
@@ -59,13 +81,17 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
   return (
     <article className={cn('relative w-full overflow-hidden', className)}>
       <div className="relative">
-        <img src={image} alt={name} className="h-[14rem] w-full rounded-[4px] object-cover" />
+        <img
+          src={image}
+          alt={name}
+          className="h-[14rem] w-full rounded-[4px] object-cover"
+        />
         {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
-      <div className="mt-[1rem] flex flex-col gap-[0.2rem]">
-        <div className="flex flex-col">
+      <div className="mt-[1rem] flex-col gap-[0.2rem]">
+        <div className="flex-col">
           <h4 className="text-caption3 text-black">{store}</h4>
-          <h3 className="text-caption2 line-clamp-1 text-black">{name}</h3>
+          <h3 className="text-caption2 text-black">{name}</h3>
         </div>
         <Price />
         <Meta />

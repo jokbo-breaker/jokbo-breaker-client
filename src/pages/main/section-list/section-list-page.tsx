@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   SECTION_META,
   SECTION_KEYS,
@@ -6,10 +6,13 @@ import {
 } from '@/shared/constants/sections';
 import ProductCard from '@/pages/main/components/product-card';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
+import TopBar from '@/shared/layouts/top-bar';
 
 export default function SectionListPage() {
   const { section } = useParams<{ section: SectionKey }>();
   const [sp] = useSearchParams();
+  const navigate = useNavigate();
+
   const mode = (sp.get('mode') ?? 'delivery') as 'delivery' | 'pickup';
 
   if (!section || !SECTION_KEYS.includes(section)) {
@@ -22,11 +25,10 @@ export default function SectionListPage() {
   const data = mode === 'delivery' ? mockDeliveryProducts : mockPickupProducts;
 
   return (
-    <div className="px-5 pb-8">
-      <header className="py-3 text-center text-[18px] font-semibold">
-        {title}
-      </header>
-      <div className="space-y-6">
+    <div className="pb-8">
+      <TopBar title={title} showBack onBack={() => navigate(-1)} sticky />
+
+      <div className="flex-col gap-[2rem] px-[2rem] pt-[0.8rem]">
         {data.map((p) => (
           <ProductCard key={p.id} product={p} variant="wide" />
         ))}
