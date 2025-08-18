@@ -13,14 +13,67 @@ export default function MapViewPage() {
     options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
   });
 
-  const fallback = { lat: 37.5665, lng: 126.978 };
+  const soongsilBase = { lat: 37.4963, lng: 126.9575 };
+  const center = loc ?? soongsilBase;
+
   const navigate = useNavigate();
-  const testPoints = [
-    { lat: 37.5665, lng: 126.978 },
-    { lat: 37.57, lng: 126.9769 },
-    { lat: 37.561, lng: 126.983 },
+
+  const testRestaurants = [
+    {
+      id: 1,
+      name: '정문돈까스',
+      lat: soongsilBase.lat + 0.0018,
+      lng: soongsilBase.lng - 0.0012,
+    },
+    {
+      id: 2,
+      name: '상도라멘',
+      lat: soongsilBase.lat + 0.001,
+      lng: soongsilBase.lng + 0.001,
+    },
+    {
+      id: 3,
+      name: '숭실카레집',
+      lat: soongsilBase.lat - 0.0012,
+      lng: soongsilBase.lng + 0.0008,
+    },
+    {
+      id: 4,
+      name: '상도불백',
+      lat: soongsilBase.lat - 0.0018,
+      lng: soongsilBase.lng - 0.001,
+    },
+    {
+      id: 5,
+      name: '홍콩반점 숭실',
+      lat: soongsilBase.lat + 0.0006,
+      lng: soongsilBase.lng - 0.0015,
+    },
+    {
+      id: 6,
+      name: '밥버거 숭실',
+      lat: soongsilBase.lat - 0.0005,
+      lng: soongsilBase.lng + 0.0016,
+    },
   ];
-  const markerIcon = useMemo(
+
+  const myMarkerIcon = useMemo(
+    () => ({
+      content: renderToString(
+        <div style={{ transform: 'translate(-50%, -100%)' }}>
+          <Icon
+            name="location"
+            size={2.4}
+            className="text-primary"
+            ariaHidden
+          />
+        </div>,
+      ),
+    }),
+    [],
+  );
+
+  const restaurantMarkerIcon = useMemo(
     () => ({
       content: renderToString(
         <div style={{ transform: 'translate(-50%, -100%)' }}>
@@ -46,13 +99,15 @@ export default function MapViewPage() {
           <div className="grid h-full place-items-center">지도 로딩 중…</div>
         }
       >
-        <NaverMap
-          defaultCenter={fallback}
-          center={loc ?? fallback}
-          defaultZoom={16}
-        >
-          {(loc ? [loc] : testPoints).map((p, i) => (
-            <Marker key={i} position={p} icon={markerIcon as any} />
+        <NaverMap defaultCenter={soongsilBase} center={center} defaultZoom={16}>
+          <Marker position={center} icon={myMarkerIcon as any} />
+
+          {testRestaurants.map((p) => (
+            <Marker
+              key={p.id}
+              position={{ lat: p.lat, lng: p.lng }}
+              icon={restaurantMarkerIcon as any}
+            />
           ))}
         </NaverMap>
       </MapDiv>
