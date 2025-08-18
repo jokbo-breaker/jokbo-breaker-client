@@ -7,6 +7,11 @@ import Section from '@/pages/main/components/section-list';
 import HeroBanner from '@/pages/main/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
+import {
+  MAIN_SECTIONS_ORDER,
+  getSectionTitle,
+  DEFAULT_LOCATION_LABEL,
+} from '@/pages/main/constants/section';
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -51,17 +56,19 @@ export default function MainPage() {
         <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
           <div className="flex items-center gap-[0.4rem]">
             <Icon name="location" size={2.4} className="text-primary" />
-            <span className="text-body3 text-black">서울시 동작구</span>
+            <span className="text-body3 text-black">
+              {DEFAULT_LOCATION_LABEL}
+            </span>
           </div>
           <HeroBanner />
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
-          {ordered.map((key) => (
+          {MAIN_SECTIONS_ORDER.map((key) => (
             <Section
               key={key}
               sectionKey={key}
-              title={getTitle(key)}
+              title={getSectionTitle(key, mode)}
               mode={mode}
               itemWidthClass="w-[16.5rem]"
             >
