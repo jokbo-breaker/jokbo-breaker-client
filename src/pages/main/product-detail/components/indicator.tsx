@@ -11,12 +11,7 @@ type Props = {
   className?: string;
 };
 
-export default function Indicator({
-  total,
-  index,
-  onSelect,
-  className,
-}: Props) {
+export default function Indicator({ total, index, onSelect, className }: Props) {
   if (total <= 0) return null;
 
   return (

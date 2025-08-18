@@ -1,54 +1,21 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '@/shared/types';
-import Icon from '@/shared/components/icon';
+import Meta from '@/pages/main/components/product/product-meta';
 import Badge from '@/pages/main/components/count-badge';
-import { formatKRW } from '@/shared/utils/format-krw';
 import { cn } from '@/shared/libs/cn';
-import React from 'react';
+import ProductPrice from '@/pages/main/components/product/product-price';
 
-type Props = {
+export type ProductCardProps = {
   product: Product;
   variant?: 'compact' | 'wide';
   className?: string;
 };
 
-function ProductCard({ product, variant = 'compact', className }: Props) {
-  const {
-    image,
-    store,
-    name,
-    discount,
-    price,
-    originalPrice,
-    remainingBadge,
-    hours,
-    distanceKm,
-  } = product;
+function ProductCard({ product, variant = 'compact', className }: ProductCardProps) {
+  const { image, store, name, discount, price, originalPrice, remainingBadge, hours, distanceKm } =
+    product;
   const navigate = useNavigate();
-  const Price = () => (
-    <div className="flex items-center gap-[0.4rem]">
-      {discount > 0 && (
-        <span className="text-caption1 text-primary">{discount}%</span>
-      )}
-      <span className="text-body3 text-black">{formatKRW(price)}</span>
-      {originalPrice && (
-        <span className="text-caption2 text-gray-300">
-          {formatKRW(originalPrice)}
-        </span>
-      )}
-    </div>
-  );
-
-  const Meta = () => (
-    <div className="text-caption4 flex items-center gap-[0.4rem] text-gray-600">
-      <span className="flex items-center gap-[0.2rem]">
-        <Icon name="cart" size={1.2} />
-        {hours}
-      </span>
-      <span aria-hidden>|</span>
-      <span>{distanceKm.toFixed(1)}km</span>
-    </div>
-  );
 
   if (variant === 'wide') {
     return (
@@ -72,8 +39,8 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
             <h4 className="text-caption1 text-black">{store}</h4>
             <h3 className="text-body3 text-black">{name}</h3>
           </div>
-          <Price />
-          <Meta />
+          <ProductPrice discount={discount} price={price} originalPrice={originalPrice} />
+          <Meta hours={hours} distanceKm={distanceKm} />
         </div>
       </article>
     );
@@ -82,18 +49,11 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
   // compact
   return (
     <article
-      className={cn(
-        'relative w-full cursor-pointer overflow-hidden',
-        className,
-      )}
+      className={cn('relative w-full cursor-pointer overflow-hidden', className)}
       onClick={() => navigate(`/product/${product.id}`)}
     >
       <div className="relative">
-        <img
-          src={image}
-          alt={name}
-          className="h-[14rem] w-full rounded-[4px] object-cover"
-        />
+        <img src={image} alt={name} className="h-[14rem] w-full rounded-[4px] object-cover" />
         {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
       <div className="mt-[1rem] flex-col gap-[0.2rem]">
@@ -101,8 +61,8 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
           <h4 className="text-caption3 text-black">{store}</h4>
           <h3 className="text-caption2 text-black">{name}</h3>
         </div>
-        <Price />
-        <Meta />
+        <ProductPrice discount={discount} price={price} originalPrice={originalPrice} />
+        <Meta hours={hours} distanceKm={distanceKm} />
       </div>
     </article>
   );

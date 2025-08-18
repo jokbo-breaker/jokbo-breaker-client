@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
-import ProductCard from '@/pages/main/components/product-card';
+import ProductCard from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
 import HeroBanner from '@/pages/main/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
@@ -15,14 +15,7 @@ export default function MainPage() {
     [mode],
   );
 
-  const ordered: SectionKey[] = [
-    'nearby',
-    'new',
-    'lastcall',
-    'breakfast',
-    'dessert',
-    'now',
-  ];
+  const ordered: SectionKey[] = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'];
 
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
@@ -52,11 +45,7 @@ export default function MainPage() {
               itemWidthClass="w-[16.5rem]"
             >
               {data.map((p) => (
-                <ProductCard
-                  key={`${key}-${p.id}`}
-                  product={p}
-                  variant="compact"
-                />
+                <ProductCard key={`${key}-${p.id}`} product={p} variant="compact" />
               ))}
             </Section>
           ))}

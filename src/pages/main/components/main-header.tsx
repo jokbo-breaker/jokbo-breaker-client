@@ -34,17 +34,10 @@ export default function Header({
 
   return (
     <header
-      className={
-        'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' +
-        className
-      }
+      className={'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' + className}
     >
       <div className="flex items-center justify-between">
-        <nav
-          className="text-body1 flex gap-[1.6rem]"
-          role="tablist"
-          aria-label="배송 방식 선택"
-        >
+        <nav className="text-body1 flex gap-[1.6rem]" role="tablist" aria-label="배송 방식 선택">
           {tabs.map(({ key, label }) => (
             <button
               key={key}

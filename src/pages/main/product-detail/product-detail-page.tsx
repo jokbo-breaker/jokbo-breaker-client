@@ -98,9 +98,7 @@ export default function ProductDetailPage() {
                 {discount > 0 && (
                   <span className="text-primary text-body1">{discount}%</span>
                 )}
-                <span className="text-[20px] font-bold">
-                  {formatKRW(price)}
-                </span>
+                <span className="text-head3 font-bold">{formatKRW(price)}</span>
                 {originalPrice && (
                   <span className="text-body2 text-gray-300 line-through">
                     {formatKRW(originalPrice)}
@@ -116,7 +114,7 @@ export default function ProductDetailPage() {
               )}
             </div>
           </section>
-          <section className="space-y-4">
+          <section className="flex-col gap-[0.8rem]">
             {address && (
               <InfoRow
                 icon="location"

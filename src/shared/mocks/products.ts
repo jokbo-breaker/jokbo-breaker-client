@@ -5,6 +5,11 @@ export const mockDeliveryProducts: Product[] = [
     id: '1',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '스타벅스 숭실대입구역점',
     name: '시크릿 런치 밀박스',
     discount: 20,
@@ -24,6 +29,11 @@ export const mockDeliveryProducts: Product[] = [
     id: '2',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '케이크팜',
     name: '스페셜 디저트박스',
     discount: 20,
@@ -43,6 +53,11 @@ export const mockDeliveryProducts: Product[] = [
     id: '4',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '스타벅스 숭실대입구역점',
     name: '모닝 샌드위치 세트',
     discount: 15,
@@ -65,6 +80,11 @@ export const mockPickupProducts: Product[] = [
     id: '1',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '스타벅스 숭실대입구역점',
     name: '시크릿 런치 밀박스',
     discount: 20,
@@ -84,6 +104,11 @@ export const mockPickupProducts: Product[] = [
     id: '2',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '케이크팜',
     name: '스페셜 디저트박스',
     discount: 20,
@@ -103,6 +128,11 @@ export const mockPickupProducts: Product[] = [
     id: '3',
     image:
       'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1548940740-204726a19be3?q=80&w=1880&auto=format&fit=crop',
+    ],
     store: '빵굽는집',
     name: '크로와상 & 아메리카노',
     discount: 10,
