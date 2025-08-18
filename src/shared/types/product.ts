@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   discount: number;
   price: number;
+  description?: string;
   originalPrice?: number;
   remainingBadge?: string;
   hours: string;

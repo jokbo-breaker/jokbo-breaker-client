@@ -27,11 +27,12 @@ export default function ProductDetailPage() {
     price,
     originalPrice,
     pickupPrice,
-    address = '서울시 동작구 사당로 4 1-2층',
-    hours = '00:00 ~ 18:00',
-    teamDeliveryAfter = '오후 5시 15분 이후',
-    phone = '010-1111-3333',
-    remainingBadge = '1개 남음',
+    address,
+    hours,
+    teamDeliveryAfter,
+    phone,
+    remainingBadge,
+    description,
   } = product as typeof product & { images?: string[] };
 
   const [idx, setIdx] = useState(0);
@@ -50,8 +51,9 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="max-h-dvh flex-col">
+    <div className="h-dvh flex-col">
       <TopBar title={name} showBack onBack={() => navigate(-1)} sticky />
+
       <main className="scrollbar-hide flex-1 overflow-y-auto">
         <div
           className="relative overflow-hidden"
@@ -84,7 +86,7 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        <div className="space-y-16 px-5 pt-7 pb-28">
+        <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
           <section className="space-y-2">
             <div className="flex-col gap-[0.2rem]">
               <div className="text-body3 text-black">{store}</div>
@@ -114,41 +116,42 @@ export default function ProductDetailPage() {
               )}
             </div>
           </section>
-
           <section className="space-y-4">
-            <InfoRow
-              icon="location"
-              text={address}
-              trailing={<button className="text-red-500">지도에서 보기</button>}
-            />
-            <InfoRow icon="clock" text={hours} />
-            <InfoRow icon="cart" text={teamDeliveryAfter} />
-            <InfoRow icon="phone" text={phone} />
+            {address && (
+              <InfoRow
+                icon="location"
+                text={address}
+                trailing={
+                  <button className="text-red-500">지도에서 보기</button>
+                }
+              />
+            )}
+            {hours && <InfoRow icon="clock" text={hours} />}
+            {teamDeliveryAfter && (
+              <InfoRow icon="cart" text={teamDeliveryAfter} />
+            )}
+            {phone && <InfoRow icon="phone" text={phone} />}
           </section>
-
-          <section>
-            <div className="rounded-[12px] bg-gray-50 px-4 py-4 text-center text-[14px] text-gray-700">
-              18시 15분 이후 팀배달이 가능한 상품이에요
-            </div>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-[16px] font-semibold">상품 설명</h2>
-            <p className="text-[14px] leading-6 text-gray-800">
-              레스토랑 루미에르의 스페셜 디너 밀키트로 특별한 미식을 만나보세요.
-              신선한 재료로 정성껏 준비한 트러플 크림 파스타, 깊은 풍미의
-              허브그릴 스테이크, 그리고 계절 재료를 활용한 시트러스 해산물
-              샐러드를 최대 50% 할인된 가격에 제공합니다...
-            </p>
-            <p className="text-[12px] leading-5 text-red-600">
+          {teamDeliveryAfter && (
+            <section>
+              <div className="rounded-[12px] bg-gray-50 px-4 py-4 text-center text-[14px] text-gray-700">
+                {teamDeliveryAfter} 팀배달이 가능한 상품이에요
+              </div>
+            </section>
+          )}
+          <section className="flex-col gap-[1.2rem]">
+            <h2 className="text-body1 text-black">상품 설명</h2>
+            <p className="text-body4 text-black">{description}</p>
+            <p className="text-caption1 text-primary pb-[2rem] break-words">
               *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
               재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>
           </section>
         </div>
       </main>
+
       <BottomCTA
-        label={`주문하기 · ${remainingBadge}`}
+        label={`주문하기 · ${remainingBadge ?? '재고 확인'}`}
         onClick={() => alert('주문하기')}
       />
     </div>
