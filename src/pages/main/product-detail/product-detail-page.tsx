@@ -120,7 +120,10 @@ export default function ProductDetailPage() {
                 icon="location"
                 text={address}
                 trailing={
-                  <button className="text-primary flex-row-center gap-[0.4rem]">
+                  <button
+                    onClick={() => navigate('/map-view')}
+                    className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
+                  >
                     <Icon name="map" size={2.4} />
                     <span className="text-caption2">지도에서 보기</span>
                   </button>
