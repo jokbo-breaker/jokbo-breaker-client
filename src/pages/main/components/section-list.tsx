@@ -33,19 +33,12 @@ export default function Section({
         onMoreClick={() => navigate(`/main/${sectionKey}?mode=${mode}`)}
       />
       <div
-        className={cn(
-          'scrollbar-hide flex gap-[1.2rem] overflow-x-auto',
-          listClassName,
-        )}
+        className={cn('scrollbar-hide flex gap-[1.2rem] overflow-x-auto', listClassName)}
         role="list"
         aria-label={`${title} 목록`}
       >
         {items.map((child, i) => (
-          <div
-            key={i}
-            role="listitem"
-            className={cn('shrink-0', itemWidthClass)}
-          >
+          <div key={i} role="listitem" className={cn('shrink-0', itemWidthClass)}>
             {child}
           </div>
         ))}

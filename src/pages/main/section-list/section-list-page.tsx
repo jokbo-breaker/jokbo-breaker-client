@@ -1,10 +1,6 @@
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import {
-  SECTION_META,
-  SECTION_KEYS,
-  type SectionKey,
-} from '@/shared/constants/sections';
-import ProductCard from '@/pages/main/components/product-card';
+import { SECTION_META, SECTION_KEYS, type SectionKey } from '@/shared/constants/sections';
+import ProductCard from '@/pages/main/components/product/product-card';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import TopBar from '@/shared/layouts/top-bar';
 

@@ -29,11 +29,7 @@ export default function Button({
   } as const;
 
   return (
-    <button
-      className={cn(base, variants[variant], className)}
-      disabled={isDisabled}
-      {...props}
-    >
+    <button className={cn(base, variants[variant], className)} disabled={isDisabled} {...props}>
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
       <span className="text-body3">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
