@@ -46,8 +46,8 @@ export default function SearchPage() {
       {!submitted ? (
         <main className="flex-1 bg-white" />
       ) : (
-        <main className="flex-1 bg-white px-[2rem] pb-[2.4rem]">
-          <div className="mt-[0.8rem] mb-[1.6rem] flex items-center gap-[0.8rem]">
+        <main className="flex-1 flex-col gap-[1.2rem] bg-white px-[2rem] pb-[2.4rem]">
+          <div className="flex-items-center gap-[0.8rem] pt-[0.8rem]">
             <Tag
               selected={sort === 'recommend'}
               onClick={() => setSort('recommend')}
@@ -63,7 +63,7 @@ export default function SearchPage() {
             />
           </div>
 
-          <section className="space-y-[2.4rem]">
+          <section className="flex-col gap-[2rem]">
             {results.map((p) => (
               <ProductCard key={p.id} product={p} variant="wide" />
             ))}
