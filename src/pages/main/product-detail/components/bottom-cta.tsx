@@ -1,10 +1,10 @@
 function BottomCTA({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <div className="mx-auto w-full bg-white px-5 py-3">
+    <div className="mx-auto w-full bg-white px-[2rem] py-[1rem]">
       <button
         type="button"
         onClick={onClick}
-        className="h-[54px] w-full rounded-[16px] bg-gray-900 text-[16px] font-semibold text-white"
+        className="text-body3 w-full rounded-[10px] bg-gray-900 py-[1.6rem] text-white"
       >
         {label}
       </button>

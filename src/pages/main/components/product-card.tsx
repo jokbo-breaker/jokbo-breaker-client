@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Product } from '@/shared/types';
 import Icon from '@/shared/components/icon';
 import Badge from '@/pages/main/components/count-badge';
@@ -23,7 +24,7 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
     hours,
     distanceKm,
   } = product;
-
+  const navigate = useNavigate();
   const Price = () => (
     <div className="flex items-center gap-[0.4rem]">
       {discount > 0 && (
@@ -53,15 +54,16 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
     return (
       <article
         className={cn(
-          'relative w-full flex-col gap-[1rem] overflow-hidden',
+          'relative w-full cursor-pointer flex-col gap-[1rem] overflow-hidden',
           className,
         )}
+        onClick={() => navigate(`/product/${product.id}`)}
       >
         <div className="relative">
           <img
             src={image}
             alt={name}
-            className="h-[16rem] w-full rounded-[4px] object-cover"
+            className="aspect-[21/10] w-full rounded-[4px] object-cover"
           />
           {remainingBadge && <Badge>{remainingBadge}</Badge>}
         </div>
@@ -79,7 +81,13 @@ function ProductCard({ product, variant = 'compact', className }: Props) {
 
   // compact
   return (
-    <article className={cn('relative w-full overflow-hidden', className)}>
+    <article
+      className={cn(
+        'relative w-full cursor-pointer overflow-hidden',
+        className,
+      )}
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
       <div className="relative">
         <img
           src={image}

@@ -4,6 +4,10 @@
     @apply flex flex-row;
   }
 
+  .flex-items-center {
+    @apply flex flex-row items-center;
+  }
+
   .flex-row-center {
     @apply flex flex-row items-center justify-center;
   }

@@ -5,6 +5,7 @@ import BottomCTA from '@/pages/main/product-detail/components/bottom-cta';
 import InfoRow from '@/pages/main/product-detail/components/info-row';
 import Indicator from '@/pages/main/product-detail/components/indicator';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
+import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
 
 export default function ProductDetailPage() {
@@ -52,7 +53,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="h-dvh flex-col">
-      <TopBar title={name} showBack onBack={() => navigate(-1)} sticky />
+      <TopBar showBack onBack={() => navigate(-1)} sticky />
 
       <main className="scrollbar-hide flex-1 overflow-y-auto">
         <div
@@ -90,28 +91,27 @@ export default function ProductDetailPage() {
           <section className="space-y-2">
             <div className="flex-col gap-[0.2rem]">
               <div className="text-body3 text-black">{store}</div>
-              <h1 className="text-body3 text-black">{name}</h1>
+              <h1 className="text-body2 text-black">{name}</h1>
             </div>
             <div className="flex-col gap-[0.8rem]">
-              <div className="flex items-center gap-[0.4rem]">
+              <div className="flex-items-center gap-[0.4rem]">
                 {discount > 0 && (
-                  <span className="text-primary text-[16px] font-bold">
-                    {discount}%
-                  </span>
+                  <span className="text-primary text-body1">{discount}%</span>
                 )}
                 <span className="text-[20px] font-bold">
                   {formatKRW(price)}
                 </span>
                 {originalPrice && (
-                  <span className="text-[16px] text-gray-300 line-through">
+                  <span className="text-body2 text-gray-300 line-through">
                     {formatKRW(originalPrice)}
                   </span>
                 )}
               </div>
 
               {pickupPrice && (
-                <div className="text-[16px] font-semibold text-blue-600">
-                  픽업 시 {formatKRW(pickupPrice)}
+                <div className="text-blue flex-items-center gap-[0.4rem]">
+                  <span className="text-body2">픽업 시</span>
+                  <span className="text-head3">{formatKRW(pickupPrice)}</span>
                 </div>
               )}
             </div>
@@ -122,7 +122,10 @@ export default function ProductDetailPage() {
                 icon="location"
                 text={address}
                 trailing={
-                  <button className="text-red-500">지도에서 보기</button>
+                  <button className="text-primary flex-row-center gap-[0.4rem]">
+                    <Icon name="map" size={2.4} />
+                    <span className="text-caption2">지도에서 보기</span>
+                  </button>
                 }
               />
             )}
@@ -134,7 +137,7 @@ export default function ProductDetailPage() {
           </section>
           {teamDeliveryAfter && (
             <section>
-              <div className="rounded-[12px] bg-gray-50 px-4 py-4 text-center text-[14px] text-gray-700">
+              <div className="text-body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
                 {teamDeliveryAfter} 팀배달이 가능한 상품이에요
               </div>
             </section>

@@ -6,6 +6,7 @@ export const ICONS = [
   "clock",
   "home",
   "location",
+  "map",
   "phone",
   "search",
   "x-icon"
