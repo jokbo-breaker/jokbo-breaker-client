@@ -37,7 +37,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="h-full w-full bg-white pb-[2.8rem]">
+    <div className="h-full w-full bg-white pb-[9rem]">
       <Header
         mode={mode}
         onModeChange={setMode}

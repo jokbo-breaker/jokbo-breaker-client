@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
+import { cn } from '@/shared/libs/cn';
 import Stepper from '@/pages/recommend/components/stepper';
 import Button from '@/shared/components/button/button';
 import { useAiMealboxForm } from '@/shared/hooks/use-ai-mealbox-form';
@@ -52,7 +53,12 @@ export default function AiMealboxPage() {
   const isResult = !!results;
 
   return (
-    <div className="flex-col-between h-[100dvh] overflow-hidden bg-white pb-[6.5rem]">
+    <div
+      className={cn(
+        'flex-col-between h-[100dvh] bg-white pb-[6.5rem]',
+        !isResult && 'overflow-hidden',
+      )}
+    >
       <div className="mx-auto w-full">
         <TopBar
           title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'}
@@ -76,7 +82,7 @@ export default function AiMealboxPage() {
           </div>
         ) : (
           <section className="mx-auto w-full px-[2.0rem] py-[0.8rem]">
-            <div className="flex-col gap-[2rem]">
+            <div className="flex-col gap-[2rem] pb-[10rem]">
               {results!.map((p) => (
                 <ProductCard key={p.id} product={p} variant="wide" />
               ))}
