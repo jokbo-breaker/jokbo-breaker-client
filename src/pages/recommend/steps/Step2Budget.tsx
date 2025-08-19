@@ -11,46 +11,48 @@ export default function Step2Budget({ value, onChange }: Props) {
   const onInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const onlyDigits = e.target.value.replace(/[^\d]/g, '');
-      if (onlyDigits === '') return onChange('');
-      const n = Math.min(BUDGET.max, Math.max(BUDGET.min, Number(onlyDigits)));
-      onChange(n);
+      onChange(onlyDigits === '' ? '' : Number(onlyDigits)); // ⬅️ clamp 제거
     },
     [onChange],
   );
 
+  const onBlur = useCallback(() => {
+    if (value === '') return;
+    const n = Math.min(BUDGET.max, Math.max(BUDGET.min, value));
+    if (n !== value) onChange(n);
+  }, [value, onChange]);
+
   return (
-    <>
-      <h2 className="px-[2.0rem] pt-[2.4rem] text-[2.2rem] leading-[1.4] font-bold">
-        원하시는 가격대를 입력해주세요
-      </h2>
+    <div className="flex-col gap-[4rem] px-[2rem]">
+      <h2 className="text-head3">원하시는 가격대를 입력해주세요</h2>
 
-      <div className="px-[2.0rem] pt-[2.4rem]">
-        <div className="flex items-end gap-[1.2rem]">
-          <span className="text-[1.8rem] font-semibold text-gray-800">
-            최대
-          </span>
+      <div className="flex-col-center gap-[1.1rem] px-[2.0rem]">
+        <div className="flex h-[2.8rem] items-center gap-[1.5rem]">
+          <span className="text-body1 text-gray-600">최대</span>
+          <div className="flex-row gap-[1.4rem]">
+            <div className="relative max-w-[16rem] flex-1">
+              <input
+                aria-label="최대 가격"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                className="peer text-body1 h-[2.8rem] w-full border-0 border-b-[0.2rem] border-black bg-transparent pb-[0.6rem] tracking-[-0.03em] outline-none focus:border-gray-900"
+                value={value === '' ? '' : formatKRW(value)}
+                onChange={onInput}
+                onBlur={onBlur}
+              />
+            </div>
 
-          <div className="relative flex-1">
-            <input
-              aria-label="최대 가격"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              className="peer w-full border-0 border-b-[0.2rem] border-gray-400 bg-transparent pb-[0.6rem] text-[2.0rem] font-semibold tracking-[-0.02em] outline-none focus:border-gray-900"
-              value={value === '' ? '' : formatKRW(value)}
-              onChange={onInput}
-            />
+            <span className="text-head3 text-black">원</span>
           </div>
-
-          <span className="text-[1.8rem] font-semibold text-gray-800">원</span>
         </div>
 
         <button
           type="button"
-          className="mx-auto mt-[1.6rem] block text-[1.5rem] text-gray-500 underline underline-offset-[0.2rem]"
+          className="text-caption2 mx-auto cursor-pointer text-gray-600 underline underline-offset-[0.2rem]"
         >
           가격은 상관 없어요
         </button>
       </div>
-    </>
+    </div>
   );
 }

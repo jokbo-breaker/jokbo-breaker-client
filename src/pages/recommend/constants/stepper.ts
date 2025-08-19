@@ -1,7 +1,7 @@
 export type StepState = 'done' | 'current' | 'upcoming';
 
 export const STEPPER_SIZE = {
-  dot: '3.6rem',
+  dot: '2rem',
   line: '0.2rem',
   gap: '2.4rem',
 } as const;
@@ -9,11 +9,11 @@ export const STEPPER_SIZE = {
 export const STEPPER_COLOR = {
   dot: {
     current: 'bg-gray-900 text-white',
-    upcoming: 'bg-gray-200 text-gray-900',
+    upcoming: 'bg-gray-200 text-white',
     done: 'bg-gray-900 text-white',
   },
   line: {
-    active: 'bg-gray-200',
+    active: 'bg-black',
     inactive: 'bg-gray-800/30',
   },
   label: {

@@ -11,24 +11,22 @@ type Props = {
 
 export default function Step1Categories({ selected, onToggle }: Props) {
   return (
-    <>
-      <h2 className="px-[2.0rem] pt-[2.4rem] text-[2.2rem] leading-[1.4] font-bold">
+    <div className="flex-col gap-[1.2rem] px-[2rem]">
+      <h2 className="text-head3 text-black">
         닉네임님, 오늘은 어떤 음식이 땡겨요?
       </h2>
 
-      <div className="px-[2.0rem] pt-[2.0rem] pb-[12rem]">
-        <div className="flex flex-wrap gap-x-[1.2rem] gap-y-[1.2rem]">
-          {FOOD_OPTIONS.map((opt) => (
-            <Tag
-              key={opt}
-              selected={selected.includes(opt)}
-              onClick={() => onToggle(opt)}
-            >
-              {opt}
-            </Tag>
-          ))}
-        </div>
+      <div className="flex flex-wrap gap-x-[1rem] gap-y-[1.2rem]">
+        {FOOD_OPTIONS.map((opt) => (
+          <Tag
+            key={opt}
+            selected={selected.includes(opt)}
+            onClick={() => onToggle(opt)}
+          >
+            {opt}
+          </Tag>
+        ))}
       </div>
-    </>
+    </div>
   );
 }

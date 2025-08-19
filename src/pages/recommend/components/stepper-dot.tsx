@@ -6,7 +6,7 @@ import {
 } from '@/pages/recommend/constants/stepper';
 
 type Props = {
-  index: number; // 0-based
+  index: number;
   state: StepState;
   stepLabel?: string; // '단계'
   doneLabel?: string; // '완료'
@@ -23,7 +23,7 @@ export default function StepDot({
   const number = index + 1;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="text-caption1 flex-col-center">
       <div
         className={cn(
           'grid place-items-center rounded-full',
@@ -33,12 +33,16 @@ export default function StepDot({
         aria-current={isCurrent ? 'step' : undefined}
         aria-label={`${number} ${isDone ? doneLabel : stepLabel}`}
       >
-        {isDone ? <CheckIcon /> : <span className="text-body3">{number}</span>}
+        {isDone ? (
+          <CheckIcon />
+        ) : (
+          <span className="text-caption1">{number}</span>
+        )}
       </div>
 
       <span
         className={cn(
-          'text-caption2 mt-[0.8rem]',
+          'text-caption1 mt-[0.8rem]',
           isDone ? STEPPER_COLOR.label.dim : STEPPER_COLOR.label.default,
         )}
       >
