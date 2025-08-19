@@ -26,7 +26,7 @@ const DEFAULT_ITEMS: NavItem[] = [
   {
     label: '주문내역',
     path: '/orders',
-    icon: { filled: 'orders-filled', lined: 'orders' },
+    icon: { filled: 'order-filled', lined: 'order' },
   },
   {
     label: '마이페이지',
@@ -69,7 +69,10 @@ export default function BottomNavigation({
     };
 
   return (
-    <div className="shadow-2 sticky bottom-0 z-[var(--z-bottom-nav)] flex w-full justify-between border-t border-gray-200 bg-white px-[1.6rem] py-[0.8rem]">
+    <div
+      className="shadow-2 sticky bottom-0 z-[var(--z-bottom-nav)] grid w-full border-t border-gray-200 bg-white px-[1.6rem] py-[0.8rem]"
+      style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
+    >
       {items.map(({ label, path, icon }) => {
         const active = isActive(path);
         const disabled = !!isDisabled?.(path);
@@ -81,7 +84,7 @@ export default function BottomNavigation({
             aria-disabled={disabled || undefined}
             disabled={disabled}
             className={cn(
-              'flex-col-center h-[4.8rem] w-[4.8rem] gap-[0.4rem]',
+              'w-full flex-col items-center justify-center gap-[0.2rem] py-[0.8rem]',
               disabled ? 'cursor-not-allowed' : 'cursor-pointer',
             )}
             onClick={handleClick(path)}
@@ -90,10 +93,11 @@ export default function BottomNavigation({
               name={active ? icon.filled : icon.lined}
               width={2.4}
               height={2.4}
+              className={cn('text-gray-400', active && 'text-primary')}
             />
             <p
               className={cn(
-                'text-caption4 text-gray-600',
+                'text-caption4 text-gray-400',
                 active && 'text-primary',
               )}
             >

@@ -52,7 +52,7 @@ export default function AiMealboxPage() {
   const isResult = !!results;
 
   return (
-    <div className="flex-col-between min-h-[100dvh] bg-white">
+    <div className="flex-col-between h-[100dvh] overflow-hidden bg-white pb-[6.5rem]">
       <div className="mx-auto w-full">
         <TopBar
           title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'}
