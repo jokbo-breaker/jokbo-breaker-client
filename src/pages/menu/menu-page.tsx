@@ -7,6 +7,10 @@ import { renderToString } from 'react-dom/server';
 import SearchTextField from '@/shared/components/text-field/search-text-field';
 import BottomSheet from '@/shared/components/bottom-sheet';
 
+// ⬇️ 추가
+import ProductCard from '@/pages/main/components/product/product-card';
+import { mockPickupProducts } from '@/shared/mocks';
+
 export default function MenuPage() {
   const { loc, loading, error, request } = useGeolocation({
     immediate: true,
@@ -93,26 +97,6 @@ export default function MenuPage() {
     [],
   );
 
-  // 바텀시트 임시 데이터(이미 구현 완료되면 제거)
-  const STORES = [
-    {
-      id: 'a1',
-      image: 'https://picsum.photos/seed/a1/960/540',
-      title: '스타벅스 숭실대입구역점',
-      distance: '1.8km',
-      date: '00:00 ~ 17:00',
-      place: '숭실대입구',
-    },
-    {
-      id: 'a2',
-      image: 'https://picsum.photos/seed/a2/960/540',
-      title: '시크릿 런치 밀박스',
-      distance: '1.2km',
-      date: '10:00 ~ 19:00',
-      place: '상도',
-    },
-  ];
-
   return (
     <div className="h-dvh w-full">
       <SearchTextField
@@ -147,42 +131,13 @@ export default function MenuPage() {
       </MapDiv>
 
       <BottomSheet height={80} minHeight={82}>
-        <div className="px-[1.6rem] py-[1.2rem] select-none">
-          <h2 className="text-body1 mb-[1.2rem] font-bold text-black">
-            주변 전시 리스트
-          </h2>
-          {STORES.map((exhibition) => (
-            <div key={exhibition.id} className="mb-[1.6rem]">
-              <img
-                src={exhibition.image}
-                alt={exhibition.title}
-                className="h-[14rem] w-full rounded-[0.6rem] object-cover"
-              />
-              <div className="mt-[0.8rem] flex items-center justify-between">
-                <h3 className="text-body3 font-semibold text-black">
-                  {exhibition.title}
-                </h3>
-                <span className="text-caption2 font-semibold text-red-500">
-                  {exhibition.distance}
-                </span>
-              </div>
-              <div className="text-caption3 mt-[0.6rem] flex items-center justify-between text-gray-500">
-                <p>{exhibition.date}</p>
-                <div className="flex items-center gap-[0.4rem] text-gray-600">
-                  <Icon
-                    name="location"
-                    size={1.6}
-                    className="text-primary"
-                    ariaHidden
-                  />
-                  <span className="cursor-pointer hover:underline">
-                    {exhibition.place}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <section className="mx-auto w-full">
+          <div className="scrollbar-hide flex-col gap-[2.0rem]">
+            {mockPickupProducts.slice(0, 10).map((p) => (
+              <ProductCard key={p.id} product={p} variant="wide" />
+            ))}
+          </div>
+        </section>
       </BottomSheet>
 
       {error && (

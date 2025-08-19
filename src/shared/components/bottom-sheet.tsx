@@ -76,15 +76,15 @@ export default function BottomSheet({
     <div
       ref={sheetRef}
       onPointerDown={handlePointerDown}
-      className="fixed bottom-4 left-1/2 z-10 w-full max-w-[43rem] touch-none rounded-t-[3rem] bg-white shadow-lg transition-transform duration-300"
+      className="bottom-sheet w-full touch-none rounded-t-[3rem] bg-white px-[2rem] pt-[1.4rem] pb-[6.5rem] shadow-lg transition-transform duration-300"
       style={{
         transform: `translate(-50%, ${translateY}px)`,
         height: `${sheetHeight}px`,
         touchAction: 'none',
       }}
     >
-      <div className="mx-auto my-3 h-[0.3rem] w-[5rem] rounded-[10px] bg-gray-200" />
-      <div className="max-h-[calc(100%-40px)] overflow-y-auto px-4">
+      <div className="mx-auto mb-[1.4rem] h-[0.3rem] w-[5rem] rounded-[10px] bg-gray-200" />
+      <div className="scrollbar-hide max-h-[calc(100%-40px)] overflow-y-auto px-4">
         {children}
       </div>
     </div>
