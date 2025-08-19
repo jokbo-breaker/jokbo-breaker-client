@@ -6,8 +6,9 @@ import Icon from '@/shared/components/icon';
 import { renderToString } from 'react-dom/server';
 import SearchTextField from '@/shared/components/text-field/search-text-field';
 import BottomSheet from '@/shared/components/bottom-sheet';
+import Tag from '@/shared/components/chips/tag';
+import FilterChip from '@/shared/components/chips/filter-chip';
 
-// ⬇️ 추가
 import ProductCard from '@/pages/main/components/product/product-card';
 import { mockPickupProducts } from '@/shared/mocks';
 
@@ -98,22 +99,34 @@ export default function MenuPage() {
   );
 
   return (
-    <div className="h-dvh w-full">
-      <SearchTextField
-        value={query}
-        onChange={setQuery}
-        onSubmit={(v) => setSubmitted(v)}
-        onBack={() => navigate(-1)}
-        onClear={() => setQuery('')}
-        autoFocus={false}
-        showBackButton
-        showSearchIcon
-        className="sticky top-0 z-[var(--z-header)] bg-white"
-        placeholder="검색어를 입력해주세요."
-      />
+    <div className="relative h-[100dvh] w-full overflow-hidden">
+      <div className="absolute top-0 right-0 left-0 z-[var(--z-header)]">
+        <SearchTextField
+          value={query}
+          onChange={setQuery}
+          onSubmit={(v) => setSubmitted(v)}
+          onBack={() => navigate(-1)}
+          onClear={() => setQuery('')}
+          autoFocus={false}
+          showBackButton
+          showSearchIcon
+          className="bg-white"
+          placeholder="검색어를 입력해주세요."
+        />
+
+        <div className="mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem]">
+          <Tag selected>인기순</Tag>
+          <FilterChip />
+        </div>
+      </div>
 
       <MapDiv
-        style={{ width: '100%', height: '100dvh' }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+        }}
         fallback={
           <div className="grid h-full place-items-center">지도 로딩 중…</div>
         }
