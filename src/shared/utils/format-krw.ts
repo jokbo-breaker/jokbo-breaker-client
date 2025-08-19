@@ -1,1 +1,3 @@
-export const formatKRW = (n: number) => n.toLocaleString('ko-KR') + '원';
+export const formatKRW = (n: number | '' = ''): string => {
+  return typeof n === 'number' ? n.toLocaleString('ko-KR') : '';
+};
