@@ -16,7 +16,7 @@ export default function Step1Categories({ selected, onToggle }: Props) {
         닉네임님, 오늘은 어떤 음식이 땡겨요?
       </h2>
 
-      <div className="flex flex-wrap gap-x-[1rem] gap-y-[1.2rem]">
+      <div className="flex flex-wrap gap-x-[1rem] gap-y-[1.2rem] pr-[0.5rem]">
         {FOOD_OPTIONS.map((opt) => (
           <Tag
             key={opt}

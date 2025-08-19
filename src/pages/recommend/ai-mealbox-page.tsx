@@ -3,10 +3,10 @@ import TopBar from '@/shared/layouts/top-bar';
 import Stepper from '@/pages/recommend/components/stepper';
 import Button from '@/shared/components/button/button';
 import { useAiMealboxForm } from '@/shared/hooks/use-ai-mealbox-form';
-import Step1Categories from '@/pages/recommend/steps/Step1Categories';
-import Step2Budget from '@/pages/recommend/steps/Step2Budget';
-import Step3Method from '@/pages/recommend/steps/Step3Method';
-import RecommendLoading from '@/pages/recommend/steps/RecommendLoading';
+import Step1Categories from '@/pages/recommend/steps/step1-categories';
+import Step2Budget from '@/pages/recommend/steps/step2-budget';
+import Step3Method from '@/pages/recommend/steps/step3-method';
+import RecommendLoading from '@/pages/recommend/steps/recommend-loading';
 
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
