@@ -20,7 +20,8 @@ export default function Button({
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
-  const base = 'flex-row-center select-none rounded-[10px] py-[1.6rem]';
+  const base =
+    'cursor-pointer flex-row-center select-none rounded-[10px] py-[1.6rem]';
 
   const variants = {
     black: 'bg-gray-900 text-white',
@@ -29,7 +30,11 @@ export default function Button({
   } as const;
 
   return (
-    <button className={cn(base, variants[variant], className)} disabled={isDisabled} {...props}>
+    <button
+      className={cn(base, variants[variant], className)}
+      disabled={isDisabled}
+      {...props}
+    >
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
       <span className="text-body3">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}

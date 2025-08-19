@@ -16,7 +16,7 @@ export default function Tag({
   ...props
 }: TagProps) {
   const base =
-    'flex-items-center rounded-full px-[1.2rem] py-[0.5rem] text-body3';
+    'flex-items-center rounded-full px-[1.2rem] py-[0.5rem] cursor-pointer text-body3';
   const off = 'bg-white text-black ring-1 ring-gray-300';
   const on = 'bg-secondary text-primary ring-1 ring-primary';
 
