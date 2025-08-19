@@ -1,14 +1,16 @@
 import { Outlet } from 'react-router-dom';
 import ScrollToTop from '@/shared/layouts/scroll-to-top';
+import BottomNavigation from '@/shared/layouts/bottom-navbar';
 
 export default function RootLayout() {
   return (
-    <div className="scrollbar-hide flex max-h-dvh flex-col overflow-y-auto">
-      <main className="mx-auto min-h-dvh w-full flex-1">
+    <div className="max-h-dvh flex-col overflow-hidden">
+      <main className="scrollbar-hide mx-auto min-h-dvh w-full flex-1 overflow-y-auto">
         <ScrollToTop />
         <Outlet />
       </main>
-      {/* 푸터 */}
+
+      <BottomNavigation />
     </div>
   );
 }
