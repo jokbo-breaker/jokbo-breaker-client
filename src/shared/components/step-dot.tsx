@@ -33,12 +33,12 @@ export default function StepDot({
         aria-current={isCurrent ? 'step' : undefined}
         aria-label={`${number} ${isDone ? doneLabel : stepLabel}`}
       >
-        {isDone ? <CheckIcon /> : <span className="text-body3">{number}</span>}
+        {isDone ? <CheckIcon /> : <span className="body3">{number}</span>}
       </div>
 
       <span
         className={cn(
-          'text-caption2 mt-[0.8rem]',
+          'caption2 mt-[0.8rem]',
           isDone ? STEPPER_COLOR.label.dim : STEPPER_COLOR.label.default,
         )}
       >

@@ -26,7 +26,7 @@ export default function Step3Method({ value, onChange }: Props) {
   };
   return (
     <div className="flex-col gap-[1.2rem] px-[2.0rem]">
-      <h2 className="text-head3 text-black">
+      <h2 className="head3 text-black">
         원하시는 상품 수령 방법을 선택해주세요
       </h2>
 
@@ -35,7 +35,7 @@ export default function Step3Method({ value, onChange }: Props) {
         value={value}
         onChange={handleChange}
         options={options}
-        className="text-body3"
+        className="body3"
       />
 
       {showError && (

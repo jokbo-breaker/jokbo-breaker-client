@@ -54,7 +54,7 @@
    ========================================= */
 
   /* ===== Headings ===== */
-  .text-head1 {
+  .head1 {
     /* 22px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -62,7 +62,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-head2 {
+  .head2 {
     /* 20px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -70,7 +70,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-head3 {
+  .head3 {
     /* 18px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -80,7 +80,7 @@
   }
 
   /* ===== Body ===== */
-  .text-body1 {
+  .body1 {
     /* 16px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -88,7 +88,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-body2 {
+  .body2 {
     /* 16px, Medium */
     font-family: var(--font-sans);
     font-weight: 500;
@@ -96,7 +96,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-body3 {
+  .body3 {
     /* 14px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -104,7 +104,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-body4 {
+  .body4 {
     /* 14px, Medium */
     font-family: var(--font-sans);
     font-weight: 500;
@@ -114,7 +114,7 @@
   }
 
   /* ===== Captions ===== */
-  .text-caption1 {
+  .caption1 {
     /* 12px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -122,7 +122,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-caption2 {
+  .caption2 {
     /* 12px, Medium */
     font-family: var(--font-sans);
     font-weight: 500;
@@ -130,7 +130,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-caption3 {
+  .caption3 {
     /* 10px, Semibold */
     font-family: var(--font-sans);
     font-weight: 600;
@@ -138,7 +138,7 @@
     line-height: var(--lh);
     letter-spacing: var(--ls);
   }
-  .text-caption4 {
+  .caption4 {
     /* 10px, Medium */
     font-family: var(--font-sans);
     font-weight: 500;

@@ -90,17 +90,17 @@ export default function ProductDetailPage() {
         <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
           <section className="space-y-2">
             <div className="flex-col gap-[0.2rem]">
-              <div className="text-body3 text-black">{store}</div>
-              <h1 className="text-body2 text-black">{name}</h1>
+              <div className="body3 text-black">{store}</div>
+              <h1 className="body2 text-black">{name}</h1>
             </div>
             <div className="flex-col gap-[0.8rem]">
               <div className="flex-items-center gap-[0.4rem]">
                 {discount > 0 && (
-                  <span className="text-primary text-body1">{discount}%</span>
+                  <span className="text-primary body1">{discount}%</span>
                 )}
-                <span className="text-head3 font-bold">{formatKRW(price)}</span>
+                <span className="head3 font-bold">{formatKRW(price)}</span>
                 {originalPrice && (
-                  <span className="text-body2 text-gray-300 line-through">
+                  <span className="body2 text-gray-300 line-through">
                     {formatKRW(originalPrice)}
                   </span>
                 )}
@@ -108,8 +108,8 @@ export default function ProductDetailPage() {
 
               {pickupPrice && (
                 <div className="text-blue flex-items-center gap-[0.4rem]">
-                  <span className="text-body2">픽업 시</span>
-                  <span className="text-head3">{formatKRW(pickupPrice)}</span>
+                  <span className="body2">픽업 시</span>
+                  <span className="head3">{formatKRW(pickupPrice)}</span>
                 </div>
               )}
             </div>
@@ -125,7 +125,7 @@ export default function ProductDetailPage() {
                     className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
                   >
                     <Icon name="map" size={2.4} />
-                    <span className="text-caption2">지도에서 보기</span>
+                    <span className="caption2">지도에서 보기</span>
                   </button>
                 }
               />
@@ -138,15 +138,15 @@ export default function ProductDetailPage() {
           </section>
           {teamDeliveryAfter && (
             <section>
-              <div className="text-body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
+              <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
                 {teamDeliveryAfter} 팀배달이 가능한 상품이에요
               </div>
             </section>
           )}
           <section className="flex-col gap-[1.2rem]">
-            <h2 className="text-body1 text-black">상품 설명</h2>
-            <p className="text-body4 text-black">{description}</p>
-            <p className="text-caption1 text-primary pb-[2rem] break-words">
+            <h2 className="body1 text-black">상품 설명</h2>
+            <p className="body4 text-black">{description}</p>
+            <p className="caption1 text-primary pb-[2rem] break-words">
               *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
               재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>

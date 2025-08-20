@@ -36,7 +36,7 @@ export default function Button({
       {...props}
     >
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
-      <span className="text-body3">{children}</span>
+      <span className="body3">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
     </button>
   );
