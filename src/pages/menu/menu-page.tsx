@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/shared/types';
 
@@ -31,13 +31,21 @@ export default function MenuPage() {
 
   const products = useMemo(() => mockPickupProducts, []);
 
+  const handleSearchSubmit = useCallback(
+    (v: string) => {
+      setQuery(v);
+      setSubmitted(v);
+      navigate(`/search?q=${encodeURIComponent(v)}`);
+    },
+    [navigate],
+  );
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden">
       <MenuHeader
         mode={mode}
         query={query}
         setQuery={setQuery}
-        onSubmit={setSubmitted}
+        onSubmit={handleSearchSubmit}
         onBack={() => (mode === 'list' ? setMode('map') : navigate(-1))}
         onClear={() => setQuery('')}
       />
