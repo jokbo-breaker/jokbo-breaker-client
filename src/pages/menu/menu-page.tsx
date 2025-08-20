@@ -8,7 +8,6 @@ import SearchTextField from '@/shared/components/text-field/search-text-field';
 import BottomSheet from '@/shared/components/bottom-sheet';
 import Tag from '@/shared/components/chips/tag';
 import FilterChip from '@/shared/components/chips/filter-chip';
-
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
 import { mockPickupProducts, testRestaurants } from '@/shared/mocks';
@@ -23,6 +22,8 @@ export default function MenuPage() {
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
   const [preview, setPreview] = useState<Product | null>(null);
+
+  const [mode, setMode] = useState<'map' | 'list'>('map');
 
   const soongsilBase = { lat: 37.4963, lng: 126.9575 };
   const center = loc ?? soongsilBase;
@@ -46,7 +47,6 @@ export default function MenuPage() {
   );
 
   const getMapInstance = (ref: any) => ref?.instance ?? ref?.map ?? ref ?? null;
-
   const [mapInstance, setMapInstance] = useState<any>(null);
 
   const handleMapRef = (node: any) => {
@@ -86,100 +86,111 @@ export default function MenuPage() {
     [],
   );
 
+  const Header = (
+    <div className="absolute top-0 right-0 left-0 z-[var(--z-header)]">
+      <SearchTextField
+        value={query}
+        onChange={setQuery}
+        onSubmit={(v) => setSubmitted(v)}
+        onBack={() => (mode === 'list' ? setMode('map') : navigate(-1))}
+        onClear={() => setQuery('')}
+        autoFocus={false}
+        showBackButton
+        showSearchIcon
+        className="bg-white"
+        placeholder="검색어를 입력해주세요."
+      />
+      <div className="mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem]">
+        <Tag selected>인기순</Tag>
+        <FilterChip />
+      </div>
+    </div>
+  );
+
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden">
-      <div className="absolute top-0 right-0 left-0 z-[var(--z-header)]">
-        <SearchTextField
-          value={query}
-          onChange={setQuery}
-          onSubmit={(v) => setSubmitted(v)}
-          onBack={() => navigate(-1)}
-          onClear={() => setQuery('')}
-          autoFocus={false}
-          showBackButton
-          showSearchIcon
-          className="bg-white"
-          placeholder="검색어를 입력해주세요."
-        />
-        <div className="mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem]">
-          <Tag selected>인기순</Tag>
-          <FilterChip />
-        </div>
-      </div>
+      <div>{Header}</div>
 
-      <MapDiv
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-        }}
-        fallback={
-          <div className="grid h-full place-items-center">지도 로딩 중…</div>
-        }
-      >
-        <NaverMap
-          defaultCenter={soongsilBase}
-          center={center}
-          defaultZoom={16}
-          ref={handleMapRef}
-        >
-          <Marker position={center} icon={myMarkerIcon as any} />
-          {testRestaurants.map((p, idx) => (
-            <Marker
-              key={p.id}
-              position={{ lat: p.lat, lng: p.lng }}
-              icon={restaurantMarkerIcon as any}
-              onClick={() =>
-                setPreview(mockPickupProducts[idx % mockPickupProducts.length])
-              }
-            />
-          ))}
-        </NaverMap>
-      </MapDiv>
-
-      {preview && (
-        <div
-          className="absolute right-0 bottom-[3rem] z-[var(--z-bottom-nav)]"
-          onClick={() => setPreview(null)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="pointer-events-auto mx-[2rem] mt-auto mb-[8rem] rounded-[1.2rem] bg-white px-[1rem] shadow-[0_0.4rem_2.0rem_rgba(0,0,0,0.16)] ring-1 ring-gray-200"
+      {mode === 'map' ? (
+        <>
+          <MapDiv
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+            }}
+            fallback={
+              <div className="grid h-full place-items-center">
+                지도 로딩 중…
+              </div>
+            }
           >
-            <div className="p-[1.2rem]">
-              <ProductCard product={preview} variant="wide" />
+            <NaverMap
+              defaultCenter={soongsilBase}
+              center={center}
+              defaultZoom={16}
+              ref={handleMapRef}
+            >
+              <Marker position={center} icon={myMarkerIcon as any} />
+              {testRestaurants.map((p, idx) => (
+                <Marker
+                  key={p.id}
+                  position={{ lat: p.lat, lng: p.lng }}
+                  icon={restaurantMarkerIcon as any}
+                  onClick={() =>
+                    setPreview(
+                      mockPickupProducts[idx % mockPickupProducts.length],
+                    )
+                  }
+                />
+              ))}
+            </NaverMap>
+          </MapDiv>
+
+          {preview && (
+            <div
+              className="absolute right-0 bottom-[3rem] z-[var(--z-bottom-nav)]"
+              onClick={() => setPreview(null)}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto mx-[2rem] mt-auto mb-[8rem] rounded-[1.2rem] bg-white px-[1rem] shadow-[0_0.4rem_2.0rem_rgba(0,0,0,0.16)] ring-1 ring-gray-200"
+              >
+                <div className="p-[1.2rem]">
+                  <ProductCard product={preview} variant="wide" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!preview && (
+            <BottomSheet
+              maxHeightRem={80}
+              minHeightRem={10}
+              onOverExpand={() => setMode('list')}
+            >
+              <section className="mx-auto w-full">
+                <div className="flex-col gap-[2.0rem]">
+                  {mockPickupProducts.slice(0, 10).map((p) => (
+                    <ProductCard key={p.id} product={p} variant="wide" />
+                  ))}
+                </div>
+              </section>
+            </BottomSheet>
+          )}
+        </>
+      ) : (
+        <div className="scrollbar-hide relative h-[100dvh] w-full overflow-y-auto pb-[6rem]">
+          <div className="pt-[11rem]" />
+          <div className="px-[2rem] pb-[4rem]">
+            <div className="flex-col gap-[2.0rem]">
+              {mockPickupProducts.slice(0, 20).map((p) => (
+                <ProductCard key={p.id} product={p} variant="wide" />
+              ))}
             </div>
           </div>
         </div>
-      )}
-
-      <div style={{ display: preview ? 'none' : undefined }}>
-        <BottomSheet height={80} minHeight={89}>
-          <section className="mx-auto w-full">
-            <div className="flex-col gap-[2.0rem]">
-              {mockPickupProducts.slice(0, 10).map((p) => (
-                <ProductCard key={p.id} product={p} variant="wide" />
-              ))}
-            </div>
-          </section>
-        </BottomSheet>
-      </div>
-
-      {!preview && (
-        <BottomSheet
-          key={preview ? 'hidden' : 'visible'}
-          height={80}
-          minHeight={89}
-        >
-          <section className="mx-auto w-full">
-            <div className="flex-col gap-[2.0rem]">
-              {mockPickupProducts.slice(0, 10).map((p) => (
-                <ProductCard key={p.id} product={p} variant="wide" />
-              ))}
-            </div>
-          </section>
-        </BottomSheet>
       )}
 
       {error && (
