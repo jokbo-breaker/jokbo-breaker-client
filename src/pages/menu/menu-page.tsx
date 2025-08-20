@@ -1,6 +1,7 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/shared/types';
+import { SortKey } from '@/pages/menu/constants/sort';
 
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import BottomSheet from '@/shared/components/bottom-sheet';
@@ -9,6 +10,7 @@ import ProductCard from '@/pages/main/components/product/product-card';
 import MenuHeader from '@/pages/menu/components/menu-header';
 import MapSection from '@/pages/menu/components/map-section';
 import PreviewCard from '@/pages/menu/components/preview-card';
+import SortModal from '@/pages/menu/components/sort-modal';
 import ListSection from '@/pages/menu/components/list-section';
 
 import { mockPickupProducts, testRestaurants } from '@/shared/mocks';
@@ -25,6 +27,8 @@ export default function MenuPage() {
   const [submitted, setSubmitted] = useState('');
   const [preview, setPreview] = useState<Product | null>(null);
   const [mode, setMode] = useState<'map' | 'list'>('map');
+  const [sort, setSort] = useState<SortKey>('popular');
+  const [sortOpen, setSortOpen] = useState(false);
 
   const navigate = useNavigate();
   const center = loc ?? SOONGSIL_BASE;
@@ -48,6 +52,8 @@ export default function MenuPage() {
         onSubmit={handleSearchSubmit}
         onBack={() => (mode === 'list' ? setMode('map') : navigate(-1))}
         onClear={() => setQuery('')}
+        sort={sort}
+        onOpenSort={() => setSortOpen(true)}
       />
 
       {mode === 'map' ? (
@@ -82,9 +88,18 @@ export default function MenuPage() {
           )}
         </>
       ) : (
-        <ListSection products={products.slice(0, 20)} />
+        <ListSection
+          products={products.slice(0, 20)}
+          sort={sort}
+          onOpenSort={() => setSortOpen(true)}
+        />
       )}
-
+      <SortModal
+        open={sortOpen}
+        value={sort}
+        onChange={setSort}
+        onClose={() => setSortOpen(false)}
+      />
       {error && (
         <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
           위치 권한/가져오기 실패: {error.message}

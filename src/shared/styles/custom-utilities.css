@@ -69,4 +69,8 @@
   .bottom-sheet {
     @apply fixed bottom-4 left-1/2 z-[1] max-w-[43rem];
   }
+
+  .bottom-modal {
+    @apply fixed bottom-0 left-1/2 z-[1] w-full max-w-[43rem] -translate-x-1/2;
+  }
 }
