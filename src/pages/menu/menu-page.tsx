@@ -85,7 +85,16 @@ export default function MenuPage() {
     }),
     [],
   );
-
+  function SortFilterRow({ className = '' }: { className?: string }) {
+    return (
+      <div
+        className={`mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem] ${className}`}
+      >
+        <Tag selected>인기순</Tag>
+        <FilterChip />
+      </div>
+    );
+  }
   const Header = (
     <div className="absolute top-0 right-0 left-0 z-[var(--z-header)]">
       <SearchTextField
@@ -100,10 +109,7 @@ export default function MenuPage() {
         className="bg-white"
         placeholder="검색어를 입력해주세요."
       />
-      <div className="mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem]">
-        <Tag selected>인기순</Tag>
-        <FilterChip />
-      </div>
+      {mode === 'map' && <SortFilterRow />}
     </div>
   );
 
@@ -181,8 +187,8 @@ export default function MenuPage() {
           )}
         </>
       ) : (
-        <div className="scrollbar-hide relative h-[100dvh] w-full overflow-y-auto pb-[6rem]">
-          <div className="pt-[11rem]" />
+        <div className="scrollbar-hide relative h-[100dvh] w-full flex-col gap-[1.2rem] overflow-y-auto pt-[5rem] pb-[6rem]">
+          <SortFilterRow />
           <div className="px-[2rem] pb-[4rem]">
             <div className="flex-col gap-[2.0rem]">
               {mockPickupProducts.slice(0, 20).map((p) => (
