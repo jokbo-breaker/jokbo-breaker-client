@@ -11,7 +11,7 @@ const ProductDetailPage = lazy(
 );
 const MapViewPage = lazy(() => import('@/pages/main/map-view/map-view'));
 const SearchPage = lazy(() => import('@/pages/search/search-page'));
-const MenuPage = lazy(() => import('@/pages/menu/menu'));
+const MenuPage = lazy(() => import('@/pages/menu/menu-page'));
 const MyPage = lazy(() => import('@/pages/my-page/my-page'));
 const OrderPage = lazy(() => import('@/pages/order/order-page'));
 const MapPage = lazy(() => import('@/pages/map/map-page'));

@@ -4,7 +4,7 @@ import type { Product } from '@/shared/types';
 type MetaProps = Pick<Product, 'hours' | 'distanceKm'>;
 
 const Meta = ({ hours, distanceKm }: MetaProps) => (
-  <div className="text-caption4 flex items-center gap-[0.4rem] text-gray-600">
+  <div className="caption4 flex items-center gap-[0.4rem] text-gray-600">
     <span className="flex items-center gap-[0.2rem]">
       <Icon name="cart" size={1.2} />
       {hours}

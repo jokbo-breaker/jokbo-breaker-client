@@ -12,9 +12,7 @@ type Props = {
 export default function Step1Categories({ selected, onToggle }: Props) {
   return (
     <div className="flex-col gap-[1.2rem] px-[2rem]">
-      <h2 className="text-head3 text-black">
-        닉네임님, 오늘은 어떤 음식이 땡겨요?
-      </h2>
+      <h2 className="head3 text-black">닉네임님, 오늘은 어떤 음식이 땡겨요?</h2>
 
       <div className="flex flex-wrap gap-x-[1rem] gap-y-[1.2rem] pr-[0.5rem]">
         {FOOD_OPTIONS.map((opt) => (

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchTextField from '@/shared/components/text-field/search-text-field';
 import ProductCard from '@/pages/main/components/product/product-card';
 import Tag from '@/shared/components/chips/tag';
@@ -10,14 +10,41 @@ type Sort = 'recommend';
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
-  const [submitted, setSubmitted] = useState('');
+  const [params, setParams] = useSearchParams();
+
+  const initialQ = params.get('q') ?? '';
+  const [query, setQuery] = useState(initialQ);
+  const [submitted, setSubmitted] = useState(initialQ);
+
   const [sort, setSort] = useState<Sort>('recommend');
   const [hasFilter, setHasFilter] = useState(false);
 
   const all = useMemo(
     () => [...mockDeliveryProducts, ...mockPickupProducts],
     [],
+  );
+
+  useEffect(() => {
+    const q = params.get('q') ?? '';
+    setQuery(q);
+    setSubmitted(q);
+  }, [params]);
+
+  const handleSubmit = useCallback(
+    (v: string) => {
+      setQuery(v);
+      setSubmitted(v);
+      setParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (v) next.set('q', v);
+          else next.delete('q');
+          return next;
+        },
+        { replace: false },
+      );
+    },
+    [setParams],
   );
 
   const results = useMemo(() => {
@@ -33,9 +60,9 @@ export default function SearchPage() {
       <SearchTextField
         value={query}
         onChange={setQuery}
-        onSubmit={(v) => setSubmitted(v)}
+        onSubmit={handleSubmit}
         onBack={() => navigate(-1)}
-        onClear={() => setQuery('')}
+        onClear={() => handleSubmit('')}
         autoFocus
         showBackButton
         showSearchIcon
@@ -57,18 +84,16 @@ export default function SearchPage() {
 
             <FilterChip
               selected={hasFilter}
-              onClick={() => {
-                setHasFilter((v) => !v);
-              }}
+              onClick={() => setHasFilter((v) => !v)}
             />
           </div>
 
-          <section className="flex-col gap-[2rem]">
+          <section className="flex-col gap-[2rem] pb-[7rem]">
             {results.map((p) => (
               <ProductCard key={p.id} product={p} variant="wide" />
             ))}
             {!results.length && (
-              <p className="py-12 text-center text-gray-500">
+              <p className="py-[12rem] text-center text-gray-500">
                 검색 결과가 없습니다.
               </p>
             )}

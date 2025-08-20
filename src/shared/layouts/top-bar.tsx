@@ -53,7 +53,7 @@ export default function TopBar({
           ))}
       </div>
 
-      <h1 className="text-body3 truncate text-center text-gray-900">{title}</h1>
+      <h1 className="body3 truncate text-center text-gray-900">{title}</h1>
 
       <div className="justify-self-end">
         {rightSlot ??

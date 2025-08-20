@@ -4,7 +4,7 @@ function BottomCTA({ label, onClick }: { label: string; onClick: () => void }) {
       <button
         type="button"
         onClick={onClick}
-        className="text-body3 w-full rounded-[10px] bg-gray-900 py-[1.6rem] text-white"
+        className="body3 w-full rounded-[10px] bg-gray-900 py-[1.6rem] text-white"
       >
         {label}
       </button>

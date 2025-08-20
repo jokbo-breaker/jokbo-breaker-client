@@ -41,7 +41,7 @@ export default function Header({
     >
       <div className="flex items-center justify-between">
         <nav
-          className="text-body1 flex gap-[1.6rem]"
+          className="body1 flex gap-[1.6rem]"
           role="tablist"
           aria-label="배송 방식 선택"
         >

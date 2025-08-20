@@ -96,10 +96,7 @@ export default function BottomNavigation({
               className={cn('text-gray-400', active && 'text-primary')}
             />
             <p
-              className={cn(
-                'text-caption4 text-gray-400',
-                active && 'text-primary',
-              )}
+              className={cn('caption4 text-gray-400', active && 'text-primary')}
             >
               {label}
             </p>

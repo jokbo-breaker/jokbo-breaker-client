@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/shared/libs/cn';
 
-// T = 리터럴 유니온('none' | 'delivery' | 'pickup' 등)
 type Option<T extends string> = {
   value: T;
   label: React.ReactNode;
@@ -15,6 +14,7 @@ type Props<T extends string> = {
   onChange: (v: T) => void;
   options: Option<T>[];
   className?: string;
+  rounded?: string;
 };
 
 export default function RadioTileGroup<T extends string>({
@@ -22,13 +22,14 @@ export default function RadioTileGroup<T extends string>({
   value,
   onChange,
   options,
-  className,
+  className = 'flex-col',
+  rounded = 'rounded-[0.4rem]',
 }: Props<T>) {
   const uid = React.useId();
   const groupName = name ?? `rtg-${uid}`;
 
   return (
-    <div className={cn('w-full flex-col gap-[1.2rem]', className)}>
+    <div className={cn('w-full gap-[1.2rem]', className)}>
       {options.map((opt) => {
         const id = `${groupName}-${opt.value}`;
         const checked = value === opt.value;
@@ -51,18 +52,16 @@ export default function RadioTileGroup<T extends string>({
 
             <div
               className={cn(
-                'flex items-center justify-between rounded-[0.4rem] border p-[1.6rem] transition-colors',
+                'flex items-center justify-between border p-[1.6rem] transition-colors',
                 'border-gray-200 bg-white',
                 'peer-focus-visible:ring-2 peer-focus-visible:ring-orange-200',
                 'peer-checked:bg-secondary peer-checked:border-primary peer-checked:[&>span:first-child]:text-primary',
                 opt.disabled && 'pointer-events-none opacity-60',
+                rounded,
               )}
             >
               <span
-                className={cn(
-                  'text-body3 text-black',
-                  'peer-checked:text-primary',
-                )}
+                className={cn('body3 text-black', 'peer-checked:text-primary')}
               >
                 {opt.label}
               </span>
@@ -70,7 +69,7 @@ export default function RadioTileGroup<T extends string>({
               {opt.right && (
                 <span
                   className={cn(
-                    'text-body4 text-black',
+                    'body4 text-black',
                     'peer-checked:text-primary',
                   )}
                 >

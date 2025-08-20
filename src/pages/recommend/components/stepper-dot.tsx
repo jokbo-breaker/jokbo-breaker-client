@@ -23,7 +23,7 @@ export default function StepDot({
   const number = index + 1;
 
   return (
-    <div className="text-caption1 flex-col-center">
+    <div className="caption1 flex-col-center">
       <div
         className={cn(
           'grid place-items-center rounded-full',
@@ -33,16 +33,12 @@ export default function StepDot({
         aria-current={isCurrent ? 'step' : undefined}
         aria-label={`${number} ${isDone ? doneLabel : stepLabel}`}
       >
-        {isDone ? (
-          <CheckIcon />
-        ) : (
-          <span className="text-caption1">{number}</span>
-        )}
+        {isDone ? <CheckIcon /> : <span className="caption1">{number}</span>}
       </div>
 
       <span
         className={cn(
-          'text-caption1 mt-[0.8rem]',
+          'caption1 mt-[0.8rem]',
           isDone ? STEPPER_COLOR.label.dim : STEPPER_COLOR.label.default,
         )}
       >

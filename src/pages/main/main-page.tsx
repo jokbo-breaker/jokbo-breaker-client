@@ -56,9 +56,7 @@ export default function MainPage() {
         <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
           <div className="flex items-center gap-[0.4rem]">
             <Icon name="location" size={2.4} className="text-primary" />
-            <span className="text-body3 text-black">
-              {DEFAULT_LOCATION_LABEL}
-            </span>
+            <span className="body3 text-black">{DEFAULT_LOCATION_LABEL}</span>
           </div>
           <HeroBanner />
         </div>

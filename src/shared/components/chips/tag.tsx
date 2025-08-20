@@ -16,7 +16,7 @@ export default function Tag({
   ...props
 }: TagProps) {
   const base =
-    'flex-items-center rounded-full px-[1.2rem] py-[0.5rem] cursor-pointer text-body3';
+    'flex-items-center rounded-full px-[1.2rem] py-[0.5rem] cursor-pointer body3';
   const off = 'bg-white text-black ring-1 ring-gray-300';
   const on = 'bg-secondary text-primary ring-1 ring-primary';
 
@@ -28,7 +28,7 @@ export default function Tag({
       {...props}
     >
       {leftIcon && <span className="shrink-0">{leftIcon}</span>}
-      <span className="text-body3">{children}</span>
+      <span className="body3">{children}</span>
       {rightIcon && <span className="shrink-0">{rightIcon}</span>}
     </button>
   );
