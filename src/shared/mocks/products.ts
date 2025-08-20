@@ -149,3 +149,43 @@ export const mockPickupProducts: Product[] = [
       '레스토랑 루미에르의 스페셜 디너 밀키트로 특별한 미식을 만나보세요. 신선한 재료로 정성껏 준비한 트러플 크림 파스타, 깊은 풍미의 허브그릴 스테이크, 그리고 계절 재료를 활용한 시트러스 해산물 샐러드를 최대 50% 할인된 가격에 제공합니다. 모든 요리는 엄격한 품질 관리 아래 조리되었으며, 오늘 저녁 9시부터 마감까지 한정 수량으로 선보입니다. 트러플 크림 파스타 (부드러운 식감과 진한 감칠맛), 허브그릴 스테이크 (신선한 재료의 조화로운 맛), 시트러스 해산물 샐러드 (계절 한정 특선) 중 재고 상황에 따라 포함됩니다. 조기 마감될 수 있으니 서둘러 방문해 주세요.',
   },
 ];
+
+const soongsilBase = { lat: 37.4963, lng: 126.9575 };
+export const testRestaurants = [
+  {
+    id: 1,
+    name: '정문돈까스',
+    lat: soongsilBase.lat + 0.0018,
+    lng: soongsilBase.lng - 0.0012,
+  },
+  {
+    id: 2,
+    name: '상도라멘',
+    lat: soongsilBase.lat + 0.001,
+    lng: soongsilBase.lng + 0.001,
+  },
+  {
+    id: 3,
+    name: '숭실카레집',
+    lat: soongsilBase.lat - 0.0012,
+    lng: soongsilBase.lng + 0.0008,
+  },
+  {
+    id: 4,
+    name: '상도불백',
+    lat: soongsilBase.lat - 0.0018,
+    lng: soongsilBase.lng - 0.001,
+  },
+  {
+    id: 5,
+    name: '홍콩반점 숭실',
+    lat: soongsilBase.lat + 0.0006,
+    lng: soongsilBase.lng - 0.0015,
+  },
+  {
+    id: 6,
+    name: '밥버거 숭실',
+    lat: soongsilBase.lat - 0.0005,
+    lng: soongsilBase.lng + 0.0016,
+  },
+];

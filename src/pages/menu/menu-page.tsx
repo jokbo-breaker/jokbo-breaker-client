@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps';
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,8 @@ import Tag from '@/shared/components/chips/tag';
 import FilterChip from '@/shared/components/chips/filter-chip';
 
 import ProductCard from '@/pages/main/components/product/product-card';
-import { mockPickupProducts } from '@/shared/mocks';
+import type { Product } from '@/shared/types';
+import { mockPickupProducts, testRestaurants } from '@/shared/mocks';
 
 export default function MenuPage() {
   const { loc, loading, error, request } = useGeolocation({
@@ -21,50 +22,12 @@ export default function MenuPage() {
 
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
+  const [preview, setPreview] = useState<Product | null>(null);
 
   const soongsilBase = { lat: 37.4963, lng: 126.9575 };
   const center = loc ?? soongsilBase;
-
+  const mapRef = useRef<any>(null);
   const navigate = useNavigate();
-
-  const testRestaurants = [
-    {
-      id: 1,
-      name: '정문돈까스',
-      lat: soongsilBase.lat + 0.0018,
-      lng: soongsilBase.lng - 0.0012,
-    },
-    {
-      id: 2,
-      name: '상도라멘',
-      lat: soongsilBase.lat + 0.001,
-      lng: soongsilBase.lng + 0.001,
-    },
-    {
-      id: 3,
-      name: '숭실카레집',
-      lat: soongsilBase.lat - 0.0012,
-      lng: soongsilBase.lng + 0.0008,
-    },
-    {
-      id: 4,
-      name: '상도불백',
-      lat: soongsilBase.lat - 0.0018,
-      lng: soongsilBase.lng - 0.001,
-    },
-    {
-      id: 5,
-      name: '홍콩반점 숭실',
-      lat: soongsilBase.lat + 0.0006,
-      lng: soongsilBase.lng - 0.0015,
-    },
-    {
-      id: 6,
-      name: '밥버거 숭실',
-      lat: soongsilBase.lat - 0.0005,
-      lng: soongsilBase.lng + 0.0016,
-    },
-  ];
 
   const myMarkerIcon = useMemo(
     () => ({
@@ -81,6 +44,31 @@ export default function MenuPage() {
     }),
     [],
   );
+
+  const getMapInstance = (ref: any) => ref?.instance ?? ref?.map ?? ref ?? null;
+
+  const [mapInstance, setMapInstance] = useState<any>(null);
+
+  const handleMapRef = (node: any) => {
+    mapRef.current = node;
+    const inst = getMapInstance(node);
+    if (inst) setMapInstance(inst);
+  };
+
+  useEffect(() => {
+    const n = (window as any).naver;
+    if (!n?.maps || !mapInstance) return;
+
+    const off: any[] = [];
+    off.push(
+      n.maps.Event.addListener(mapInstance, 'click', () => setPreview(null)),
+    );
+    off.push(
+      n.maps.Event.addListener(mapInstance, 'tap', () => setPreview(null)),
+    );
+
+    return () => off.forEach((h) => n.maps.Event.removeListener(h));
+  }, [mapInstance]);
 
   const restaurantMarkerIcon = useMemo(
     () => ({
@@ -113,7 +101,6 @@ export default function MenuPage() {
           className="bg-white"
           placeholder="검색어를 입력해주세요."
         />
-
         <div className="mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem]">
           <Tag selected>인기순</Tag>
           <FilterChip />
@@ -131,27 +118,69 @@ export default function MenuPage() {
           <div className="grid h-full place-items-center">지도 로딩 중…</div>
         }
       >
-        <NaverMap defaultCenter={soongsilBase} center={center} defaultZoom={16}>
+        <NaverMap
+          defaultCenter={soongsilBase}
+          center={center}
+          defaultZoom={16}
+          ref={handleMapRef}
+        >
           <Marker position={center} icon={myMarkerIcon as any} />
-          {testRestaurants.map((p) => (
+          {testRestaurants.map((p, idx) => (
             <Marker
               key={p.id}
               position={{ lat: p.lat, lng: p.lng }}
               icon={restaurantMarkerIcon as any}
+              onClick={() =>
+                setPreview(mockPickupProducts[idx % mockPickupProducts.length])
+              }
             />
           ))}
         </NaverMap>
       </MapDiv>
 
-      <BottomSheet height={80} minHeight={82}>
-        <section className="mx-auto w-full">
-          <div className="scrollbar-hide flex-col gap-[2.0rem]">
-            {mockPickupProducts.slice(0, 10).map((p) => (
-              <ProductCard key={p.id} product={p} variant="wide" />
-            ))}
+      {preview && (
+        <div
+          className="absolute right-0 bottom-[3rem] z-[var(--z-bottom-nav)]"
+          onClick={() => setPreview(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="pointer-events-auto mx-[2rem] mt-auto mb-[8rem] rounded-[1.2rem] bg-white px-[1rem] shadow-[0_0.4rem_2.0rem_rgba(0,0,0,0.16)] ring-1 ring-gray-200"
+          >
+            <div className="p-[1.2rem]">
+              <ProductCard product={preview} variant="wide" />
+            </div>
           </div>
-        </section>
-      </BottomSheet>
+        </div>
+      )}
+
+      <div style={{ display: preview ? 'none' : undefined }}>
+        <BottomSheet height={80} minHeight={89}>
+          <section className="mx-auto w-full">
+            <div className="flex-col gap-[2.0rem]">
+              {mockPickupProducts.slice(0, 10).map((p) => (
+                <ProductCard key={p.id} product={p} variant="wide" />
+              ))}
+            </div>
+          </section>
+        </BottomSheet>
+      </div>
+
+      {!preview && (
+        <BottomSheet
+          key={preview ? 'hidden' : 'visible'}
+          height={80}
+          minHeight={89}
+        >
+          <section className="mx-auto w-full">
+            <div className="flex-col gap-[2.0rem]">
+              {mockPickupProducts.slice(0, 10).map((p) => (
+                <ProductCard key={p.id} product={p} variant="wide" />
+              ))}
+            </div>
+          </section>
+        </BottomSheet>
+      )}
 
       {error && (
         <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
