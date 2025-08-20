@@ -1,12 +1,18 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/shared/types';
+import { hasActiveFilters } from '@/pages/menu/utils/has-active-filters';
+import {
+  FILTER_DEFAULT,
+  type FilterState,
+} from '@/pages/menu/constants/filter';
 import { SortKey } from '@/pages/menu/constants/sort';
 
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import BottomSheet from '@/shared/components/bottom-sheet';
 
 import ProductCard from '@/pages/main/components/product/product-card';
+import FilterModal from './components/filter-modal';
 import MenuHeader from '@/pages/menu/components/menu-header';
 import MapSection from '@/pages/menu/components/map-section';
 import PreviewCard from '@/pages/menu/components/preview-card';
@@ -29,7 +35,10 @@ export default function MenuPage() {
   const [mode, setMode] = useState<'map' | 'list'>('map');
   const [sort, setSort] = useState<SortKey>('popular');
   const [sortOpen, setSortOpen] = useState(false);
+  const [filter, setFilter] = useState<FilterState>(FILTER_DEFAULT);
+  const [filterOpen, setFilterOpen] = useState(false);
 
+  const filterSelected = hasActiveFilters(filter);
   const navigate = useNavigate();
   const center = loc ?? SOONGSIL_BASE;
 
@@ -54,8 +63,9 @@ export default function MenuPage() {
         onClear={() => setQuery('')}
         sort={sort}
         onOpenSort={() => setSortOpen(true)}
+        onOpenFilter={() => setFilterOpen(true)}
+        filterSelected={filterSelected}
       />
-
       {mode === 'map' ? (
         <>
           <MapSection
@@ -92,14 +102,25 @@ export default function MenuPage() {
           products={products.slice(0, 20)}
           sort={sort}
           onOpenSort={() => setSortOpen(true)}
+          onOpenFilter={() => setFilterOpen(true)}
+          filterSelected={filterSelected}
         />
       )}
+
       <SortModal
         open={sortOpen}
         value={sort}
         onChange={setSort}
         onClose={() => setSortOpen(false)}
       />
+
+      <FilterModal
+        open={filterOpen}
+        value={filter}
+        onApply={(next) => setFilter(next)}
+        onClose={() => setFilterOpen(false)}
+      />
+
       {error && (
         <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
           위치 권한/가져오기 실패: {error.message}

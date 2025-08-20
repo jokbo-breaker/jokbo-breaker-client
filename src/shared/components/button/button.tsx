@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '@/shared/libs/cn';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'black' | 'white' | 'gray';
+  variant?: 'black' | 'white' | 'gray' | 'outline';
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -27,6 +27,8 @@ export default function Button({
     black: 'bg-gray-900 text-white',
     white: 'bg-gray-100 text-gray-700',
     gray: 'bg-gray-900 text-white opacity-50',
+    outline:
+      'bg-white text-black outline outline-1 outline-offset-[-1px] outline-gray-200',
   } as const;
 
   return (

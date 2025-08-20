@@ -14,7 +14,7 @@ export default function FilterChip({
   ...props
 }: FilterChipProps) {
   const base =
-    'flex-items-center gap-[0.8rem] rounded-full px-[1rem] py-[0.35rem] body4';
+    'flex-items-center cursor-pointer gap-[0.8rem] rounded-full px-[1rem] py-[0.35rem] body4';
   const off = 'bg-white text-black ring-1 ring-gray-300';
   const on = 'bg-secondary text-primary ring-1 ring-primary';
 

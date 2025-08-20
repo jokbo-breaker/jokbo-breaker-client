@@ -6,10 +6,14 @@ export default function SortFilterRow({
   className = '',
   sort,
   onOpenSort,
+  onOpenFilter,
+  filterSelected,
 }: {
   className?: string;
   sort: SortKey;
   onOpenSort: () => void;
+  onOpenFilter: () => void;
+  filterSelected: boolean;
 }) {
   return (
     <div
@@ -18,7 +22,7 @@ export default function SortFilterRow({
       <Tag selected onClick={onOpenSort}>
         {SORT_LABEL[sort]}
       </Tag>
-      <FilterChip />
+      <FilterChip selected={filterSelected} onClick={onOpenFilter} />
     </div>
   );
 }
