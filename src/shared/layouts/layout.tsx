@@ -19,7 +19,7 @@ export default function Layout() {
       </main>
 
       {!isHiddenRoute && (
-        <div className="pointer-events-none fixed bottom-[2rem] left-1/2 z-[var(--z-floating)] w-full max-w-[43rem] -translate-x-1/2">
+        <div className="pointer-events-none fixed right-[0.5rem] bottom-[1rem] left-1/2 z-[var(--z-floating)] w-full max-w-[43rem] -translate-x-1/2">
           <div className="flex justify-end">
             <div className="pointer-events-auto">
               <FloatingButton onClick={() => setOpenMealbox(true)} />

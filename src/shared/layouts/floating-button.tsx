@@ -1,16 +1,20 @@
+import Icon from '@/shared/components/icon';
+
 interface FloatingButtonProps {
   onClick?: () => void;
 }
 
 function FloatingButton({ onClick }: FloatingButtonProps) {
   return (
-    <div className="flex justify-end px-4">
+    <div className="flex justify-end">
       <button
         type="button"
         onClick={onClick}
         aria-label="button"
-        className="bg-primary flex h-[60px] w-[60px] cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-white transition"
-      />
+        className="flex cursor-pointer items-center gap-2 rounded-full text-white transition"
+      >
+        <Icon name="floating" size={5} />
+      </button>
     </div>
   );
 }
