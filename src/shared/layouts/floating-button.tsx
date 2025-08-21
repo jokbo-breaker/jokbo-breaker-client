@@ -10,7 +10,7 @@ function FloatingButton({ onClick }: FloatingButtonProps) {
         onClick={onClick}
         aria-label="button"
         className="bg-primary flex h-[60px] w-[60px] cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-white transition"
-      ></button>
+      />
     </div>
   );
 }
