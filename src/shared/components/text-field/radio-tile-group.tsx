@@ -6,6 +6,7 @@ type Option<T extends string> = {
   label: React.ReactNode;
   right?: React.ReactNode;
   disabled?: boolean;
+  below?: React.ReactNode;
 };
 
 type Props<T extends string> = {
@@ -34,11 +35,7 @@ export default function RadioTileGroup<T extends string>({
         const id = `${groupName}-${opt.value}`;
         const checked = value === opt.value;
         return (
-          <label
-            key={opt.value}
-            htmlFor={id}
-            className="relative block cursor-pointer"
-          >
+          <label key={opt.value} htmlFor={id} className="block cursor-pointer">
             <input
               id={id}
               type="radio"
@@ -77,6 +74,8 @@ export default function RadioTileGroup<T extends string>({
                 </span>
               )}
             </div>
+
+            {opt.below ? <div className="mt-[0.5rem]">{opt.below}</div> : null}
           </label>
         );
       })}
