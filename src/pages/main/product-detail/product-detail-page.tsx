@@ -52,7 +52,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="h-dvh flex-col">
+    <div className="h-dvh flex-col pb-[8rem]">
       <TopBar showBack onBack={() => navigate(-1)} sticky />
 
       <main className="scrollbar-hide flex-1 overflow-y-auto">
@@ -98,10 +98,10 @@ export default function ProductDetailPage() {
                 {discount > 0 && (
                   <span className="text-primary body1">{discount}%</span>
                 )}
-                <span className="head3 font-bold">{formatKRW(price)}</span>
+                <span className="head3 font-bold">{formatKRW(price)}원</span>
                 {originalPrice && (
                   <span className="body2 text-gray-300 line-through">
-                    {formatKRW(originalPrice)}
+                    {formatKRW(originalPrice)}원
                   </span>
                 )}
               </div>
@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
               {pickupPrice && (
                 <div className="text-blue flex-items-center gap-[0.4rem]">
                   <span className="body2">픽업 시</span>
-                  <span className="head3">{formatKRW(pickupPrice)}</span>
+                  <span className="head3">{formatKRW(pickupPrice)}원</span>
                 </div>
               )}
             </div>
@@ -152,12 +152,11 @@ export default function ProductDetailPage() {
             </p>
           </section>
         </div>
+        <BottomCTA
+          label={`주문하기 · ${remainingBadge ?? '재고 확인'}`}
+          onClick={() => navigate(`/checkout/${id}`)}
+        />
       </main>
-
-      <BottomCTA
-        label={`주문하기 · ${remainingBadge ?? '재고 확인'}`}
-        onClick={() => alert('주문하기')}
-      />
     </div>
   );
 }

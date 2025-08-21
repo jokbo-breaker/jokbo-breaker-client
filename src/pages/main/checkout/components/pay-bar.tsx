@@ -1,0 +1,27 @@
+import Button from '@/shared/components/button/button';
+import { formatKRW } from '@/shared/utils/format-krw';
+
+type Props = {
+  total: number;
+  onPay: () => void;
+  disabled?: boolean;
+  canPay?: boolean;
+};
+
+export default function PayBar({ total, onPay, canPay }: Props) {
+  return (
+    <div className="sticky right-0 bottom-0 left-0 z-[120] flex gap-[1.7rem] bg-white px-[2rem] py-[2rem]">
+      <div className="body1 flex flex-1 items-center justify-between text-black">
+        총 {formatKRW(total)}원
+      </div>
+      <Button
+        variant={canPay ? 'black' : 'gray'}
+        className="flex-2 rounded-[1.2rem]"
+        onClick={onPay}
+        disabled={!canPay}
+      >
+        {formatKRW(total)}원 결제하기
+      </Button>
+    </div>
+  );
+}
