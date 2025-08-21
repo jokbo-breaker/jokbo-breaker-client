@@ -34,7 +34,7 @@ function PromoModal({ open, onClose }: PromoModalProps) {
             className="bg-white"
           />
 
-          <div className="scrollbar-hide flex-1 overflow-y-auto">
+          <div className="scrollbar-hide flex-1 overflow-x-hidden overflow-y-auto">
             <section className="items-centerd flex justify-between gap-[1.6rem] pt-[2.4rem]">
               <div className="flex-col gap-[2rem] pl-[2rem]">
                 <div className="flex-col gap-[0.4rem]">
