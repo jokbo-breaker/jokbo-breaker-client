@@ -37,7 +37,7 @@ export default function MenuPage() {
   const [sortOpen, setSortOpen] = useState(false);
   const [filter, setFilter] = useState<FilterState>(FILTER_DEFAULT);
   const [filterOpen, setFilterOpen] = useState(false);
-
+  const [includeSoldOut, setIncludeSoldOut] = useState(false);
   const filterSelected = hasActiveFilters(filter);
   const navigate = useNavigate();
   const center = loc ?? SOONGSIL_BASE;
@@ -65,6 +65,8 @@ export default function MenuPage() {
         onOpenSort={() => setSortOpen(true)}
         onOpenFilter={() => setFilterOpen(true)}
         filterSelected={filterSelected}
+        includeSoldOut={includeSoldOut}
+        onToggleSoldOut={() => setIncludeSoldOut((v) => !v)}
       />
       {mode === 'map' ? (
         <>
@@ -105,6 +107,8 @@ export default function MenuPage() {
           onOpenSort={() => setSortOpen(true)}
           onOpenFilter={() => setFilterOpen(true)}
           filterSelected={filterSelected}
+          includeSoldOut={includeSoldOut}
+          onToggleSoldOut={() => setIncludeSoldOut((v) => !v)}
         />
       )}
 
