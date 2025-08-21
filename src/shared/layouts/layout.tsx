@@ -19,7 +19,7 @@ export default function Layout() {
       </main>
 
       {!isHiddenRoute && (
-        <div className="pointer-events-none fixed bottom-[9rem] left-1/2 z-[15] w-full max-w-[430px] -translate-x-1/2">
+        <div className="pointer-events-none fixed bottom-[9rem] left-1/2 z-[var(--z-floating)] w-full max-w-[430px] -translate-x-1/2">
           <div className="flex justify-end">
             <div className="pointer-events-auto">
               <FloatingButton onClick={() => setOpenMealbox(true)} />
@@ -32,7 +32,10 @@ export default function Layout() {
 
       {openMealbox && (
         <>
-          <div className="fixed inset-0 z-[20]" onClick={() => setOpenMealbox(false)} />
+          <div
+            className="fixed inset-0 z-[var(--z-bottom-modal)]"
+            onClick={() => setOpenMealbox(false)}
+          />
           <AiMealboxPage onClose={() => setOpenMealbox(false)} />
         </>
       )}
