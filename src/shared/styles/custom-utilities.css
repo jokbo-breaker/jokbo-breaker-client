@@ -1,0 +1,76 @@
+@layer utilities {
+  /* flex row */
+  .flex-row {
+    @apply flex flex-row;
+  }
+
+  .flex-items-center {
+    @apply flex flex-row items-center;
+  }
+
+  .flex-row-center {
+    @apply flex flex-row items-center justify-center;
+  }
+
+  .flex-row-between {
+    @apply flex flex-row items-center justify-between;
+  }
+
+  .flex-row-end {
+    @apply flex flex-row items-center justify-end;
+  }
+
+  .flex-row-items-start {
+    @apply flex flex-row items-start;
+  }
+
+  .flex-row-items-end {
+    @apply flex flex-row items-end;
+  }
+
+  /* flex col */
+  .flex-col {
+    @apply flex flex-col;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .flex-col-between {
+    @apply flex flex-col items-center justify-between;
+  }
+
+  .flex-col-end {
+    @apply flex flex-col items-center justify-end;
+  }
+
+  .flex-col-items-start {
+    @apply flex flex-col items-start;
+  }
+
+  .flex-col-items-end {
+    @apply flex flex-col items-end;
+  }
+
+  .header-layout {
+    @apply sticky top-0 z-[var(--z-header)] h-[5.6rem] py-[1.55rem] pl-[2rem];
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bottom-sheet {
+    @apply fixed bottom-4 left-1/2 z-[1] max-w-[43rem];
+  }
+
+  .bottom-modal {
+    @apply fixed bottom-0 left-1/2 z-[1] w-full max-w-[43rem] -translate-x-1/2;
+  }
+}

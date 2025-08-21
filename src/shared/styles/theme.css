@@ -1,0 +1,158 @@
+@theme {
+  /* ===== Base ===== */
+  --color-white: #ffffff;
+  --color-black: #1a1a1b;
+  --color-red: #ff4141;
+  --color-blue: #3d69ff;
+
+  /* Orange */
+  --color-primary: #ff5735;
+  --color-secondary: #ffebe3;
+
+  /* ===== Gray ===== */
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f0f1f4;
+  --color-gray-200: #e2e6ea;
+  --color-gray-300: #b0b4b8;
+  --color-gray-400: #979b9f;
+  --color-gray-500: #7e8286;
+  --color-gray-600: #65696d;
+  --color-gray-700: #4c5054;
+  --color-gray-800: #33373b;
+  --color-gray-900: #1a1e22;
+
+  /* ===== Overlay ===== */
+  --color-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Z-Index */
+  --z-header: 5;
+  --z-overlay: 6;
+  --z-bottom-nav: 7;
+  --z-floating: 7.5;
+  --z-bottom-modal: 8;
+
+  /* Radius / Shadow */
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+@layer utilities {
+  /* Shadow */
+  .u-shadow-md {
+    box-shadow: var(--shadow-md);
+  }
+  .u-shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* =========================================
+   Typography — Font Guide (Pretendard)
+   1rem = 10px (html { font-size: 62.5% })
+   Line-height: 1.5 (150%)
+   Letter-spacing: -0.025em (-2.5%)
+   ========================================= */
+
+  /* ===== Headings ===== */
+  .head1 {
+    /* 22px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 2.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .head2 {
+    /* 20px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .head3 {
+    /* 18px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+
+  /* ===== Body ===== */
+  .body1 {
+    /* 16px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .body2 {
+    /* 16px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .body3 {
+    /* 14px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .body4 {
+    /* 14px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+
+  /* ===== Captions ===== */
+  .caption1 {
+    /* 12px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .caption2 {
+    /* 12px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .caption3 {
+    /* 10px, Semibold */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+  .caption4 {
+    /* 10px, Medium */
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: var(--lh);
+    letter-spacing: var(--ls);
+  }
+
+  /* Scrollbar helper */
+  .u-scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+}
