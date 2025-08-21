@@ -10,7 +10,7 @@ type Props = {
 
 export default function PayBar({ total, onPay, canPay }: Props) {
   return (
-    <div className="sticky right-0 bottom-0 left-0 z-[120] flex gap-[1.7rem] bg-white px-[2rem] py-[2rem]">
+    <div className="sticky right-0 bottom-0 left-0 z-[40] flex gap-[1.7rem] bg-white px-[2rem] py-[2rem]">
       <div className="body1 flex flex-1 items-center justify-between text-black">
         총 {formatKRW(total)}원
       </div>

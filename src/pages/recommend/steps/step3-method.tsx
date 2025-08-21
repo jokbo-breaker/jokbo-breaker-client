@@ -29,7 +29,7 @@ export default function Step3Method({ value, onChange }: Props) {
         value={value}
         onChange={handleChange}
         options={options}
-        className="body3"
+        className="body3 flex-col"
       />
 
       {showError && (

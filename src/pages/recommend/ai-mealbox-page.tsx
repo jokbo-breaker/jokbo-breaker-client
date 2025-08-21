@@ -8,13 +8,15 @@ import Step1Categories from '@/pages/recommend/steps/step1-categories';
 import Step2Budget from '@/pages/recommend/steps/step2-budget';
 import Step3Method from '@/pages/recommend/steps/step3-method';
 import RecommendLoading from '@/pages/recommend/steps/recommend-loading';
-
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
-
 import { mockDeliveryProducts } from '@/shared/mocks';
 
-export default function AiMealboxPage() {
+type Props = {
+  onClose?: () => void;
+};
+
+export default function AiMealboxPage({ onClose }: Props) {
   const {
     foods,
     toggleFood,
@@ -41,7 +43,6 @@ export default function AiMealboxPage() {
   const onSubmit = () => {
     if (!canSubmit) return;
     setShowLoading(true);
-
     setTimeout(() => {
       const demo = [...mockDeliveryProducts].slice(0, 10);
       setResults(demo);
@@ -55,12 +56,17 @@ export default function AiMealboxPage() {
   return (
     <div
       className={cn(
-        'flex-col-between h-[100dvh] bg-white pb-[6.5rem]',
+        'flex-col-between scrollbar-hide fixed z-[30] h-[100dvh] w-full max-w-[43rem] overflow-y-auto bg-white',
         !isResult && 'overflow-hidden',
       )}
     >
       <div className="mx-auto w-full">
-        <TopBar title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'} showClose sticky />
+        <TopBar
+          title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'}
+          showClose
+          sticky
+          onClose={onClose}
+        />
 
         {!isResult ? (
           <div className="flex-col gap-[1.2rem]">
@@ -74,9 +80,23 @@ export default function AiMealboxPage() {
           </div>
         ) : (
           <section className="mx-auto w-full px-[2.0rem] py-[0.8rem]">
-            <div className="flex-col gap-[2rem] pb-[10rem]">
+            <div className="flex-col gap-[2rem]">
               {results!.map((p) => (
-                <ProductCard key={p.id} product={p} variant="wide" />
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => onClose?.()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onClose?.();
+                    }
+                  }}
+                  aria-label={`${p.name ?? '상품'} 선택`}
+                  className="block w-full appearance-none rounded-lg border-0 bg-transparent p-0 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
+                >
+                  <ProductCard product={p} variant="wide" />
+                </button>
               ))}
             </div>
           </section>
@@ -107,7 +127,7 @@ export default function AiMealboxPage() {
         </div>
       )}
 
-      <RecommendLoading visible={showLoading} />
+      {showLoading && <RecommendLoading visible />}
     </div>
   );
 }

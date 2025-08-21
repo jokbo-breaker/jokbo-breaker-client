@@ -11,7 +11,6 @@ const MenuPage = lazy(() => import('@/pages/menu/menu-page'));
 const MyPage = lazy(() => import('@/pages/my-page/my-page'));
 const OrderPage = lazy(() => import('@/pages/order/order-page'));
 const MapPage = lazy(() => import('@/pages/map/map-page'));
-const AiMealboxPage = lazy(() => import('@/pages/recommend/ai-mealbox-page'));
 const CheckoutPage = lazy(() => import('@/pages/main/checkout/checkout-page'));
 
 export const router = createBrowserRouter([
@@ -25,7 +24,6 @@ export const router = createBrowserRouter([
       { path: '/map-view', element: <MapViewPage /> },
       { path: '/search', element: <SearchPage /> },
       { path: '/map', element: <MapPage /> },
-      { path: '/ai-recommend', element: <AiMealboxPage /> },
       { path: '/menu', element: <MenuPage /> },
       { path: '/mypage', element: <MyPage /> },
       { path: '/orders', element: <OrderPage /> },
