@@ -18,31 +18,54 @@ export default function QtyStepper({
   max = 99,
   className,
 }: Props) {
+  const canDec = value > min;
+  const canInc = value < max;
+
   return (
     <div
       className={cn(
-        'flex-items-center gap-[1.2rem] rounded-[1.2rem] bg-gray-50 px-[1.2rem] py-[0.8rem]',
+        'flex-items-center h-[4rem] w-[10rem] justify-between',
+        'gap-[1rem] rounded-[0.4rem] bg-gray-100 px-[1rem]',
         className,
       )}
     >
       <button
         type="button"
         aria-label="수량 감소"
-        className="cursor-pointer rounded-[0.8rem] bg-white p-[0.6rem] ring-1 ring-gray-200"
-        onClick={() => onChange(clamp(value - 1, min, max))}
+        onClick={() => canDec && onChange(clamp(value - 1, min, max))}
+        disabled={!canDec}
+        className={cn(
+          'grid h-[1.6rem] w-[1.6rem] place-items-center',
+          canDec
+            ? 'cursor-pointer text-gray-600'
+            : 'cursor-not-allowed text-gray-300',
+        )}
       >
-        <Icon name="minus" size={2.4} ariaHidden />
+        <Icon name="minus" size={1.6} ariaHidden />
       </button>
-      <span className="body2 min-w-[3.2rem] text-center text-black">
+
+      <span
+        className={cn(
+          'body2 grid h-[2.8rem] min-w-[2.8rem] place-items-center',
+          'rounded-[0.4rem] bg-white text-black',
+        )}
+      >
         {value}
       </span>
+
       <button
         type="button"
         aria-label="수량 증가"
-        className="cursor-pointer rounded-[0.8rem] bg-white p-[0.6rem] ring-1 ring-gray-200"
-        onClick={() => onChange(clamp(value + 1, min, max))}
+        onClick={() => canInc && onChange(clamp(value + 1, min, max))}
+        disabled={!canInc}
+        className={cn(
+          'grid h-[1.6rem] w-[1.6rem] place-items-center',
+          canInc
+            ? 'cursor-pointer text-gray-600'
+            : 'cursor-not-allowed text-gray-300',
+        )}
       >
-        <Icon name="plus" size={2.4} ariaHidden />
+        <Icon name="plus" size={1.6} ariaHidden />
       </button>
     </div>
   );

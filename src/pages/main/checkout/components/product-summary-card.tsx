@@ -3,15 +3,9 @@ import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
 
 type Props = {
   product: Product;
-  qty: number;
-  onQtyChange: (v: number) => void;
 };
 
-export default function ProductSummaryCard({
-  product,
-  qty,
-  onQtyChange,
-}: Props) {
+export default function ProductSummaryCard({ product }: Props) {
   return (
     <section className="flex items-center justify-between gap-[1.2rem]">
       <div className="flex items-center gap-[1.2rem]">
@@ -25,8 +19,6 @@ export default function ProductSummaryCard({
           <h2 className="body2 text-black">{product.name}</h2>
         </div>
       </div>
-
-      <QtyStepper value={qty} onChange={onQtyChange} />
     </section>
   );
 }

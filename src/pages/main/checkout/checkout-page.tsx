@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import TopBar from '@/shared/layouts/top-bar';
 import ProductSummaryCard from '@/pages/main/checkout/components/product-summary-card';
 import PayBar from '@/pages/main/checkout/components/pay-bar';
+import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
 import { getUnitPrice } from '@/pages/main/checkout/utils/checkout';
 import {
   DEFAULT_QTY,
@@ -58,7 +59,6 @@ export default function CheckoutPage() {
     { value: 'cash' as const, label: PAYMENT_LABEL.cash },
   ];
 
-  // ✅ 두 셀렉트가 모두 선택되어야 결제 가능
   const canPay = !!orderType && !!payment;
 
   return (
@@ -68,38 +68,38 @@ export default function CheckoutPage() {
       <main className="scrollbar-hide flex-1 overflow-y-auto px-[2rem] pb-[10rem]">
         <section className="flex-col gap-[1.6rem] pt-[2rem]">
           <h3 className="body1 text-black">상품 정보</h3>
-          <ProductSummaryCard
-            product={product}
-            qty={qty}
-            onQtyChange={setQty}
-          />
-          <div className="flex-col gap-[0.8rem]">
-            <div className="flex-items-center gap-[0.4rem]">
-              {product.discount > 0 && (
-                <span className="body1 text-primary">{product.discount}%</span>
-              )}
-              <span className="head3 font-bold">
-                {formatKRW(product.price)}원
-              </span>
-              {product.originalPrice && (
-                <span className="body2 text-gray-300 line-through">
-                  {formatKRW(product.originalPrice)}원
+          <ProductSummaryCard product={product} />
+          <div className="flex-row-between">
+            <div className="flex-col">
+              <div className="flex-items-center gap-[0.4rem]">
+                {product.discount > 0 && (
+                  <span className="body1 text-primary">
+                    {product.discount}%
+                  </span>
+                )}
+                <span className="head3 font-bold">
+                  {formatKRW(product.price)}원
                 </span>
+                {product.originalPrice && (
+                  <span className="body2 text-gray-300 line-through">
+                    {formatKRW(product.originalPrice)}원
+                  </span>
+                )}
+              </div>
+
+              {product.pickupPrice && (
+                <div className="flex-items-center text-blue gap-[0.4rem]">
+                  <span className="body2">픽업 시</span>
+                  <span className="head3">
+                    {formatKRW(product.pickupPrice)}원
+                  </span>
+                </div>
               )}
             </div>
-
-            {product.pickupPrice && (
-              <div className="flex-items-center text-blue gap-[0.4rem]">
-                <span className="body2">픽업 시</span>
-                <span className="head3">
-                  {formatKRW(product.pickupPrice)}원
-                </span>
-              </div>
-            )}
+            <QtyStepper value={qty} onChange={setQty} />
           </div>
         </section>
 
-        {/* 주문 유형 */}
         <section className="flex-col gap-[1.2rem] pt-[3.2rem]">
           <h3 className="body1 text-black">주문 유형</h3>
           <RadioTileGroup
