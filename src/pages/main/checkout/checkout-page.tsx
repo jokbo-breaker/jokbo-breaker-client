@@ -4,6 +4,7 @@ import TopBar from '@/shared/layouts/top-bar';
 import ProductSummaryCard from '@/pages/main/checkout/components/product-summary-card';
 import PayBar from '@/pages/main/checkout/components/pay-bar';
 import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
+import PaymentCompleteView from '@/pages/main/checkout/components/payment-complete-view';
 import { getUnitPrice } from '@/pages/main/checkout/utils/checkout';
 import {
   DEFAULT_QTY,
@@ -19,6 +20,12 @@ export default function CheckoutPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const [stage, setStage] = useState<'form' | 'done'>('form');
+  const [savedG, setSavedG] = useState(0);
+  const [qty, setQty] = useState<number>(DEFAULT_QTY);
+  const [orderType, setOrderType] = useState<OrderType | ''>('');
+  const [payment, setPayment] = useState<PaymentMethod | ''>('');
+
   const product = useMemo(() => {
     const all = [...mockDeliveryProducts, ...mockPickupProducts];
     return all.find((p) => p.id === id);
@@ -33,24 +40,17 @@ export default function CheckoutPage() {
     );
   }
 
-  const [qty, setQty] = useState<number>(DEFAULT_QTY);
-
-  const [orderType, setOrderType] = useState<OrderType | ''>('');
-  const [payment, setPayment] = useState<PaymentMethod | ''>('');
-
   const unit = orderType ? getUnitPrice(product, orderType) : product.price;
   const total = unit * qty;
+
   const extractKrTime = (s?: string) => {
     const m = s?.match(/(오전|오후)\s*\d{1,2}시\s*\d{1,2}분/);
     return m ? m[0].replace(/\s+/g, ' ') : null;
   };
-
   const teamStart = extractKrTime(product.teamDeliveryAfter) ?? '오후 8시 15분';
-
   const teamDeliveryRight = product.teamDeliveryAfter
     ? `${teamStart} 이후에 출발합니다`
     : '팀배달 시간 미정';
-
   const pickupRight = `${teamStart} ~ 영업 종료 시`;
 
   const ORDER_TYPE_OPTIONS = [
@@ -64,20 +64,30 @@ export default function CheckoutPage() {
         </p>
       ),
     },
-    {
-      value: 'pickup' as const,
-      label: '픽업',
-      right: pickupRight,
-    },
+    { value: 'pickup' as const, label: '픽업', right: pickupRight },
   ];
   const PAYMENT_OPTIONS = [
     { value: 'card' as const, label: PAYMENT_LABEL.card },
     { value: 'cash' as const, label: PAYMENT_LABEL.cash },
   ];
-
   const canPay = !!orderType && !!payment;
 
-  return (
+  const SAVED_PER_ORDER_G = 34;
+  const handlePay = () => {
+    if (!canPay) return;
+    const g = orderType === 'team' ? SAVED_PER_ORDER_G * qty : 0;
+    setSavedG(Math.max(0, Math.round(g)));
+    setStage('done');
+  };
+
+  return stage === 'done' ? (
+    <PaymentCompleteView
+      savedG={savedG}
+      remainingBadge={product.remainingBadge ?? null}
+      onBack={() => setStage('form')}
+      onPrimary={() => setStage('form')}
+    />
+  ) : (
     <div className="h-dvh flex-col">
       <TopBar title="주문하기" showBack onBack={() => navigate(-1)} sticky />
 
@@ -139,15 +149,7 @@ export default function CheckoutPage() {
         </section>
       </main>
 
-      <PayBar
-        total={total}
-        canPay={canPay}
-        onPay={() => {
-          if (!canPay) return;
-          alert(`결제 완료: ${formatKRW(total)}원`);
-          navigate(-1);
-        }}
-      />
+      <PayBar total={total} canPay={canPay} onPay={handlePay} />
     </div>
   );
 }

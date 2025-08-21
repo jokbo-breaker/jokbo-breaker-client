@@ -1,4 +1,3 @@
-// pages/menu/components/list-section.tsx
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
 import SortFilterRow from '@/pages/menu/components/sort-filter-row';
@@ -8,8 +7,8 @@ type Props = {
   products: Product[];
   sort: SortKey;
   onOpenSort: () => void;
-  onOpenFilter: () => void; // ✅ 추가
-  filterSelected: boolean; // ✅ 추가
+  onOpenFilter: () => void;
+  filterSelected: boolean;
 };
 
 export default function ListSection({
