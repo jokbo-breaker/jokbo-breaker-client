@@ -1,8 +1,5 @@
 import Tag from '@/shared/components/chips/tag';
-import {
-  FOOD_OPTIONS,
-  FoodOption,
-} from '@/pages/recommend/constants/recommend';
+import { FOOD_OPTIONS, FoodOption } from '@/pages/recommend/constants/recommend';
 
 type Props = {
   selected: FoodOption[];
@@ -16,11 +13,7 @@ export default function Step1Categories({ selected, onToggle }: Props) {
 
       <div className="flex flex-wrap gap-x-[1rem] gap-y-[1.2rem] pr-[0.5rem]">
         {FOOD_OPTIONS.map((opt) => (
-          <Tag
-            key={opt}
-            selected={selected.includes(opt)}
-            onClick={() => onToggle(opt)}
-          >
+          <Tag key={opt} selected={selected.includes(opt)} onClick={() => onToggle(opt)}>
             {opt}
           </Tag>
         ))}

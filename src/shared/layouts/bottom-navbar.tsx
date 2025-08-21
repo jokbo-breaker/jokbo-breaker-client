@@ -61,12 +61,11 @@ export default function BottomNavigation({
     [current, activeMatch],
   );
 
-  const handleClick =
-    (path: string) => (ev: React.MouseEvent<HTMLButtonElement>) => {
-      if (isDisabled?.(path)) return;
-      if (onTabClick) onTabClick(path, ev);
-      else navigate(path);
-    };
+  const handleClick = (path: string) => (ev: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDisabled?.(path)) return;
+    if (onTabClick) onTabClick(path, ev);
+    else navigate(path);
+  };
 
   return (
     <div
@@ -95,11 +94,7 @@ export default function BottomNavigation({
               height={2.4}
               className={cn('text-gray-400', active && 'text-primary')}
             />
-            <p
-              className={cn('caption4 text-gray-400', active && 'text-primary')}
-            >
-              {label}
-            </p>
+            <p className={cn('caption4 text-gray-400', active && 'text-primary')}>{label}</p>
           </button>
         );
       })}

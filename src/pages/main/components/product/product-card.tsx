@@ -12,22 +12,9 @@ export type ProductCardProps = {
   className?: string;
 };
 
-function ProductCard({
-  product,
-  variant = 'compact',
-  className,
-}: ProductCardProps) {
-  const {
-    image,
-    store,
-    name,
-    discount,
-    price,
-    originalPrice,
-    remainingBadge,
-    hours,
-    distanceKm,
-  } = product;
+function ProductCard({ product, variant = 'compact', className }: ProductCardProps) {
+  const { image, store, name, discount, price, originalPrice, remainingBadge, hours, distanceKm } =
+    product;
   const navigate = useNavigate();
 
   if (variant === 'wide') {
@@ -52,11 +39,7 @@ function ProductCard({
             <h4 className="caption1 text-black">{store}</h4>
             <h3 className="body3 text-black">{name}</h3>
           </div>
-          <ProductPrice
-            discount={discount}
-            price={price}
-            originalPrice={originalPrice}
-          />
+          <ProductPrice discount={discount} price={price} originalPrice={originalPrice} />
           <Meta hours={hours} distanceKm={distanceKm} />
         </div>
       </article>
@@ -66,18 +49,11 @@ function ProductCard({
   // compact
   return (
     <article
-      className={cn(
-        'relative w-full cursor-pointer overflow-hidden',
-        className,
-      )}
+      className={cn('relative w-full cursor-pointer overflow-hidden', className)}
       onClick={() => navigate(`/product/${product.id}`)}
     >
       <div className="relative">
-        <img
-          src={image}
-          alt={name}
-          className="h-[14rem] w-full rounded-[4px] object-cover"
-        />
+        <img src={image} alt={name} className="h-[14rem] w-full rounded-[4px] object-cover" />
         {remainingBadge && <Badge>{remainingBadge}</Badge>}
       </div>
       <div className="mt-[1rem] flex-col gap-[0.2rem]">
@@ -85,11 +61,7 @@ function ProductCard({
           <h4 className="caption3 text-black">{store}</h4>
           <h3 className="caption2 text-black">{name}</h3>
         </div>
-        <ProductPrice
-          discount={discount}
-          price={price}
-          originalPrice={originalPrice}
-        />
+        <ProductPrice discount={discount} price={price} originalPrice={originalPrice} />
         <Meta hours={hours} distanceKm={distanceKm} />
       </div>
     </article>

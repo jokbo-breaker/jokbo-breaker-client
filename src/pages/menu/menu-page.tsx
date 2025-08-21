@@ -2,10 +2,7 @@ import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '@/shared/types';
 import { hasActiveFilters } from '@/pages/menu/utils/has-active-filters';
-import {
-  FILTER_DEFAULT,
-  type FilterState,
-} from '@/pages/menu/constants/filter';
+import { FILTER_DEFAULT, type FilterState } from '@/pages/menu/constants/filter';
 import { SortKey } from '@/pages/menu/constants/sort';
 
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
@@ -124,11 +121,7 @@ export default function MenuPage() {
       {error && (
         <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
           위치 권한/가져오기 실패: {error.message}
-          <button
-            className="ml-[0.8rem] underline"
-            onClick={request}
-            disabled={loading}
-          >
+          <button className="ml-[0.8rem] underline" onClick={request} disabled={loading}>
             다시 시도
           </button>
         </div>

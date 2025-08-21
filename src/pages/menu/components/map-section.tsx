@@ -27,10 +27,7 @@ export default function MapSection({
   const [mapInstance, setMapInstance] = useState<any>(null);
 
   const myMarkerIcon = useMemo(() => makeLocationPinHtml('text-primary'), []);
-  const restaurantMarkerIcon = useMemo(
-    () => makeLocationPinHtml('text-primary'),
-    [],
-  );
+  const restaurantMarkerIcon = useMemo(() => makeLocationPinHtml('text-primary'), []);
 
   const handleMapRef = (node: any) => {
     mapRef.current = node;
@@ -56,16 +53,9 @@ export default function MapSection({
         width: '100%',
         height: '100%',
       }}
-      fallback={
-        <div className="grid h-full place-items-center">지도 로딩 중…</div>
-      }
+      fallback={<div className="grid h-full place-items-center">지도 로딩 중…</div>}
     >
-      <NaverMap
-        defaultCenter={defaultCenter}
-        center={center}
-        defaultZoom={16}
-        ref={handleMapRef}
-      >
+      <NaverMap defaultCenter={defaultCenter} center={center} defaultZoom={16} ref={handleMapRef}>
         <Marker position={center} icon={myMarkerIcon as any} />
         {restaurants.map((r, idx) => (
           <Marker

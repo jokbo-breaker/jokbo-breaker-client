@@ -1,10 +1,7 @@
 import { cn } from '@/shared/libs/cn';
 import StepDot from '@/pages/recommend/components/stepper-dot';
 import { useStepper } from '@/shared/hooks/use-stepper';
-import {
-  STEPPER_COLOR,
-  STEPPER_SIZE,
-} from '@/pages/recommend/constants/stepper';
+import { STEPPER_COLOR, STEPPER_SIZE } from '@/pages/recommend/constants/stepper';
 
 type StepperProps = {
   total?: number;
@@ -38,10 +35,7 @@ export default function Stepper({
     <div className={cn('relative w-full', className)}>
       {/* 배경 트랙 */}
       <div
-        className={cn(
-          'absolute inset-x-0 rounded-full',
-          STEPPER_COLOR.line.inactive,
-        )}
+        className={cn('absolute inset-x-0 rounded-full', STEPPER_COLOR.line.inactive)}
         style={{
           top,
           height: STEPPER_SIZE.line,
@@ -69,13 +63,7 @@ export default function Stepper({
         style={{ paddingLeft: sidePad, paddingRight: sidePad }}
       >
         {states.map((state, i) => (
-          <StepDot
-            key={i}
-            index={i}
-            state={state}
-            stepLabel={stepLabel}
-            doneLabel={doneLabel}
-          />
+          <StepDot key={i} index={i} state={state} stepLabel={stepLabel} doneLabel={doneLabel} />
         ))}
       </div>
     </div>

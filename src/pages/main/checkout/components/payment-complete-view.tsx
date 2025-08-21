@@ -11,12 +11,7 @@ type Props = {
 
 const WEEK_BASELINE_G = 1148;
 
-export default function PaymentCompleteView({
-  savedG,
-  remainingBadge,
-  onPrimary,
-  onBack,
-}: Props) {
+export default function PaymentCompleteView({ savedG, remainingBadge, onPrimary, onBack }: Props) {
   const ratio = Math.min(100, (savedG / WEEK_BASELINE_G) * 100);
 
   return (
@@ -50,9 +45,7 @@ export default function PaymentCompleteView({
               />
             </div>
             <div className="mt-[0.6rem] flex items-center justify-end text-gray-700">
-              <span className="caption1">
-                {WEEK_BASELINE_G.toLocaleString()}g
-              </span>
+              <span className="caption1">{WEEK_BASELINE_G.toLocaleString()}g</span>
             </div>
           </div>
 

@@ -57,19 +57,12 @@ export default function RadioTileGroup<T extends string>({
                 rounded,
               )}
             >
-              <span
-                className={cn('body3 text-black', 'peer-checked:text-primary')}
-              >
+              <span className={cn('body3 text-black', 'peer-checked:text-primary')}>
                 {opt.label}
               </span>
 
               {opt.right && (
-                <span
-                  className={cn(
-                    'body4 text-black',
-                    'peer-checked:text-primary',
-                  )}
-                >
+                <span className={cn('body4 text-black', 'peer-checked:text-primary')}>
                   {opt.right}
                 </span>
               )}

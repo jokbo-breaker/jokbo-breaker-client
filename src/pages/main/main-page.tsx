@@ -22,14 +22,7 @@ export default function MainPage() {
     [mode],
   );
 
-  const ordered: SectionKey[] = [
-    'nearby',
-    'new',
-    'lastcall',
-    'breakfast',
-    'dessert',
-    'now',
-  ];
+  const ordered: SectionKey[] = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'];
 
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
@@ -71,11 +64,7 @@ export default function MainPage() {
               itemWidthClass="w-[16.5rem]"
             >
               {data.map((p) => (
-                <ProductCard
-                  key={`${key}-${p.id}`}
-                  product={p}
-                  variant="compact"
-                />
+                <ProductCard key={`${key}-${p.id}`} product={p} variant="compact" />
               ))}
             </Section>
           ))}

@@ -19,10 +19,7 @@ export default function SearchPage() {
   const [sort, setSort] = useState<Sort>('recommend');
   const [hasFilter, setHasFilter] = useState(false);
 
-  const all = useMemo(
-    () => [...mockDeliveryProducts, ...mockPickupProducts],
-    [],
-  );
+  const all = useMemo(() => [...mockDeliveryProducts, ...mockPickupProducts], []);
 
   useEffect(() => {
     const q = params.get('q') ?? '';
@@ -50,9 +47,7 @@ export default function SearchPage() {
   const results = useMemo(() => {
     const q = submitted.trim().toLowerCase();
     if (!q) return [];
-    return all.filter((p) =>
-      [p.store, p.name].some((s) => s?.toLowerCase().includes(q)),
-    );
+    return all.filter((p) => [p.store, p.name].some((s) => s?.toLowerCase().includes(q)));
   }, [submitted, all]);
 
   return (
@@ -75,17 +70,11 @@ export default function SearchPage() {
       ) : (
         <main className="flex-1 flex-col gap-[1.2rem] bg-white px-[2rem] pb-[2.4rem]">
           <div className="flex-items-center gap-[0.8rem] pt-[0.8rem]">
-            <Tag
-              selected={sort === 'recommend'}
-              onClick={() => setSort('recommend')}
-            >
+            <Tag selected={sort === 'recommend'} onClick={() => setSort('recommend')}>
               추천순
             </Tag>
 
-            <FilterChip
-              selected={hasFilter}
-              onClick={() => setHasFilter((v) => !v)}
-            />
+            <FilterChip selected={hasFilter} onClick={() => setHasFilter((v) => !v)} />
           </div>
 
           <section className="flex-col gap-[2rem] pb-[7rem]">
@@ -93,9 +82,7 @@ export default function SearchPage() {
               <ProductCard key={p.id} product={p} variant="wide" />
             ))}
             {!results.length && (
-              <p className="py-[12rem] text-center text-gray-500">
-                검색 결과가 없습니다.
-              </p>
+              <p className="py-[12rem] text-center text-gray-500">검색 결과가 없습니다.</p>
             )}
           </section>
         </main>

@@ -55,12 +55,7 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
     >
       <div className="absolute inset-0">
         <div className="mx-auto flex h-full w-full max-w-[43rem] flex-col bg-white">
-          <TopBar
-            title="필터"
-            showClose
-            onClose={onClose}
-            className="bg-white px-[2rem]"
-          />
+          <TopBar title="필터" showClose onClose={onClose} className="bg-white px-[2rem]" />
 
           <div className="scrollbar-hide flex-1 flex-col gap-[3.6rem] overflow-y-auto px-[2rem]">
             <section className="flex-col gap-[1.2rem]">
@@ -152,11 +147,7 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
 
           <div className="sticky right-0 bottom-0 left-0 px-[2rem] pt-[1.2rem] pb-[max(env(safe-area-inset-bottom),2rem)]">
             <div className="flex items-center gap-[1.2rem]">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setDraft(FILTER_DEFAULT)}
-              >
+              <Button variant="outline" className="flex-1" onClick={() => setDraft(FILTER_DEFAULT)}>
                 초기화
               </Button>
               <Button

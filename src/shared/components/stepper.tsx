@@ -25,20 +25,13 @@ export default function Stepper({
       <div className="flex items-center">
         {states.map((state, i) => (
           <div key={i} className="flex flex-1 items-center">
-            <StepDot
-              index={i}
-              state={state}
-              stepLabel={stepLabel}
-              doneLabel={doneLabel}
-            />
+            <StepDot index={i} state={state} stepLabel={stepLabel} doneLabel={doneLabel} />
 
             {i < states.length - 1 && (
               <div
                 className={cn(
                   'mx-[1.2rem] flex-1 rounded-full',
-                  isConnectorActive(i)
-                    ? STEPPER_COLOR.line.active
-                    : STEPPER_COLOR.line.inactive,
+                  isConnectorActive(i) ? STEPPER_COLOR.line.active : STEPPER_COLOR.line.inactive,
                 )}
                 style={{ height: STEPPER_SIZE.line }}
                 aria-hidden

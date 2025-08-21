@@ -60,11 +60,7 @@ export default function AiMealboxPage() {
       )}
     >
       <div className="mx-auto w-full">
-        <TopBar
-          title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'}
-          showClose
-          sticky
-        />
+        <TopBar title={isResult ? 'AI가 상품을 추천해줬어요' : 'AI 밀박스 추천'} showClose sticky />
 
         {!isResult ? (
           <div className="flex-col gap-[1.2rem]">
@@ -72,12 +68,8 @@ export default function AiMealboxPage() {
               <Stepper total={3} current={step} />
             </div>
 
-            {step === 1 && (
-              <Step1Categories selected={foods} onToggle={toggleFood} />
-            )}
-            {step === 2 && (
-              <Step2Budget value={maxPrice} onChange={setMaxPrice} />
-            )}
+            {step === 1 && <Step1Categories selected={foods} onToggle={toggleFood} />}
+            {step === 2 && <Step2Budget value={maxPrice} onChange={setMaxPrice} />}
             {step === 3 && <Step3Method value={method} onChange={setMethod} />}
           </div>
         ) : (
@@ -95,15 +87,7 @@ export default function AiMealboxPage() {
         <div className="mx-auto w-full max-w-[43rem] px-[2.0rem] pb-[2.4rem]">
           {step < 3 ? (
             <Button
-              variant={
-                step === 1
-                  ? canNext1
-                    ? 'black'
-                    : 'white'
-                  : canNext2
-                    ? 'black'
-                    : 'white'
-              }
+              variant={step === 1 ? (canNext1 ? 'black' : 'white') : canNext2 ? 'black' : 'white'}
               className="w-full"
               disabled={step === 1 ? !canNext1 : !canNext2}
               onClick={onNext}

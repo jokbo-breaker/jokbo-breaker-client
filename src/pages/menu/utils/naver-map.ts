@@ -1,2 +1,1 @@
-export const getMapInstance = (ref: any) =>
-  ref?.instance ?? ref?.map ?? ref ?? null;
+export const getMapInstance = (ref: any) => ref?.instance ?? ref?.map ?? ref ?? null;

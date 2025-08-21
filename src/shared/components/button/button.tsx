@@ -20,23 +20,17 @@ export default function Button({
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
-  const base =
-    'cursor-pointer flex-row-center select-none rounded-[10px] py-[1.6rem]';
+  const base = 'cursor-pointer flex-row-center select-none rounded-[10px] py-[1.6rem]';
 
   const variants = {
     black: 'bg-gray-900 text-white',
     white: 'bg-gray-100 text-gray-700',
     gray: 'bg-gray-900 text-white opacity-50',
-    outline:
-      'bg-white text-black outline outline-1 outline-offset-[-1px] outline-gray-200',
+    outline: 'bg-white text-black outline outline-1 outline-offset-[-1px] outline-gray-200',
   } as const;
 
   return (
-    <button
-      className={cn(base, variants[variant], className)}
-      disabled={isDisabled}
-      {...props}
-    >
+    <button className={cn(base, variants[variant], className)} disabled={isDisabled} {...props}>
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
       <span className="body3">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}

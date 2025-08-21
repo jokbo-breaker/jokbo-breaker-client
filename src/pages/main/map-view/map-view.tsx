@@ -61,12 +61,7 @@ export default function MapViewPage() {
     () => ({
       content: renderToString(
         <div style={{ transform: 'translate(-50%, -100%)' }}>
-          <Icon
-            name="location"
-            size={2.4}
-            className="text-primary"
-            ariaHidden
-          />
+          <Icon name="location" size={2.4} className="text-primary" ariaHidden />
         </div>,
       ),
     }),
@@ -77,12 +72,7 @@ export default function MapViewPage() {
     () => ({
       content: renderToString(
         <div style={{ transform: 'translate(-50%, -100%)' }}>
-          <Icon
-            name="location"
-            size={2.4}
-            className="text-primary"
-            ariaHidden
-          />
+          <Icon name="location" size={2.4} className="text-primary" ariaHidden />
         </div>,
       ),
     }),
@@ -95,9 +85,7 @@ export default function MapViewPage() {
 
       <MapDiv
         style={{ width: '100%', height: '100vh' }}
-        fallback={
-          <div className="grid h-full place-items-center">지도 로딩 중…</div>
-        }
+        fallback={<div className="grid h-full place-items-center">지도 로딩 중…</div>}
       >
         <NaverMap defaultCenter={soongsilBase} center={center} defaultZoom={16}>
           <Marker position={center} icon={myMarkerIcon as any} />
@@ -115,11 +103,7 @@ export default function MapViewPage() {
       {error && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded bg-white/90 px-3 py-2 shadow">
           위치 권한/가져오기 실패: {error.message}
-          <button
-            className="ml-2 underline"
-            onClick={request}
-            disabled={loading}
-          >
+          <button className="ml-2 underline" onClick={request} disabled={loading}>
             다시 시도
           </button>
         </div>
