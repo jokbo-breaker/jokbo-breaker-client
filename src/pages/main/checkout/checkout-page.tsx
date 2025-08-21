@@ -1,9 +1,7 @@
-import * as React from 'react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import TopBar from '@/shared/layouts/top-bar';
 import ProductSummaryCard from '@/pages/main/checkout/components/product-summary-card';
-import SelectRow from '@/pages/main/checkout/components/select-row';
 import PayBar from '@/pages/main/checkout/components/pay-bar';
 import { getUnitPrice } from '@/pages/main/checkout/utils/checkout';
 import {
@@ -35,12 +33,11 @@ export default function CheckoutPage() {
   }
 
   const [qty, setQty] = useState<number>(DEFAULT_QTY);
-  const [orderType, setOrderType] = useState<OrderType>(
-    product.teamDeliveryAfter ? 'team' : 'pickup',
-  );
-  const [payment, setPayment] = useState<PaymentMethod>('card');
 
-  const unit = getUnitPrice(product, orderType);
+  const [orderType, setOrderType] = useState<OrderType | ''>('');
+  const [payment, setPayment] = useState<PaymentMethod | ''>('');
+
+  const unit = orderType ? getUnitPrice(product, orderType) : product.price;
   const total = unit * qty;
 
   const teamDeliveryRight = product.teamDeliveryAfter
@@ -55,10 +52,14 @@ export default function CheckoutPage() {
       right: product.hours ? product.hours.replace('~', ' ~ ') : '영업 시간 내',
     },
   ];
+
   const PAYMENT_OPTIONS = [
     { value: 'card' as const, label: PAYMENT_LABEL.card },
     { value: 'cash' as const, label: PAYMENT_LABEL.cash },
   ];
+
+  // ✅ 두 셀렉트가 모두 선택되어야 결제 가능
+  const canPay = !!orderType && !!payment;
 
   return (
     <div className="flex-col">
@@ -101,7 +102,6 @@ export default function CheckoutPage() {
         {/* 주문 유형 */}
         <section className="flex-col gap-[1.2rem] pt-[3.2rem]">
           <h3 className="body1 text-black">주문 유형</h3>
-
           <RadioTileGroup
             name="orderType"
             value={orderType}
@@ -116,7 +116,6 @@ export default function CheckoutPage() {
           )}
         </section>
 
-        {/* 결제 방법 */}
         <section className="flex-col gap-[1.2rem] pt-[3.2rem]">
           <h3 className="body1 text-black">결제 방법</h3>
           <RadioTileGroup
@@ -131,7 +130,9 @@ export default function CheckoutPage() {
 
       <PayBar
         total={total}
+        canPay={canPay}
         onPay={() => {
+          if (!canPay) return;
           alert(`결제 완료: ${formatKRW(total)}원`);
           navigate(-1);
         }}

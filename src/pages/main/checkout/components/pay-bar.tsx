@@ -5,19 +5,20 @@ type Props = {
   total: number;
   onPay: () => void;
   disabled?: boolean;
+  canPay?: boolean;
 };
 
-export default function PayBar({ total, onPay, disabled }: Props) {
+export default function PayBar({ total, onPay, canPay }: Props) {
   return (
-    <div className="sticky right-0 bottom-0 left-0 bg-white px-[2rem] pt-[1.2rem] pb-[max(env(safe-area-inset-bottom),2rem)]">
-      <div className="flex items-center justify-between pb-[1.2rem]">
-        <span className="body1 text-black">총 {formatKRW(total)}원</span>
+    <div className="sticky right-0 bottom-0 left-0 z-[120] flex gap-[1.7rem] bg-white px-[2rem] py-[2rem]">
+      <div className="body1 flex flex-1 items-center justify-between text-black">
+        총 {formatKRW(total)}원
       </div>
       <Button
-        variant="black"
-        className="w-full"
+        variant={canPay ? 'black' : 'gray'}
+        className="flex-2 rounded-[1.2rem]"
         onClick={onPay}
-        disabled={disabled}
+        disabled={!canPay}
       >
         {formatKRW(total)}원 결제하기
       </Button>
