@@ -6,6 +6,7 @@ import ProductCard from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
 import HeroBanner from '@/pages/main/components/banner';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
+import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
 import {
   MAIN_SECTIONS_ORDER,
@@ -57,13 +58,12 @@ export default function MainPage() {
             >
               <Icon name="search" width={2.4} />
             </button>
-            <button
-              onClick={() => navigate('/mypage')}
-              aria-label="프로필"
-              className="cursor-pointer text-gray-200"
-            >
-              <Icon name="header-profile" width={2.4} />
-            </button>
+            <ProfileModal
+              user={{ name: '닉네임', email: 'aaaa@gmail.com' }}
+              onLogout={() => {
+                console.log('logout');
+              }}
+            />
           </>
         }
       />

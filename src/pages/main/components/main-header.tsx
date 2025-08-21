@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from '@/shared/components/icon';
+import { ProfileModal } from '@/pages/main/components/profile-modal';
 
 export type Mode = 'delivery' | 'pickup';
 

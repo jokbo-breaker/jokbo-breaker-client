@@ -13,7 +13,7 @@ function FloatingButton({ onClick }: FloatingButtonProps) {
         aria-label="button"
         className="flex cursor-pointer items-center gap-2 rounded-full text-white transition"
       >
-        <Icon name="floating" size={5} />
+        <Icon name="floating" size={7} />
       </button>
     </div>
   );
