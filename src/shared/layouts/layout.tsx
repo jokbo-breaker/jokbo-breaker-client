@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import ScrollToTop from '@/shared/layouts/scroll-to-top';
-import BottomNavigation from '@/shared/layouts/bottom-navbar';
+// import BottomNavigation from '@/shared/layouts/bottom-navbar';
 import FloatingButton from '@/shared/layouts/floating-button';
 import AiMealboxPage from '@/pages/recommend/ai-mealbox-page';
 
@@ -19,7 +19,7 @@ export default function Layout() {
       </main>
 
       {!isHiddenRoute && (
-        <div className="pointer-events-none fixed bottom-[9rem] left-1/2 z-[var(--z-floating)] w-full max-w-[430px] -translate-x-1/2">
+        <div className="pointer-events-none fixed right-[0.5rem] bottom-[1rem] left-1/2 z-[var(--z-floating)] w-full max-w-[43rem] -translate-x-1/2">
           <div className="flex justify-end">
             <div className="pointer-events-auto">
               <FloatingButton onClick={() => setOpenMealbox(true)} />
@@ -28,8 +28,7 @@ export default function Layout() {
         </div>
       )}
 
-      <BottomNavigation />
-
+      {/* <BottomNavigation /> */}
       {openMealbox && (
         <>
           <div

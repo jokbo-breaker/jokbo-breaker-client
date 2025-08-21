@@ -34,10 +34,17 @@ export default function Header({
 
   return (
     <header
-      className={'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' + className}
+      className={
+        'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' +
+        className
+      }
     >
       <div className="flex items-center justify-between">
-        <nav className="body1 flex gap-[1.6rem]" role="tablist" aria-label="배송 방식 선택">
+        <nav
+          className="body1 flex gap-[1.6rem]"
+          role="tablist"
+          aria-label="배송 방식 선택"
+        >
           {tabs.map(({ key, label }) => (
             <button
               key={key}
@@ -57,7 +64,7 @@ export default function Header({
           ))}
         </nav>
 
-        <div className="flex items-center">
+        <div className="flex h-[2.4rem] items-center gap-[1rem]">
           {rightSlot ?? (
             <button aria-label="검색" className="cursor-pointer text-black">
               <Icon name="search" width={2.4} />

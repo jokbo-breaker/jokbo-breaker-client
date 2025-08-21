@@ -74,8 +74,12 @@ export default function AiMealboxPage({ onClose }: Props) {
               <Stepper total={3} current={step} />
             </div>
 
-            {step === 1 && <Step1Categories selected={foods} onToggle={toggleFood} />}
-            {step === 2 && <Step2Budget value={maxPrice} onChange={setMaxPrice} />}
+            {step === 1 && (
+              <Step1Categories selected={foods} onToggle={toggleFood} />
+            )}
+            {step === 2 && (
+              <Step2Budget value={maxPrice} onChange={setMaxPrice} />
+            )}
             {step === 3 && <Step3Method value={method} onChange={setMethod} />}
           </div>
         ) : (
@@ -107,7 +111,15 @@ export default function AiMealboxPage({ onClose }: Props) {
         <div className="mx-auto w-full max-w-[43rem] px-[2.0rem] pb-[2.4rem]">
           {step < 3 ? (
             <Button
-              variant={step === 1 ? (canNext1 ? 'black' : 'white') : canNext2 ? 'black' : 'white'}
+              variant={
+                step === 1
+                  ? canNext1
+                    ? 'black'
+                    : 'white'
+                  : canNext2
+                    ? 'black'
+                    : 'white'
+              }
               className="w-full"
               disabled={step === 1 ? !canNext1 : !canNext2}
               onClick={onNext}
@@ -127,7 +139,12 @@ export default function AiMealboxPage({ onClose }: Props) {
         </div>
       )}
 
-      {showLoading && <RecommendLoading visible />}
+      <RecommendLoading
+        visible={showLoading}
+        minLoops={2}
+        forceOnceInSession={true}
+        minOnceMs={1200}
+      />
     </div>
   );
 }
