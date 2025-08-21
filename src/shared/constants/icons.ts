@@ -12,6 +12,7 @@ export const ICONS = [
   "home",
   "home-filled",
   "location",
+  "logout",
   "map",
   "minus",
   "order",
