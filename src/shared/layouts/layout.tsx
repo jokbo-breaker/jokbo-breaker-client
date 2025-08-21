@@ -32,10 +32,7 @@ export default function Layout() {
 
       {openMealbox && (
         <>
-          <div
-            className="fixed inset-0 z-[20] bg-black/40"
-            onClick={() => setOpenMealbox(false)}
-          />
+          <div className="fixed inset-0 z-[20]" onClick={() => setOpenMealbox(false)} />
           <AiMealboxPage onClose={() => setOpenMealbox(false)} />
         </>
       )}
