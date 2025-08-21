@@ -139,7 +139,7 @@ export default function AiMealboxPage({ onClose }: Props) {
         </div>
       )}
 
-      <RecommendLoading visible={showLoading} />
+      {showLoading && <RecommendLoading visible />}
     </div>
   );
 }

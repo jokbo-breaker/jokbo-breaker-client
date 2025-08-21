@@ -2,12 +2,18 @@ import { useMemo } from 'react';
 
 export default function LoopLoading({ size = 40 }) {
   const BAR_COUNT = 10;
-  const bars = useMemo(() => Array.from({ length: BAR_COUNT }, () => crypto.randomUUID()), []);
+  const bars = useMemo(
+    () => Array.from({ length: BAR_COUNT }, () => crypto.randomUUID()),
+    [],
+  );
   const step = 360 / BAR_COUNT;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-sm">
-      <div className="relative" style={{ height: `${size}px`, width: `${size}px` }}>
+      <div
+        className="relative"
+        style={{ height: `${size}px`, width: `${size}px` }}
+      >
         {bars.map((id, i) => (
           <div
             key={id}
