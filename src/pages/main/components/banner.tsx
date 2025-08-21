@@ -28,7 +28,7 @@ function PromoModal({ open, onClose }: PromoModalProps) {
       <div className="absolute inset-0">
         <div className="mx-auto flex h-full w-full max-w-[43rem] flex-col bg-white">
           <TopBar
-            title={`팀 OO가 만들고자 하는 세상`}
+            title={`잔반없는날이 만들고자 하는 세상`}
             showClose
             onClose={onClose}
             className="bg-white"
@@ -105,7 +105,7 @@ export default function Banner() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="h-[20rem] w-full bg-neutral-200"
+        className="h-[20rem] w-full cursor-pointer bg-gray-100"
         aria-label="프로모션 배너 자리"
       />
       <PromoModal open={open} onClose={() => setOpen(false)} />
