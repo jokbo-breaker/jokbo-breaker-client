@@ -2,20 +2,17 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 type BottomSheetProps = {
   children: React.ReactNode;
-  /** 최대 높이(rem). 기본 80rem */
   maxHeightRem?: number;
-  /** 접힌 상태에서 보이는 높이(rem). 기본 9rem */
   minHeightRem?: number;
-  /** 과거 호환: 접힌 높이 px 단위 */
   minHeight?: number;
-  /** 높이 % of viewport (과거 호환). 기본 80 */
   height?: number;
-  /** 최상단에서 추가로 위로 당길 때 호출 (리스트 전환 등에 사용) */
   onOverExpand?: () => void;
-  /** 오버드래그 임계치(rem). 기본 2.4rem */
   overThresholdRem?: number;
-  /** 상단 드래그 허용 영역 높이(rem). 기본 4rem */
   dragAreaRem?: number;
+  initialVisiblePx?: number;
+  initialVisibleRem?: number;
+  initialVisibleVH?: number;
+  initialVisibleRatio?: number;
 };
 
 export default function BottomSheet({
@@ -27,6 +24,10 @@ export default function BottomSheet({
   onOverExpand,
   overThresholdRem = 2.4,
   dragAreaRem = 4,
+  initialVisiblePx,
+  initialVisibleRem,
+  initialVisibleVH,
+  initialVisibleRatio,
 }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +41,9 @@ export default function BottomSheet({
   const overPullUpRef = useRef(0);
 
   const remToPx = useCallback((rem: number) => {
-    const base = parseFloat(getComputedStyle(document.documentElement).fontSize || '10px');
+    const base = parseFloat(
+      getComputedStyle(document.documentElement).fontSize || '10px',
+    );
     return rem * base;
   }, []);
 
@@ -52,15 +55,42 @@ export default function BottomSheet({
     const vh = window.innerHeight;
     const maxPx = remToPx(maxHeightRem);
     const percentPx = (vh * height) / 100;
-
     const calculatedHeight = Math.min(vh, maxPx, percentPx);
+
     const minVisiblePx = getMinVisiblePx();
-    const initialTranslateY = Math.max(calculatedHeight - minVisiblePx, 0);
+
+    // ✅ 초기 보이는 높이 계산 (우선순위: px > rem > vh > ratio > min)
+    let initialVisible = minVisiblePx;
+    if (typeof initialVisibleRatio === 'number') {
+      initialVisible = calculatedHeight * initialVisibleRatio;
+    }
+    if (typeof initialVisibleVH === 'number') {
+      initialVisible = (vh * initialVisibleVH) / 100;
+    }
+    if (typeof initialVisibleRem === 'number') {
+      initialVisible = remToPx(initialVisibleRem);
+    }
+    if (typeof initialVisiblePx === 'number') {
+      initialVisible = initialVisiblePx;
+    }
+
+    initialVisible = Math.max(0, Math.min(initialVisible, calculatedHeight));
+
+    const initialTranslateY = Math.max(calculatedHeight - initialVisible, 0);
 
     setSheetHeight(calculatedHeight);
     setTranslateY(initialTranslateY);
     translateYRef.current = initialTranslateY;
-  }, [height, maxHeightRem, minHeightRem, remToPx, getMinVisiblePx]);
+  }, [
+    height,
+    maxHeightRem,
+    remToPx,
+    getMinVisiblePx,
+    initialVisiblePx,
+    initialVisibleRem,
+    initialVisibleVH,
+    initialVisibleRatio,
+  ]);
 
   useEffect(() => {
     translateYRef.current = translateY;
@@ -132,7 +162,14 @@ export default function BottomSheet({
 
     overPullUpRef.current = 0;
     lastClientYRef.current = null;
-  }, [isDragging, sheetHeight, getMinVisiblePx, onOverExpand, overThresholdRem, remToPx]);
+  }, [
+    isDragging,
+    sheetHeight,
+    getMinVisiblePx,
+    onOverExpand,
+    overThresholdRem,
+    remToPx,
+  ]);
 
   useEffect(() => {
     if (isDragging) {
@@ -154,7 +191,7 @@ export default function BottomSheet({
     <div
       ref={sheetRef}
       onPointerDown={startDragIfInDragZone}
-      className="fixed bottom-0 left-1/2 z-[var(--z-bottom-nav)] w-full max-w-[var(--max-width)] rounded-t-[3rem] bg-white px-[2rem] pt-[1.4rem] pb-[6.5rem] shadow-lg"
+      className="fixed bottom-0 left-1/2 z-[var(--z-bottom-nav)] w-full max-w-[var(--max-width)] rounded-t-[3rem] bg-white px-[2rem] pt-[1.4rem] shadow-lg"
       style={{
         transform: `translateX(-50%) translateY(${translateY}px)`,
         height: `${sheetHeight}px`,
@@ -167,7 +204,9 @@ export default function BottomSheet({
         className="mx-auto mb-[1.4rem] h-[0.3rem] w-[5rem] cursor-grab rounded-[10px] bg-gray-200 active:cursor-grabbing"
         aria-label="시트 드래그 핸들"
       />
-      <div className="scrollbar-hide max-h-[calc(100%-4rem)] overflow-y-auto px-4">{children}</div>
+      <div className="scrollbar-hide max-h-[calc(100%-4rem)] overflow-y-auto px-4">
+        {children}
+      </div>
     </div>
   );
 }

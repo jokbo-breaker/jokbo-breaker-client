@@ -22,7 +22,14 @@ export default function MainPage() {
     [mode],
   );
 
-  const ordered: SectionKey[] = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'];
+  const ordered: SectionKey[] = [
+    'nearby',
+    'new',
+    'lastcall',
+    'breakfast',
+    'dessert',
+    'now',
+  ];
 
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
@@ -30,18 +37,34 @@ export default function MainPage() {
   };
 
   return (
-    <div className="h-full w-full bg-white pb-[9rem]">
+    <div className="h-full w-full bg-white pb-[2rem]">
       <Header
         mode={mode}
         onModeChange={setMode}
         rightSlot={
-          <button
-            aria-label="검색"
-            className="cursor-pointer text-black"
-            onClick={() => navigate('/search')}
-          >
-            <Icon name="search" width={2.4} />
-          </button>
+          <>
+            <button
+              onClick={() => navigate('/menu')}
+              aria-label="메뉴"
+              className="cursor-pointer text-gray-700"
+            >
+              <Icon name="bag" width={2.4} />
+            </button>
+            <button
+              onClick={() => navigate('/search')}
+              aria-label="검색"
+              className="cursor-pointer text-gray-700"
+            >
+              <Icon name="search" width={2.4} />
+            </button>
+            <button
+              onClick={() => navigate('/mypage')}
+              aria-label="프로필"
+              className="cursor-pointer text-gray-200"
+            >
+              <Icon name="header-profile" width={2.4} />
+            </button>
+          </>
         }
       />
 
@@ -64,7 +87,11 @@ export default function MainPage() {
               itemWidthClass="w-[16.5rem]"
             >
               {data.map((p) => (
-                <ProductCard key={`${key}-${p.id}`} product={p} variant="compact" />
+                <ProductCard
+                  key={`${key}-${p.id}`}
+                  product={p}
+                  variant="compact"
+                />
               ))}
             </Section>
           ))}

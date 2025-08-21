@@ -91,7 +91,7 @@ export default function SearchTextField({
             type="button"
             onClick={onBack}
             aria-label="뒤로가기"
-            className="text-black"
+            className="cursor-pointer text-black"
             disabled={disabled}
           >
             <Icon name="arrow" size={2.4} ariaHidden className="text-black" />
@@ -107,7 +107,12 @@ export default function SearchTextField({
           ].join(' ')}
         >
           {showSearchIcon && (
-            <Icon name="search" size={2} ariaHidden className="shrink-0 text-gray-400" />
+            <Icon
+              name="search"
+              size={2}
+              ariaHidden
+              className="shrink-0 text-gray-400"
+            />
           )}
 
           <input
@@ -128,8 +133,17 @@ export default function SearchTextField({
 
           {/* 클리어(X) — 값 있을 때만 */}
           {val?.length > 0 && (
-            <button type="button" onClick={handleClear} aria-label="입력 지우기">
-              <Icon className="text-gray-300" name="clear" size={2.4} ariaHidden />
+            <button
+              type="button"
+              onClick={handleClear}
+              aria-label="입력 지우기"
+            >
+              <Icon
+                className="text-gray-300"
+                name="clear"
+                size={2.4}
+                ariaHidden
+              />
             </button>
           )}
         </div>
