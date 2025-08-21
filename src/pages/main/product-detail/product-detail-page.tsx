@@ -154,7 +154,7 @@ export default function ProductDetailPage() {
         </div>
         <BottomCTA
           label={`주문하기 · ${remainingBadge ?? '재고 확인'}`}
-          onClick={() => alert('주문하기')}
+          onClick={() => navigate(`/checkout/${id}`)}
         />
       </main>
     </div>
