@@ -6,6 +6,7 @@ import PayBar from '@/pages/main/checkout/components/pay-bar';
 import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
 import PaymentCompleteView from '@/pages/main/checkout/components/payment-complete-view';
 import { getUnitPrice } from '@/pages/main/checkout/utils/checkout';
+import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import {
   DEFAULT_QTY,
   type OrderType,
@@ -83,7 +84,7 @@ export default function CheckoutPage() {
   return stage === 'done' ? (
     <PaymentCompleteView
       savedG={savedG}
-      remainingBadge={product.remainingBadge ?? null}
+      remainingBadge={getRemainingBadge(product.stockLeft ?? null)}
       onBack={() => setStage('form')}
       onPrimary={() => setStage('form')}
     />
