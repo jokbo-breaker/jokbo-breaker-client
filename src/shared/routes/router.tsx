@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ const MyPage = lazy(() => import('@/pages/my-page/my-page'));
 const OrderPage = lazy(() => import('@/pages/order/order-page'));
 const MapPage = lazy(() => import('@/pages/map/map-page'));
 const LoginPage = lazy(() => import('@/pages/login/login-page'));
+const LoginSucessPage = lazy(() => import('@/pages/login/login-success'));
 const CheckoutPage = lazy(() => import('@/pages/main/checkout/checkout-page'));
 
 export const router = createBrowserRouter([
@@ -23,7 +25,12 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
-      { path: '/login', element: <LoginPage /> },
+      { path: '/auth/login', element: <LoginPage /> },
+      {
+        path: '//auth/success',
+        element: <Navigate to="/auth/success" replace />,
+      },
+      { path: '/auth/success', element: <LoginSucessPage /> },
       { path: '/main/:section', element: <SectionListPage /> },
       { path: '/product/:id', element: <ProductDetailPage /> },
       { path: '/checkout/:id', element: <CheckoutPage /> },
