@@ -11,20 +11,15 @@ export const getAccessToken = (): string => {
 export const setAccessToken = (token: string): void => {
   try {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
-  } catch {
-    // ignore
-  }
+  } catch {}
 };
 
 export const clearAccessToken = (): void => {
   try {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-  } catch {
-    // ignore
-  }
+  } catch {}
 };
 
-/** Authorization 헤더 헬퍼 */
 export const getAuthHeader = (): { Authorization?: string } => {
   const token = getAccessToken();
   return token ? { Authorization: `Bearer ${token}` } : {};

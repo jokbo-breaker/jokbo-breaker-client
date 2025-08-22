@@ -10,8 +10,6 @@ export const HTTP_STATUS = {
   SERVER_ERROR: 500,
 } as const;
 
-export type StatusCode = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
-
 export const RESPONSE_MESSAGE: Record<number, string> = {
   [HTTP_STATUS.BAD_REQUEST]: '입력값이 올바르지 않습니다.',
   [HTTP_STATUS.UNAUTHORIZED]: '요청 헤더가 올바르지 않는 토큰입니다.',
