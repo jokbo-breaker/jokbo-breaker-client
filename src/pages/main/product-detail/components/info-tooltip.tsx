@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
   PropsWithChildren,
@@ -25,7 +24,6 @@ type TooltipProps = PropsWithChildren<{
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
-  hoverableContent?: boolean;
   className?: string;
   trigger?: Trigger;
   lockToTriggerRight?: boolean;
@@ -43,16 +41,17 @@ export default function Tooltip({
   open,
   onOpenChange,
   disabled = false,
-  hoverableContent = true,
   className = '',
   trigger = 'click',
   lockToTriggerRight = false,
 }: TooltipProps) {
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
+
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = typeof open === 'boolean';
   const isOpen = isControlled ? (open as boolean) : uncontrolledOpen;
+
   const setOpen = useCallback(
     (v: boolean) => (isControlled ? onOpenChange?.(v) : setUncontrolledOpen(v)),
     [isControlled, onOpenChange],
@@ -109,33 +108,21 @@ export default function Tooltip({
       else if (align === 'end') top = tRect.bottom - tipRect.height;
       else top = centerY - tipRect.height / 2;
     }
-    if (lockToTriggerRight && (side === 'top' || side === 'bottom')) {
-      // 오른쪽을 트리거에 고정: left = triggerRight - tipWidth
-      left = tRect.right - tipRect.width;
-      // 왼쪽으로만 최소 마진 보장 (너무 왼쪽으로 튀는 것 방지)
-      left = Math.max(left, margin);
-    } else {
-      // 기본: 양쪽 클램프
-      left = Math.min(Math.max(left, margin), vw - tipRect.width - margin);
-    }
 
-    top = Math.min(Math.max(top, margin), vh - tipRect.height - margin);
-    left = clamp(left, margin, vw - tipRect.width - margin);
+    if (lockToTriggerRight && (side === 'top' || side === 'bottom')) {
+      left = Math.max(tRect.right - tipRect.width, margin); // 오른쪽을 고정, 왼쪽만 마진
+    } else {
+      left = clamp(left, margin, vw - tipRect.width - margin);
+    }
     top = clamp(top, margin, vh - tipRect.height - margin);
 
     const arrow: { left?: number; top?: number } = {};
     if (side === 'top' || side === 'bottom') {
       const ideal = centerX - left;
-      arrow.left = Math.min(
-        Math.max(ideal, arrowSize + 8),
-        tipRect.width - arrowSize - 8,
-      );
+      arrow.left = clamp(ideal, arrowSize + 8, tipRect.width - arrowSize - 8);
     } else {
       const ideal = centerY - top;
-      arrow.top = Math.min(
-        Math.max(ideal, arrowSize + 8),
-        tipRect.height - arrowSize - 8,
-      );
+      arrow.top = clamp(ideal, arrowSize + 8, tipRect.height - arrowSize - 8);
     }
 
     setCoords({ top, left });
@@ -191,26 +178,25 @@ export default function Tooltip({
 
   useEffect(() => {
     if (!(isOpen && trigger === 'click')) return;
-    const onDown = (e: MouseEvent) => {
+    const onDown = (e: PointerEvent) => {
       const t = e.target as Node;
       if (triggerRef.current?.contains(t) || tipRef.current?.contains(t))
         return;
       setOpen(false);
     };
-    document.addEventListener('mousedown', onDown);
-    return () => document.removeEventListener('mousedown', onDown);
+    document.addEventListener('pointerdown', onDown, true);
+    return () => document.removeEventListener('pointerdown', onDown, true);
   }, [isOpen, trigger, setOpen]);
 
   const triggerHandlers =
     trigger === 'click'
       ? {
-          onClick: (e: React.MouseEvent) => {
-            e.preventDefault();
-            setOpen(!isOpen);
-          },
-          onTouchStart: (e: React.TouchEvent) => {
-            e.preventDefault();
-            setOpen(!isOpen);
+          onClick: () => setOpen(!isOpen),
+          onKeyDown: (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(!isOpen);
+            }
           },
         }
       : {
@@ -218,25 +204,7 @@ export default function Tooltip({
           onMouseLeave: scheduleClose,
           onFocus: scheduleOpen,
           onBlur: scheduleClose,
-          onTouchStart: (e: React.TouchEvent) => {
-            e.preventDefault();
-            isOpen ? setOpen(false) : setOpen(true);
-          },
         };
-
-  const tipHandlers = useMemo(
-    () =>
-      trigger === 'hover' && hoverableContent
-        ? {
-            onMouseEnter: () => {
-              clearTimers();
-              setOpen(true);
-            },
-            onMouseLeave: scheduleClose,
-          }
-        : {},
-    [hoverableContent, trigger],
-  );
 
   const bubble =
     'relative rounded-[4px] bg-gray-800 text-white px-[1.2rem] py-[0.9rem] caption2 shadow-xl';
@@ -259,39 +227,38 @@ export default function Tooltip({
           <div
             id={id}
             role="tooltip"
-            className="pointer-events-auto fixed z-[30]"
+            className="pointer-events-auto fixed z-[60]"
             style={{
               top: coords?.top ?? -9999,
               left: coords?.left ?? -9999,
               maxWidth,
             }}
             ref={tipRef}
-            {...tipHandlers}
           >
             <div className={`${bubble} ${className}`}>
               {content}
               {side === 'bottom' && (
                 <div
                   className={arrowBase}
-                  style={{ top: -3.5, left: arrowPos.left }}
+                  style={{ top: -4, left: arrowPos.left }}
                 />
               )}
               {side === 'top' && (
                 <div
                   className={arrowBase}
-                  style={{ bottom: -3.5, left: arrowPos.left }}
+                  style={{ bottom: -4, left: arrowPos.left }}
                 />
               )}
               {side === 'left' && (
                 <div
                   className={arrowBase}
-                  style={{ right: -3.5, top: arrowPos.top }}
+                  style={{ right: -4, top: arrowPos.top }}
                 />
               )}
               {side === 'right' && (
                 <div
                   className={arrowBase}
-                  style={{ left: -3.5, top: arrowPos.top }}
+                  style={{ left: -4, top: arrowPos.top }}
                 />
               )}
             </div>
@@ -332,8 +299,9 @@ export function InfoTooltipButton({
     >
       <button
         type="button"
-        className="caption4 flex cursor-pointer items-center gap-[0.2rem] rounded-[4px] bg-gray-100 py-[0.45rem] pr-[0.6rem] pl-[0.2rem] text-gray-600 hover:bg-gray-200/90"
         aria-label={text}
+        style={{ touchAction: 'manipulation' }}
+        className="caption4 flex cursor-pointer items-center gap-[0.2rem] rounded-[4px] bg-gray-100 py-[0.45rem] pr-[0.6rem] pl-[0.2rem] text-gray-600 hover:bg-gray-200/90"
       >
         <Icon name="info" size={1.6} className="text-gray-500" />
         <span>{text}</span>
