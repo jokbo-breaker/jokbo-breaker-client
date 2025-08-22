@@ -16,6 +16,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.85.0",
     "@types/navermaps": "^3.9.1",
+    "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "lottie-react": "^2.4.1",
     "react": "^19.1.1",
