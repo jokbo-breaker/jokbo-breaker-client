@@ -6,7 +6,7 @@ type PromoModalProps = {
   onClose: () => void;
 };
 
-function PromoModal({ open, onClose }: PromoModalProps) {
+export default function PromoModal({ open, onClose }: PromoModalProps) {
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -94,21 +94,5 @@ function PromoModal({ open, onClose }: PromoModalProps) {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function Banner() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="h-[20rem] w-full cursor-pointer bg-gray-100"
-        aria-label="프로모션 배너 자리"
-      />
-      <PromoModal open={open} onClose={() => setOpen(false)} />
-    </>
   );
 }

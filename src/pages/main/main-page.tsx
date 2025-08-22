@@ -4,7 +4,7 @@ import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
 import ProductCard from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
-import HeroBanner from '@/pages/main/components/banner';
+import Banner from '@/pages/main/components/banner-contents';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
@@ -74,7 +74,7 @@ export default function MainPage() {
             <Icon name="location" size={2.4} className="text-primary" />
             <span className="body3 text-black">{DEFAULT_LOCATION_LABEL}</span>
           </div>
-          <HeroBanner />
+          <Banner />
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
