@@ -9,6 +9,14 @@ import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
 import InfoTooltipButton from '@/pages/main/product-detail/components/info-tooltip';
 import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
+import Badge from '@/pages/main/product-detail/components/badge';
+
+const MethodText = ({ label, time }: { label: string; time: string }) => (
+  <div className="flex items-center gap-[0.4rem]">
+    <Badge>{label}</Badge>
+    <span className="body3 whitespace-nowrap text-black">{time}</span>
+  </div>
+);
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +39,6 @@ export default function ProductDetailPage() {
     originalPrice,
     pickupPrice,
     address,
-    hours,
     teamDeliveryAfter,
     phone,
     stockLeft,
@@ -134,34 +141,35 @@ export default function ProductDetailPage() {
             </div>
           </section>
           <section className="flex-col gap-[0.8rem]">
-            {address && (
+            <InfoRow
+              icon="location"
+              text={address}
+              trailing={
+                <button
+                  onClick={() => navigate('/map-view')}
+                  className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
+                >
+                  <Icon name="map" size={2.4} />
+                  <span className="caption2">지도에서 보기</span>
+                </button>
+              }
+            />
+            <div className="flex-col gap-[0.4rem]">
               <InfoRow
-                icon="location"
-                text={address}
-                trailing={
-                  <button
-                    onClick={() => navigate('/map-view')}
-                    className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
-                  >
-                    <Icon name="map" size={2.4} />
-                    <span className="caption2">지도에서 보기</span>
-                  </button>
-                }
+                icon="cart"
+                text={<MethodText label="픽업" time="17:15 ~ 18:00" />}
               />
-            )}
-            {hours && <InfoRow icon="clock" text={hours} />}
-            {teamDeliveryAfter && (
-              <InfoRow icon="cart" text={teamDeliveryAfter} />
-            )}
+              <InfoRow
+                text={<MethodText label="팀배달" time="17:15 ~ 18:00" />}
+              />
+            </div>
             {phone && <InfoRow icon="phone" text={phone} />}
           </section>
-          {teamDeliveryAfter && (
-            <section>
-              <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
-                {teamDeliveryAfter} 팀배달이 가능한 상품이에요
-              </div>
-            </section>
-          )}
+          <section>
+            <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
+              {teamDeliveryAfter} 팀배달이 가능한 상품이에요
+            </div>
+          </section>
           <section className="flex-col gap-[1.2rem]">
             <h2 className="body1 text-black">상품 설명</h2>
             <p className="body4 text-black">{description}</p>
