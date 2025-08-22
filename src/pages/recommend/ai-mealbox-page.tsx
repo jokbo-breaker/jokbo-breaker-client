@@ -11,6 +11,7 @@ import RecommendLoading from '@/pages/recommend/steps/recommend-loading';
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
 import { mockDeliveryProducts } from '@/shared/mocks';
+import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
 
 type Props = {
   onClose?: () => void;
@@ -51,7 +52,8 @@ export default function AiMealboxPage({ onClose }: Props) {
     console.log('submit payload:', payload);
   };
 
-  const isResult = !!results;
+  const isResult = results !== null;
+  const list = results ?? [];
 
   return (
     <div
@@ -74,31 +76,41 @@ export default function AiMealboxPage({ onClose }: Props) {
               <Stepper total={3} current={step} />
             </div>
 
-            {step === 1 && <Step1Categories selected={foods} onToggle={toggleFood} />}
-            {step === 2 && <Step2Budget value={maxPrice} onChange={setMaxPrice} />}
+            {step === 1 && (
+              <Step1Categories selected={foods} onToggle={toggleFood} />
+            )}
+            {step === 2 && (
+              <Step2Budget value={maxPrice} onChange={setMaxPrice} />
+            )}
             {step === 3 && <Step3Method value={method} onChange={setMethod} />}
           </div>
         ) : (
           <section className="mx-auto w-full px-[2.0rem] py-[0.8rem]">
-            <div className="flex-col gap-[2rem]">
-              {results!.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => onClose?.()}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onClose?.();
-                    }
-                  }}
-                  aria-label={`${p.name ?? '상품'} 선택`}
-                  className="block w-full appearance-none rounded-lg border-0 bg-transparent p-0 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
-                >
-                  <ProductCard product={p} variant="wide" />
-                </button>
-              ))}
-            </div>
+            {list.length === 0 ? (
+              <div className="flex min-h-[calc(100dvh-10rem)] items-center justify-center">
+                <EmptyRecommend />
+              </div>
+            ) : (
+              <div className="flex-col gap-[2rem]">
+                {list.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onClose?.()}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onClose?.();
+                      }
+                    }}
+                    aria-label={`${p.name ?? '상품'} 선택`}
+                    className="block w-full appearance-none rounded-lg border-0 bg-transparent p-0 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
+                  >
+                    <ProductCard product={p} variant="wide" />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>
@@ -107,7 +119,15 @@ export default function AiMealboxPage({ onClose }: Props) {
         <div className="mx-auto w-full max-w-[43rem] px-[2.0rem] pb-[2.4rem]">
           {step < 3 ? (
             <Button
-              variant={step === 1 ? (canNext1 ? 'black' : 'white') : canNext2 ? 'black' : 'white'}
+              variant={
+                step === 1
+                  ? canNext1
+                    ? 'black'
+                    : 'white'
+                  : canNext2
+                    ? 'black'
+                    : 'white'
+              }
               className="w-full"
               disabled={step === 1 ? !canNext1 : !canNext2}
               onClick={onNext}
