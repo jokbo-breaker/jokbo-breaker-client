@@ -25,6 +25,7 @@
   --color-overlay: rgba(0, 0, 0, 0.4);
 
   /* Z-Index */
+  --z-tooltip: 4;
   --z-header: 5;
   --z-overlay: 6;
   --z-bottom-nav: 7;
