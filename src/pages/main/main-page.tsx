@@ -28,7 +28,6 @@ type ApiSectionKey = keyof Pick<
   'nearBy' | 'brandNew' | 'lowInStock' | 'mealTime' | 'sweet' | 'pickUpRightNow'
 >;
 
-// UI 섹션키 → API 응답키 매핑
 const UI_TO_API: Record<SectionKey, ApiSectionKey> = {
   nearby: 'nearBy',
   new: 'brandNew',
@@ -54,7 +53,6 @@ export default function MainPage() {
     return typeof t === 'string' ? t : t[mode];
   };
 
-  // 섹션별 리스트 (UI 키 기준으로 접근)
   const lists = useMemo(() => {
     const d = data ?? ({} as DiscoverResponse);
     return Object.fromEntries(
@@ -65,7 +63,6 @@ export default function MainPage() {
     ) as Record<SectionKey, any[]>;
   }, [data]);
 
-  // 로딩 중엔 전체 섹션에 스켈레톤 표시, 로딩 후엔 아이템 있는 섹션만 표시
   const keysToRender = useMemo(
     () =>
       isLoading
