@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
-import ProductCard from '@/pages/main/components/product/product-card';
+import ProductCard, {
+  ProductCardSkeleton,
+} from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
 import Banner from '@/pages/main/components/banner-contents';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
@@ -10,7 +12,6 @@ import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
 import {
   MAIN_SECTIONS_ORDER,
-  getSectionTitle,
   DEFAULT_LOCATION_LABEL,
 } from '@/pages/main/constants/section';
 
@@ -18,17 +19,20 @@ export default function MainPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>('delivery');
 
+  const [isLoading] = useState<boolean>(false);
+
   const data = useMemo(
     () => (mode === 'delivery' ? mockDeliveryProducts : mockPickupProducts),
     [mode],
   );
 
-  const ordered: SectionKey[] = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'];
-
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
     return typeof t === 'string' ? t : t[mode];
   };
+
+  const SKELETON_COUNT = 8;
+  const skeletons = Array.from({ length: SKELETON_COUNT });
 
   return (
     <div className="h-full w-full bg-white pb-[2rem]">
@@ -75,13 +79,24 @@ export default function MainPage() {
             <Section
               key={key}
               sectionKey={key}
-              title={getSectionTitle(key, mode)}
+              title={getTitle(key)}
               mode={mode}
               itemWidthClass="w-[16.5rem]"
             >
-              {data.map((p) => (
-                <ProductCard key={`${key}-${p.id}`} product={p} variant="compact" />
-              ))}
+              {isLoading
+                ? skeletons.map((_, i) => (
+                    <ProductCardSkeleton
+                      key={`s-${key}-${i}`}
+                      variant="compact"
+                    />
+                  ))
+                : data.map((p) => (
+                    <ProductCard
+                      key={`${key}-${p.id}`}
+                      product={p}
+                      variant="compact"
+                    />
+                  ))}
             </Section>
           ))}
         </div>
