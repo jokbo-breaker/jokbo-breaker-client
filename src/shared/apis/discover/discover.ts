@@ -11,12 +11,11 @@ export type DiscoverItem = {
   originalMenuPrice: number;
   discountedMenuPrice: number;
   discountedPercentage: number;
-  pickUpStartTime: string; // "YYYYMMDD HH:mm:ss"
-  pickUpEndTime: string; // "
-  storeDistance: number; // km
+  pickUpStartTime: string;
+  pickUpEndTime: string;
+  storeDistance: number;
   pickupPrice: number;
 
-  // ✅ 응답에 항상 오지 않을 수 있는 필드들은 optional 로
   category?: string;
   supportsDelivery?: boolean;
   gramPerUnit?: number;
@@ -25,7 +24,7 @@ export type DiscoverItem = {
 
 export type DiscoverResponse = {
   success: boolean;
-  totalMenus: number; // ✅ 샘플 응답에 존재
+  totalMenus: number;
   nearBy: DiscoverItem[];
   brandNew: DiscoverItem[];
   lowInStock: DiscoverItem[];
@@ -36,9 +35,37 @@ export type DiscoverResponse = {
 
 export type DiscoverParams = {
   type: 'pickup' | 'delivery';
-  place: string; // 예: "동작"
+  place: string;
   lat: number;
   lng: number;
+};
+export type MenuDetailResponse = {
+  success: boolean;
+  storeId: string;
+  storeName: string;
+  storeOpenTime: string;
+  storeCloseTime: string;
+  storeAddress: string;
+  storeLat: number;
+  storeLng: number;
+  storePhoneNumber: string;
+  menuId: string;
+  menuName: string;
+  menuImageUrls: string[];
+  menuDescription: string;
+  stockLeft: number;
+  originalMenuPrice: number;
+  discountedMenuPrice: number;
+  discountedPercentage: number;
+  gramPerUnit: number;
+  pickupPrice: number;
+  deliveryPrice: number;
+  totalSoldCount: number;
+  pickUpStartTime: string;
+  pickUpEndTime: string;
+  deliveryStartTime: string;
+  isDeliveryAvailable: boolean;
+  supportsDelivery: boolean;
 };
 
 export const createDiscoverApi = (http: HttpClient) => ({
@@ -47,4 +74,6 @@ export const createDiscoverApi = (http: HttpClient) => ({
       END_POINT.DISCOVER(type, place),
       { lat, lng },
     ),
+  menuDetail: (menuId: string) =>
+    http.get<MenuDetailResponse>(END_POINT.DISCOVER_MENU_DETAIL(menuId)),
 });
