@@ -12,6 +12,7 @@ export const END_POINT = {
   DISCOVER: (type: 'pickup' | 'delivery', place: string) =>
     `/discover?type=${type}&place=${encodeURIComponent(place)}`,
   DISCOVER_MENU_DETAIL: (menuId: string) => `/discover/menu/${menuId}`,
+  DISCOVER_FILTER: `/discover/filter`,
   ORDER_CREATE: '/order',
 } as const;
 

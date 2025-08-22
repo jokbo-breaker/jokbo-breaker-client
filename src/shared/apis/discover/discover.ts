@@ -15,7 +15,7 @@ export type DiscoverItem = {
   pickUpEndTime: string;
   storeDistance: number;
   pickupPrice: number;
-
+  foodType?: string;
   category?: string;
   supportsDelivery?: boolean;
   gramPerUnit?: number;
@@ -67,6 +67,30 @@ export type MenuDetailResponse = {
   isDeliveryAvailable: boolean;
   supportsDelivery: boolean;
 };
+export type DiscoverFilterRequest = {
+  lat: number;
+  lng: number;
+  query?: string | null;
+  category?: string | null;
+  foodType?: '식사' | '디저트' | null;
+  sortBy?: '인기순' | '가격 낮은 순' | '가격 높은 순' | '거리순' | null;
+  priceRange?: string | null;
+  deliveryMethod?: '배달' | '픽업' | '지금 바로' | '나중에' | null;
+};
+
+export type DiscoverFilterResponse = {
+  success: boolean;
+  filters: Partial<{
+    query: string | null;
+    foodType: string | null;
+    category: string | null;
+    priceRange: string | null;
+    deliveryMethod: string | null;
+    sortBy: string | null;
+  }>;
+  count: number;
+  results: DiscoverItem[];
+};
 
 export const createDiscoverApi = (http: HttpClient) => ({
   search: ({ type, place, lat, lng }: DiscoverParams) =>
@@ -76,4 +100,9 @@ export const createDiscoverApi = (http: HttpClient) => ({
     ),
   menuDetail: (menuId: string) =>
     http.get<MenuDetailResponse>(END_POINT.DISCOVER_MENU_DETAIL(menuId)),
+  filter: (body: DiscoverFilterRequest) =>
+    http.post<DiscoverFilterResponse, DiscoverFilterRequest>(
+      END_POINT.DISCOVER_FILTER,
+      body,
+    ),
 });

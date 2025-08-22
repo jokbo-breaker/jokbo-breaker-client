@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import Tag from '@/shared/components/chips/tag';
 import RadioTileGroup from '@/shared/components/text-field/radio-tile-group';
 import TopBar from '@/shared/layouts/top-bar';
@@ -26,6 +27,15 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
     if (open) setDraft(value);
   }, [open, value]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const toggleInArray = <T extends string>(arr: T[], k: T): T[] =>
@@ -38,6 +48,7 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
     for (let i = 0; i < as.length; i++) if (as[i] !== bs[i]) return false;
     return true;
   };
+
   const isSameFilter = (a: FilterState, b: FilterState) =>
     a.foodType === b.foodType &&
     a.priceMax === b.priceMax &&
@@ -46,16 +57,28 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
 
   const changed = !isSameFilter(draft, value);
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[var(--z-bottom-modal)]"
+      className="fixed inset-0 z-[9999]"
       role="dialog"
       aria-modal="true"
       aria-label="필터"
     >
-      <div className="absolute inset-0">
+      <button
+        aria-label="닫기"
+        className="absolute inset-0 bg-black/40"
+        onClick={onClose}
+        type="button"
+      />
+
+      <div className="fixed inset-0 flex justify-center">
         <div className="mx-auto flex h-full w-full max-w-[43rem] flex-col bg-white">
-          <TopBar title="필터" showClose onClose={onClose} className="bg-white px-[2rem]" />
+          <TopBar
+            title="필터"
+            showClose
+            onClose={onClose}
+            className="bg-white px-[2rem]"
+          />
 
           <div className="scrollbar-hide flex-1 flex-col gap-[3.6rem] overflow-y-auto px-[2rem]">
             <section className="flex-col gap-[1.2rem]">
@@ -98,7 +121,7 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
               </div>
             </section>
 
-            <section className="flex-col gap-[1.2rem]">
+            <section className="gap=[1.2rem] flex-col">
               <h3 className="body3 font-medium text-black">가격대</h3>
               <div className="flex flex-wrap gap-[0.8rem]">
                 {PRICE_OPTIONS.map((p) => {
@@ -147,7 +170,11 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
 
           <div className="sticky right-0 bottom-0 left-0 px-[2rem] pt-[1.2rem] pb-[max(env(safe-area-inset-bottom),2rem)]">
             <div className="flex items-center gap-[1.2rem]">
-              <Button variant="outline" className="flex-1" onClick={() => setDraft(FILTER_DEFAULT)}>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setDraft(FILTER_DEFAULT)}
+              >
                 초기화
               </Button>
               <Button
@@ -165,6 +192,7 @@ export default function FilterModal({ open, value, onApply, onClose }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -4,6 +4,8 @@ import type {
   DiscoverParams,
   DiscoverResponse,
   MenuDetailResponse,
+  DiscoverFilterRequest,
+  DiscoverFilterResponse,
 } from './discover';
 
 export const useDiscoverQuery = (params: DiscoverParams) =>
@@ -18,6 +20,24 @@ export const useMenuDetailQuery = (menuId: string) =>
     queryKey: ['menu-detail', menuId],
     queryFn: () => api.discover.menuDetail(menuId),
     enabled: !!menuId,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+export const useDiscoverFilterQuery = (params: DiscoverFilterRequest) =>
+  useQuery<DiscoverFilterResponse>({
+    queryKey: [
+      'discover-filter',
+      params.lat,
+      params.lng,
+      params.query ?? '',
+      params.category ?? '',
+      params.foodType ?? '',
+      params.sortBy ?? '',
+      params.priceRange ?? '',
+      params.deliveryMethod ?? '',
+    ],
+    queryFn: () => api.discover.filter(params),
+    enabled: Number.isFinite(params.lat) && Number.isFinite(params.lng),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
