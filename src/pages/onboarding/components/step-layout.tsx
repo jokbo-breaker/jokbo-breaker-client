@@ -11,7 +11,7 @@ type Props = {
 
 export default function StepLayout({ lines, icon, alt, extra }: Props) {
   return (
-    <div className="flex-col-center w-full">
+    <div className="flex-col-center w-full py-[9rem]">
       <div className="head2 text-center text-black">
         {lines.map((t, i) => (
           <p key={i}>{t}</p>
