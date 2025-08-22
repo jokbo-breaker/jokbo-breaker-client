@@ -5,17 +5,16 @@ import Icon from '@/shared/components/icon';
 
 export default function BannerContents() {
   const [open, setOpen] = React.useState(false);
-  const [slide, setSlide] = React.useState(0); // 0: 콘텐츠, 1: 회색
+  const [slide, setSlide] = React.useState(0);
 
-  // 드래그 상태
   const wrapRef = React.useRef<HTMLDivElement>(null);
   const dragRef = React.useRef({
     active: false,
     startX: 0,
     dx: 0,
   });
-  const [, force] = React.useReducer((c) => c + 1, 0); // 드래그 중 리렌더 트리거
-  const suppressClickRef = React.useRef(false); // 드래그 후 클릭 억제
+  const [, force] = React.useReducer((c) => c + 1, 0);
+  const suppressClickRef = React.useRef(false);
 
   const openModal = React.useCallback(() => setOpen(true), []);
   const onKeyOpen = React.useCallback((e: React.KeyboardEvent) => {
@@ -25,9 +24,7 @@ export default function BannerContents() {
     }
   }, []);
 
-  // 드래그 핸들러(마우스/터치 겸용 Pointer Events)
   const onPointerDown = (e: React.PointerEvent) => {
-    // 마우스는 좌클릭만
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
     dragRef.current.active = true;
@@ -46,7 +43,7 @@ export default function BannerContents() {
     if (!dragRef.current.active) return;
     const dx = dragRef.current.dx;
     const w = wrapRef.current?.clientWidth ?? 1;
-    const threshold = Math.max(28, w * 0.08); // 28px 또는 너비의 8%
+    const threshold = Math.max(28, w * 0.08);
 
     let next = slide;
     if (Math.abs(dx) > threshold) {
@@ -55,7 +52,6 @@ export default function BannerContents() {
     }
     setSlide(next);
 
-    // 드래그했다면 바로 이어지는 click 억제
     if (Math.abs(dx) > 5) suppressClickRef.current = true;
 
     dragRef.current.active = false;
@@ -68,7 +64,6 @@ export default function BannerContents() {
   const onPointerCancel = () => endDrag();
   const onPointerLeave = () => endDrag();
 
-  // 배너의 click 에서 드래그 후 클릭만 억제
   const onClickCapture = (e: React.SyntheticEvent) => {
     if (suppressClickRef.current) {
       e.preventDefault();
@@ -77,15 +72,11 @@ export default function BannerContents() {
     }
   };
 
-  // 트랙 이동 계산: 트랙 너비가 200%이므로 px → % 로 변환 시 50을 곱/나눔
   const base = slide === 0 ? 0 : -50;
   const w = wrapRef.current?.clientWidth ?? 1;
-  const dragPercent = dragRef.current.active
-    ? (dragRef.current.dx / w) * 50
-    : 0;
+  const dragPercent = dragRef.current.active ? (dragRef.current.dx / w) * 50 : 0;
   const transform = `translateX(calc(${base}% + ${dragPercent}%))`;
 
-  // 배너 클릭이 인디케이터로 버블링되지 않도록(그리고 그 반대도)
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   return (
@@ -154,11 +145,7 @@ export default function BannerContents() {
                 <div className="flex items-center justify-center gap-[0.6rem]">
                   <span className="body3">오늘</span>
                   <span className="relative px-1">
-                    <Icon
-                      name="logo-title"
-                      className="text-primary relative z-[1]"
-                      width={7.8}
-                    />
+                    <Icon name="logo-title" className="text-primary relative z-[1]" width={7.8} />
                   </span>
                   <span className="body3">에서</span>
                 </div>
@@ -173,8 +160,7 @@ export default function BannerContents() {
                 <div className="flex-row-center gap-[0.2rem]">
                   <span className="head1 text-primary">1,506</span>
                   <span className="body4">
-                    <span className="text-primary">g</span>의 음식물류 폐기물을
-                    절약했어요!
+                    <span className="text-primary">g</span>의 음식물류 폐기물을 절약했어요!
                   </span>
                 </div>
               </div>
@@ -204,12 +190,7 @@ export default function BannerContents() {
           onTouchStart={stopBubble}
           onMouseDown={stopBubble}
         >
-          <Indicator
-            total={2}
-            index={slide}
-            onSelect={setSlide}
-            className="bg-transparent"
-          />
+          <Indicator total={2} index={slide} onSelect={setSlide} className="bg-transparent" />
         </div>
       </div>
 

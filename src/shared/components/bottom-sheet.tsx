@@ -41,9 +41,7 @@ export default function BottomSheet({
   const overPullUpRef = useRef(0);
 
   const remToPx = useCallback((rem: number) => {
-    const base = parseFloat(
-      getComputedStyle(document.documentElement).fontSize || '10px',
-    );
+    const base = parseFloat(getComputedStyle(document.documentElement).fontSize || '10px');
     return rem * base;
   }, []);
 
@@ -162,14 +160,7 @@ export default function BottomSheet({
 
     overPullUpRef.current = 0;
     lastClientYRef.current = null;
-  }, [
-    isDragging,
-    sheetHeight,
-    getMinVisiblePx,
-    onOverExpand,
-    overThresholdRem,
-    remToPx,
-  ]);
+  }, [isDragging, sheetHeight, getMinVisiblePx, onOverExpand, overThresholdRem, remToPx]);
 
   useEffect(() => {
     if (isDragging) {
@@ -204,9 +195,7 @@ export default function BottomSheet({
         className="mx-auto mb-[1.4rem] h-[0.3rem] w-[5rem] cursor-grab rounded-[10px] bg-gray-200 active:cursor-grabbing"
         aria-label="시트 드래그 핸들"
       />
-      <div className="scrollbar-hide max-h-[calc(100%-4rem)] overflow-y-auto px-4">
-        {children}
-      </div>
+      <div className="scrollbar-hide max-h-[calc(100%-4rem)] overflow-y-auto px-4">{children}</div>
     </div>
   );
 }

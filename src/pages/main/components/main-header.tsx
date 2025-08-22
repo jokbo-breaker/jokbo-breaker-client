@@ -34,10 +34,7 @@ export default function Header({
 
   return (
     <header
-      className={
-        'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' +
-        className
-      }
+      className={'sticky top-0 z-[var(--z-header)] bg-white px-[2rem] py-[0.2rem] ' + className}
     >
       <div className="flex items-center justify-between">
         <nav
