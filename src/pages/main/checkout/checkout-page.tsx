@@ -6,6 +6,7 @@ import PayBar from '@/pages/main/checkout/components/pay-bar';
 import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
 import PaymentCompleteView from '@/pages/main/checkout/components/payment-complete-view';
 import { getUnitPrice } from '@/pages/main/checkout/utils/checkout';
+import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import {
   DEFAULT_QTY,
   type OrderType,
@@ -56,9 +57,13 @@ export default function CheckoutPage() {
   const ORDER_TYPE_OPTIONS = [
     {
       value: 'team' as const,
-      label: '팀배달',
+      label: '팀배달 · 17-32분',
       right: teamDeliveryRight,
-      below: <p className="caption1 text-primary">*출발 시각에 맞추어 순차적으로 배달됩니다</p>,
+      below: (
+        <p className="caption1 text-primary">
+          *출발 시각에 맞추어 순차적으로 배달됩니다
+        </p>
+      ),
     },
     { value: 'pickup' as const, label: '픽업', right: pickupRight },
   ];
@@ -79,7 +84,7 @@ export default function CheckoutPage() {
   return stage === 'done' ? (
     <PaymentCompleteView
       savedG={savedG}
-      remainingBadge={product.remainingBadge ?? null}
+      remainingBadge={getRemainingBadge(product.stockLeft ?? null)}
       onBack={() => setStage('form')}
       onPrimary={() => setStage('form')}
     />
@@ -95,18 +100,26 @@ export default function CheckoutPage() {
             <div className="flex-col">
               <div className="flex-items-center gap-[0.4rem]">
                 {product.discount > 0 && (
-                  <span className="body1 text-primary">{product.discount}%</span>
+                  <span className="body1 text-primary">
+                    {product.discount}%
+                  </span>
                 )}
-                <span className="head3 font-bold">{formatKRW(product.price)}원</span>
+                <span className="head3 font-bold">
+                  {formatKRW(product.price)}원
+                </span>
                 {product.originalPrice && (
-                  <span className="body2 text-gray-300">{formatKRW(product.originalPrice)}원</span>
+                  <span className="body2 text-gray-300 line-through">
+                    {formatKRW(product.originalPrice)}원
+                  </span>
                 )}
               </div>
 
               {product.pickupPrice && (
                 <div className="flex-items-center text-blue gap-[0.4rem]">
                   <span className="body2">픽업 시</span>
-                  <span className="head3">{formatKRW(product.pickupPrice)}원</span>
+                  <span className="head3">
+                    {formatKRW(product.pickupPrice)}원
+                  </span>
                 </div>
               )}
             </div>

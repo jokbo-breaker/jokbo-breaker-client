@@ -2,14 +2,16 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
-import ProductCard from '@/pages/main/components/product/product-card';
+import ProductCard, {
+  ProductCardSkeleton,
+} from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
-import HeroBanner from '@/pages/main/components/banner';
+import Banner from '@/pages/main/components/banner-contents';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
+import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
 import {
   MAIN_SECTIONS_ORDER,
-  getSectionTitle,
   DEFAULT_LOCATION_LABEL,
 } from '@/pages/main/constants/section';
 
@@ -17,24 +19,20 @@ export default function MainPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>('delivery');
 
+  const [isLoading] = useState<boolean>(false);
+
   const data = useMemo(
     () => (mode === 'delivery' ? mockDeliveryProducts : mockPickupProducts),
     [mode],
   );
 
-  const ordered: SectionKey[] = [
-    'nearby',
-    'new',
-    'lastcall',
-    'breakfast',
-    'dessert',
-    'now',
-  ];
-
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
     return typeof t === 'string' ? t : t[mode];
   };
+
+  const SKELETON_COUNT = 8;
+  const skeletons = Array.from({ length: SKELETON_COUNT });
 
   return (
     <div className="h-full w-full bg-white pb-[2rem]">
@@ -57,24 +55,23 @@ export default function MainPage() {
             >
               <Icon name="search" width={2.4} />
             </button>
-            <button
-              onClick={() => navigate('/mypage')}
-              aria-label="프로필"
-              className="cursor-pointer text-gray-200"
-            >
-              <Icon name="header-profile" width={2.4} />
-            </button>
+            <ProfileModal
+              user={{ name: '닉네임', email: 'aaaa@gmail.com' }}
+              onLogout={() => {
+                console.log('logout');
+              }}
+            />
           </>
         }
       />
 
       <div className="space-y-[2.4rem]">
-        <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
-          <div className="flex items-center gap-[0.4rem]">
+        <div className="flex-col gap-[1.6rem] pt-[1.6rem]">
+          <div className="flex items-center gap-[0.4rem] px-[2rem]">
             <Icon name="location" size={2.4} className="text-primary" />
             <span className="body3 text-black">{DEFAULT_LOCATION_LABEL}</span>
           </div>
-          <HeroBanner />
+          <Banner />
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
@@ -82,17 +79,24 @@ export default function MainPage() {
             <Section
               key={key}
               sectionKey={key}
-              title={getSectionTitle(key, mode)}
+              title={getTitle(key)}
               mode={mode}
               itemWidthClass="w-[16.5rem]"
             >
-              {data.map((p) => (
-                <ProductCard
-                  key={`${key}-${p.id}`}
-                  product={p}
-                  variant="compact"
-                />
-              ))}
+              {isLoading
+                ? skeletons.map((_, i) => (
+                    <ProductCardSkeleton
+                      key={`s-${key}-${i}`}
+                      variant="compact"
+                    />
+                  ))
+                : data.map((p) => (
+                    <ProductCard
+                      key={`${key}-${p.id}`}
+                      product={p}
+                      variant="compact"
+                    />
+                  ))}
             </Section>
           ))}
         </div>

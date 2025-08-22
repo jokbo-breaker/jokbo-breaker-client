@@ -6,17 +6,75 @@ type PromoModalProps = {
   onClose: () => void;
 };
 
-function PromoModal({ open, onClose }: PromoModalProps) {
+function useImagesReady(srcs: string[], enabled: boolean) {
+  const [ready, setReady] = React.useState(false);
+
   React.useEffect(() => {
-    if (!open) return;
+    if (!enabled) {
+      setReady(false);
+      return;
+    }
+    let cancelled = false;
+
+    const loadOne = (src: string) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        const cleanup = () => {
+          img.removeEventListener('load', onDone);
+          img.removeEventListener('error', onDone);
+        };
+        const onDone = () => {
+          cleanup();
+          resolve();
+        };
+
+        img.addEventListener('load', onDone, { once: true });
+        img.addEventListener('error', onDone, { once: true });
+        img.src = src;
+
+        if (img.complete) {
+          cleanup();
+          resolve();
+          return;
+        }
+
+        const canDecode =
+          typeof (img as HTMLImageElement & { decode?: () => Promise<void> })
+            .decode === 'function';
+        if (canDecode) {
+          (img as any).decode().then(onDone).catch(onDone);
+        }
+      });
+
+    Promise.all(srcs.map(loadOne)).then(() => {
+      if (!cancelled) setReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, JSON.stringify(srcs)]);
+
+  return ready;
+}
+
+export default function PromoModal({ open, onClose }: PromoModalProps) {
+  const sources = React.useMemo(
+    () => ['/promo.svg', '/promo2.svg', '/promo3.svg'],
+    [],
+  );
+  const imagesReady = useImagesReady(sources, open);
+
+  React.useEffect(() => {
+    if (!open || !imagesReady) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [open, imagesReady, onClose]);
 
-  if (!open) return null;
+  if (!open || !imagesReady) return null;
 
   return (
     <div
@@ -28,13 +86,13 @@ function PromoModal({ open, onClose }: PromoModalProps) {
       <div className="absolute inset-0">
         <div className="mx-auto flex h-full w-full max-w-[43rem] flex-col bg-white">
           <TopBar
-            title={`잔반없는날이 만들고자 하는 세상`}
+            title="잔반없는날이 만들고자 하는 세상"
             showClose
             onClose={onClose}
             className="bg-white"
           />
 
-          <div className="scrollbar-hide flex-1 overflow-y-auto">
+          <div className="scrollbar-hide flex-1 overflow-x-hidden overflow-y-auto">
             <section className="items-centerd flex justify-between gap-[1.6rem] pt-[2.4rem]">
               <div className="flex-col gap-[2rem] pl-[2rem]">
                 <div className="flex-col gap-[0.4rem]">
@@ -94,21 +152,5 @@ function PromoModal({ open, onClose }: PromoModalProps) {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function Banner() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="h-[20rem] w-full cursor-pointer bg-gray-100"
-        aria-label="프로모션 배너 자리"
-      />
-      <PromoModal open={open} onClose={() => setOpen(false)} />
-    </>
   );
 }

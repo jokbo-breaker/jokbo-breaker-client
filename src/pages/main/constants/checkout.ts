@@ -7,3 +7,5 @@ export const PAYMENT_LABEL: Record<PaymentMethod, string> = {
   card: '카드 결제',
   cash: '현장 결제',
 };
+
+export const STOCK_LOW_THRESHOLD = 5;

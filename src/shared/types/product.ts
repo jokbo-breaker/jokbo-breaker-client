@@ -8,7 +8,7 @@ export type Product = {
   price: number;
   description?: string;
   originalPrice?: number;
-  remainingBadge?: string;
+  stockLeft?: number;
   hours: string;
   distanceKm: number;
   address?: string;
