@@ -7,6 +7,7 @@ import Indicator from '@/pages/main/product-detail/components/indicator';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
+import { InfoTooltipButton } from '@/pages/main/product-detail/components/info-tooltip';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -89,9 +90,23 @@ export default function ProductDetailPage() {
 
         <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
           <section className="space-y-2">
-            <div className="flex-col gap-[0.2rem]">
-              <div className="body3 text-black">{store}</div>
-              <h1 className="body2 text-black">{name}</h1>
+            <div className="flex-row-between">
+              <div className="flex-col gap-[0.2rem]">
+                <div className="body3 text-black">{store}</div>
+                <h1 className="body2 text-black">{name}</h1>
+              </div>
+              <InfoTooltipButton
+                text="구성이 궁금해요"
+                side="bottom"
+                align="start"
+                content={
+                  <div className="leading-[1.35]">
+                    매장에서 지정한 g 수를 바탕으로 구성돼요
+                    <br />
+                    매장의 상황에 따라 조금씩 달라질 수 있어요
+                  </div>
+                }
+              />
             </div>
             <div className="flex-col gap-[0.8rem]">
               <div className="flex-items-center gap-[0.4rem]">
