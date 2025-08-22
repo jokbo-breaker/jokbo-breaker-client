@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
@@ -7,13 +7,15 @@ import ProductCard, {
 } from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
 import Banner from '@/pages/main/components/banner-contents';
-import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
 import {
   MAIN_SECTIONS_ORDER,
   DEFAULT_LOCATION_LABEL,
 } from '@/pages/main/constants/section';
+
+import { useDiscoverQuery } from '@/shared/apis/discover/discover-queries';
+import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 
 export default function MainPage() {
   const navigate = useNavigate();
