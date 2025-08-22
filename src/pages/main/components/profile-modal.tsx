@@ -46,13 +46,16 @@ export function ProfileModal({
 
       {open && (
         <>
-          <div className="fixed inset-0 z-[30]" onClick={() => setOpen(false)} />
+          <div
+            className="fixed inset-0 z-[30]"
+            onClick={() => setOpen(false)}
+          />
 
           <div
             ref={cardRef}
             role="menu"
             aria-label="프로필 메뉴"
-            className="absolute top-[calc(100%+0.8rem)] right-0 z-[50] min-w-[12rem] rounded-2xl bg-white px-[1.2rem] py-[1rem] shadow-[0_8px_24px_rgba(0,0,0,0.14)] ring-1 ring-black/5"
+            className="absolute top-[calc(100%+0.8rem)] right-0 z-[40] min-w-[12rem] rounded-2xl bg-white px-[1.2rem] py-[1rem] shadow-[0_8px_24px_rgba(0,0,0,0.14)] ring-1 ring-black/5"
           >
             <div className="relative z-10 flex-col gap-[0.4rem]">
               <div className="flex-col">

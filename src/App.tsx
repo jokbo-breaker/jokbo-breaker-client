@@ -8,7 +8,7 @@ import useSplash from '@/shared/hooks/use-splash';
 import Splash from '@/shared/components/splash/splash';
 
 export default function App() {
-  const { visible, hide } = useSplash({ minShowMs: 900 });
+  const { visible, hide } = useSplash({ minShowMs: 1000 });
 
   return (
     <QueryClientProvider client={queryClient}>

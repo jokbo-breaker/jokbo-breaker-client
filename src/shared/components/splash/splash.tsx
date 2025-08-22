@@ -32,7 +32,7 @@ export default function Splash({
       aria-live="polite"
       onClick={dismissible ? close : undefined}
       className={cn(
-        'flex-col-center fixed inset-0 z-[999] gap-[1.2rem]',
+        'flex-col-center fixed inset-0 z-[50] gap-[1.2rem]',
         'bg-primary text-black select-none',
         leaving
           ? 'opacity-0 transition-opacity duration-[400ms]'
@@ -40,7 +40,7 @@ export default function Splash({
       )}
       style={{ transitionDuration: `${fadeMs}ms` }}
     >
-      <Icon name="logo-title" width={12} height={2.6} className="text-white" />
+      <Icon name="logo-title" width={18} height={3.6} className="text-white" />
     </div>
   );
 }
