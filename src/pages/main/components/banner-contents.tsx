@@ -3,16 +3,14 @@ import PromoModal from '@/pages/main/components/banner';
 import Indicator from '@/pages/main/product-detail/components/indicator';
 import Icon from '@/shared/components/icon';
 
+const formatGram = (n: number) => `${n.toLocaleString()}g`;
+
 export default function BannerContents() {
   const [open, setOpen] = React.useState(false);
   const [slide, setSlide] = React.useState(0);
 
   const wrapRef = React.useRef<HTMLDivElement>(null);
-  const dragRef = React.useRef({
-    active: false,
-    startX: 0,
-    dx: 0,
-  });
+  const dragRef = React.useRef({ active: false, startX: 0, dx: 0 });
   const [, force] = React.useReducer((c) => c + 1, 0);
   const suppressClickRef = React.useRef(false);
 
@@ -32,13 +30,11 @@ export default function BannerContents() {
     dragRef.current.dx = 0;
     force();
   };
-
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragRef.current.active) return;
     dragRef.current.dx = e.clientX - dragRef.current.startX;
     force();
   };
-
   const endDrag = () => {
     if (!dragRef.current.active) return;
     const dx = dragRef.current.dx;
@@ -59,7 +55,6 @@ export default function BannerContents() {
     dragRef.current.dx = 0;
     force();
   };
-
   const onPointerUp = () => endDrag();
   const onPointerCancel = () => endDrag();
   const onPointerLeave = () => endDrag();
@@ -80,6 +75,11 @@ export default function BannerContents() {
   const transform = `translateX(calc(${base}% + ${dragPercent}%))`;
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
+
+  // === 배너 #2 데이터 (샘플) ===
+  const current = 642;
+  const reference = 1148;
+  const percent = Math.min(100, (current / reference) * 100);
 
   return (
     <>
@@ -105,6 +105,7 @@ export default function BannerContents() {
             transitionDuration: dragRef.current.active ? '0ms' : undefined,
           }}
         >
+          {/* ===== 배너 #1 (기존) ===== */}
           <div className="relative h-full w-1/2">
             <img
               src="/food1.svg"
@@ -187,7 +188,44 @@ export default function BannerContents() {
             </div>
           </div>
 
-          <div className="h-full w-1/2 bg-gray-800" />
+          {/* ===== 배너 #2 ===== */}
+          <div className="relative h-full w-1/2 bg-gray-900">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-[1.6rem] px-[2.4rem] text-center">
+              <div className="flex items-center gap-[0.3rem]">
+                <span className="body1 text-gray-50">
+                  이번주 나의 따뜻한 발걸음
+                </span>
+                <span aria-hidden>👣</span>
+              </div>
+              <div className="w-full flex-col gap-[1.2rem]">
+                <div className="w-full flex-col gap-[0.6rem]">
+                  <div className="flex w-full items-center justify-between">
+                    <span className="caption2">{formatGram(current)}</span>
+                    <span className="body3 text-primary">
+                      {formatGram(reference)}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  aria-label="이번주 절약량 진행도"
+                  className="relative h-[1.6rem] w-full rounded-[40px] bg-gray-200"
+                >
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-[40px] bg-gradient-to-r from-[#ff6a3d] to-[#ff8a64]"
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
+                <div className="w-full flex-col text-end">
+                  <div className="caption1 text-gray-300">
+                    일주일 간 가정 내 음식물류 폐기물 발생량
+                  </div>
+                  <div className="caption4 text-gray-500">
+                    (환경부, 2021, 1가정 기준)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
