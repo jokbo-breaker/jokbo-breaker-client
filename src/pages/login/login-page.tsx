@@ -13,16 +13,18 @@ export default function LoginPage() {
   const { isPending: logoutLoading } = useLogoutMutation();
 
   const [waking, setWaking] = useState(false);
+  const googleStartUrl = useMemo(() => {
+    const base = BASE_URL.replace(/\/$/, '');
+    const path = END_POINT.AUTH_GOOGLE_START.replace(/^\//, '');
+    const url = new URL(`${base}/${path}`);
 
-  // BASE_URL + path 안전 결합
-  const withBase = useCallback((path: string) => {
-    return `${BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+    const isLocalHost = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(
+      window.location.hostname,
+    );
+    if (isLocalHost) url.searchParams.set('returnTo', 'local');
+
+    return url.toString();
   }, []);
-
-  const googleStartUrl = useMemo(
-    () => withBase(END_POINT.AUTH_GOOGLE_START),
-    [withBase],
-  );
 
   const wakeAndGoGoogle = useCallback(async () => {
     setWaking(true);
