@@ -30,7 +30,7 @@ export default function PaymentCompleteView({
               예쁘게 포장해서 기다리고 있을게요
             </p>
           </div>
-          <Icon name="complete-order" size={20} />
+          <Icon name="complete-order" size={20} className="animate-float" />
           <Divider />
         </section>
         <section className="pt-[2.8rem] text-center">
