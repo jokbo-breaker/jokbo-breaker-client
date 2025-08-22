@@ -1,6 +1,5 @@
 import React from 'react';
 import Icon from '@/shared/components/icon';
-import { ProfileModal } from '@/pages/main/components/profile-modal';
 
 export type Mode = 'delivery' | 'pickup';
 
@@ -42,10 +41,11 @@ export default function Header({
     >
       <div className="flex items-center justify-between">
         <nav
-          className="body1 flex gap-[1.6rem]"
+          className="body1 flex items-center gap-[1.6rem]"
           role="tablist"
           aria-label="배송 방식 선택"
         >
+          <Icon className="text-primary" name="logo-title" width={7.8} />
           {tabs.map(({ key, label }) => (
             <button
               key={key}
