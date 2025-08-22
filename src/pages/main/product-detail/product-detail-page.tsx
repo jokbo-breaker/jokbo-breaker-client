@@ -4,12 +4,19 @@ import TopBar from '@/shared/layouts/top-bar';
 import BottomCTA from '@/pages/main/product-detail/components/bottom-cta';
 import InfoRow from '@/pages/main/product-detail/components/info-row';
 import Indicator from '@/pages/main/product-detail/components/indicator';
-import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
 import InfoTooltipButton from '@/pages/main/product-detail/components/info-tooltip';
 import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import Badge from '@/pages/main/product-detail/components/badge';
+import { useMenuDetailQuery } from '@/shared/apis/discover/discover-queries';
+
+const hhmm = (ts?: string | null) => {
+  if (!ts) return '';
+  const t = ts.split(' ')[1] || '';
+  const [h = '00', m = '00'] = t.split(':');
+  return `${h}:${m}`;
+};
 
 const MethodText = ({ label, time }: { label: string; time: string }) => (
   <div className="flex items-center gap-[0.4rem]">
@@ -22,34 +29,47 @@ export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const product = useMemo(() => {
-    const all = [...mockDeliveryProducts, ...mockPickupProducts];
-    return all.find((p) => p.id === id);
-  }, [id]);
+  const { data, isLoading, isError } = useMenuDetailQuery(id ?? '');
 
-  if (!product) return <div className="p-6">상품을 찾을 수 없습니다.</div>;
-
-  const {
-    image,
-    images = [image],
-    store,
-    name,
-    discount,
-    price,
-    originalPrice,
-    pickupPrice,
-    address,
-    teamDeliveryAfter,
-    phone,
-    stockLeft,
-    description,
-  } = product as typeof product & { images?: string[] };
-  const remainingBadge = useMemo(
-    () => getRemainingBadge(stockLeft ?? null),
-    [stockLeft],
-  );
   const [idx, setIdx] = useState(0);
   const startX = useRef<number | null>(null);
+
+  const images = useMemo(
+    () => (data?.menuImageUrls?.length ? data.menuImageUrls : ['']),
+    [data?.menuImageUrls],
+  );
+  const image = images[0];
+
+  const store = data?.storeName ?? '';
+  const name = data?.menuName ?? '';
+  const discount = data?.discountedPercentage ?? 0;
+  const price = data?.discountedMenuPrice ?? 0;
+  const originalPrice = data?.originalMenuPrice ?? 0;
+  const pickupPrice = data?.pickupPrice ?? 0;
+  const address = data?.storeAddress ?? '';
+  const phone = data?.storePhoneNumber ?? '';
+  const stockLeft = data?.stockLeft ?? null;
+  const description = data?.menuDescription ?? '';
+
+  const pickupTime = useMemo(
+    () =>
+      data ? `${hhmm(data.pickUpStartTime)} ~ ${hhmm(data.pickUpEndTime)}` : '',
+    [data],
+  );
+  const deliveryTime = useMemo(
+    () =>
+      data
+        ? data.isDeliveryAvailable
+          ? `${hhmm(data.deliveryStartTime)} ~ ${hhmm(data.storeCloseTime)}`
+          : '미지원'
+        : '',
+    [data],
+  );
+
+  const remainingBadge = useMemo(
+    () => getRemainingBadge(stockLeft),
+    [stockLeft],
+  );
 
   const onTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
@@ -58,8 +78,8 @@ export default function ProductDetailPage() {
     if (startX.current == null) return;
     const dx = e.changedTouches[0].clientX - startX.current;
     const thresh = 30;
-    if (dx <= -thresh && idx < images.length - 1) setIdx(idx + 1);
-    else if (dx >= thresh && idx > 0) setIdx(idx - 1);
+    if (dx <= -thresh && idx < images.length - 1) setIdx((v) => v + 1);
+    else if (dx >= thresh && idx > 0) setIdx((v) => v - 1);
     startX.current = null;
   };
 
@@ -81,7 +101,7 @@ export default function ProductDetailPage() {
               <img
                 key={i}
                 src={src}
-                alt={`${name} ${i + 1}`}
+                alt={`${name || '상품 이미지'} ${i + 1}`}
                 className="aspect-square w-full object-cover pt-[0.8rem]"
               />
             ))}
@@ -100,6 +120,11 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
+          {isLoading && <div className="body3 text-gray-500">불러오는 중…</div>}
+          {isError && (
+            <div className="body3 text-red-600">상품을 찾을 수 없습니다.</div>
+          )}
+
           <section className="space-y-2">
             <div className="flex-row-between">
               <div className="flex-col gap-[0.2rem]">
@@ -119,20 +144,21 @@ export default function ProductDetailPage() {
                 }
               />
             </div>
+
             <div className="flex-col gap-[0.8rem]">
               <div className="flex-items-center gap-[0.4rem]">
                 {discount > 0 && (
                   <span className="text-primary body1">{discount}%</span>
                 )}
                 <span className="head3 font-bold">{formatKRW(price)}원</span>
-                {originalPrice && (
+                {!!originalPrice && (
                   <span className="body2 text-gray-300 line-through">
                     {formatKRW(originalPrice)}원
                   </span>
                 )}
               </div>
 
-              {pickupPrice && (
+              {!!pickupPrice && (
                 <div className="text-blue flex-items-center gap-[0.4rem]">
                   <span className="body2">픽업 시</span>
                   <span className="head3">{formatKRW(pickupPrice)}원</span>
@@ -140,10 +166,11 @@ export default function ProductDetailPage() {
               )}
             </div>
           </section>
+
           <section className="flex-col gap-[0.8rem]">
             <InfoRow
               icon="location"
-              text={address}
+              text={address || '주소 정보가 없습니다.'}
               trailing={
                 <button
                   onClick={() => navigate('/map-view')}
@@ -154,31 +181,47 @@ export default function ProductDetailPage() {
                 </button>
               }
             />
+
             <div className="flex-col gap-[0.4rem]">
               <InfoRow
                 icon="cart"
-                text={<MethodText label="픽업" time="17:15 ~ 18:00" />}
+                text={<MethodText label="픽업" time={pickupTime || '-'} />}
               />
-              <InfoRow
-                text={<MethodText label="팀배달" time="17:15 ~ 18:00" />}
-              />
+              {data?.isDeliveryAvailable && (
+                <InfoRow
+                  text={
+                    <MethodText
+                      label="팀배달"
+                      time={deliveryTime || '미지원'}
+                    />
+                  }
+                />
+              )}
             </div>
+
             {phone && <InfoRow icon="phone" text={phone} />}
           </section>
-          <section>
-            <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
-              {teamDeliveryAfter} 팀배달이 가능한 상품이에요
-            </div>
-          </section>
+
+          {data?.isDeliveryAvailable && (
+            <section>
+              <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
+                팀배달이 가능한 상품이에요
+              </div>
+            </section>
+          )}
+
           <section className="flex-col gap-[1.2rem]">
             <h2 className="body1 text-black">상품 설명</h2>
-            <p className="body4 text-black">{description}</p>
+            <p className="body4 text-black">
+              {description || '설명 정보가 없습니다.'}
+            </p>
             <p className="caption1 text-primary pb-[2rem] break-words">
               *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
               재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>
           </section>
         </div>
+
         <BottomCTA
           label={`주문하기 · ${remainingBadge}`}
           onClick={() => navigate(`/checkout/${id}`)}

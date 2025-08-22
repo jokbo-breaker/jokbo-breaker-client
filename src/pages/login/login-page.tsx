@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { BASE_URL, END_POINT } from '@/shared/apis/constants/endpoints';
 import {
   useMeQuery,
@@ -18,7 +19,18 @@ export default function LoginPage() {
   } = useAuthStatusQuery();
   const { mutate: logout, isPending: logoutLoading } = useLogoutMutation();
 
-  const googleStartUrl = `${BASE_URL}${END_POINT.AUTH_GOOGLE_START}`;
+  const googleStartUrl = useMemo(() => {
+    const base = BASE_URL.replace(/\/$/, '');
+    const path = END_POINT.AUTH_GOOGLE_START.replace(/^\//, '');
+    const url = new URL(`${base}/${path}`);
+
+    const isLocalHost = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(
+      window.location.hostname,
+    );
+    if (isLocalHost) url.searchParams.set('returnTo', 'local');
+
+    return url.toString();
+  }, []);
 
   const wakeAndGoGoogle = async () => {
     try {
