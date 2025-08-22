@@ -12,6 +12,54 @@ export type ProductCardProps = {
   className?: string;
 };
 
+function Block({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={cn('animate-pulse rounded-[4px] bg-gray-100', className)}
+    />
+  );
+}
+
+export function ProductCardSkeleton({
+  variant = 'compact',
+  className,
+}: {
+  variant?: 'compact' | 'wide';
+  className?: string;
+}) {
+  if (variant === 'wide') {
+    return (
+      <article
+        className={cn(
+          'relative w-full flex-col gap-[1rem] overflow-hidden',
+          className,
+        )}
+      >
+        <Block className="aspect-[21/10] w-full" />
+        <div className="flex-col gap-[0.6rem]">
+          <Block className="h-[1.2rem] w-[30%]" />
+          <Block className="h-[1.6rem] w-[60%]" />
+          <Block className="h-[1.6rem] w-[40%]" />
+          <Block className="h-[1.2rem] w-[50%]" />
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article className={cn('relative w-full overflow-hidden', className)}>
+      <Block className="h-[14rem] w-full" />
+      <div className="mt-[1rem] flex-col gap-[0.6rem]">
+        <Block className="h-[1.0rem] w-[40%]" />
+        <Block className="h-[1.2rem] w-[70%]" />
+        <Block className="h-[1.6rem] w-[50%]" />
+        <Block className="h-[1.0rem] w-[60%]" />
+      </div>
+    </article>
+  );
+}
+
 function ProductCard({
   product,
   variant = 'compact',
@@ -63,7 +111,6 @@ function ProductCard({
     );
   }
 
-  // compact
   return (
     <article
       className={cn(
