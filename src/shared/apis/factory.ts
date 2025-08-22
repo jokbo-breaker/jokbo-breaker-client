@@ -1,6 +1,6 @@
-import { axiosInstance } from './base/instance';
-import { HttpClient } from './base/http';
-import { createAuthApi } from './auth/auth';
+import { axiosInstance } from '@/shared/apis/base/instance';
+import { HttpClient } from '@/shared/apis/base/http';
+import { createAuthApi } from '@/shared/apis/auth/auth';
 
 const http = new HttpClient(axiosInstance);
 

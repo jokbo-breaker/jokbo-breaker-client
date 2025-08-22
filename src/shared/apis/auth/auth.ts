@@ -33,13 +33,6 @@ export type AuthStatusResponse = {
   user?: User;
 };
 
-export type AppleLoginRequest = { identityToken: string };
-export type AppleLoginResponse = {
-  token: string;
-  success?: boolean;
-  message?: string;
-};
-
 export const createAuthApi = (http: HttpClient) =>
   ({
     getGoogleLoginUrl: () => `${BASE_URL}${END_POINT.AUTH_GOOGLE_START}`,
@@ -51,10 +44,4 @@ export const createAuthApi = (http: HttpClient) =>
     logout: () => http.post<LogoutResponse>(END_POINT.AUTH_LOGOUT),
     updateProfile: (body: UpdateProfileRequest) =>
       http.put<UpdateProfileResponse>(END_POINT.AUTH_PROFILE_UPDATE, body),
-
-    loginWithApple: (identityToken: string) =>
-      http.post<AppleLoginResponse, AppleLoginRequest>(
-        END_POINT.AUTH_APPLE_LOGIN,
-        { identityToken },
-      ),
   }) as const;

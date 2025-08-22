@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../factory';
-import { AUTH_KEY } from '../constants/keys';
-import type { MeResponse } from './auth';
-import type { AuthStatusResponse } from './auth';
+import { api } from '@/shared/apis/factory';
+import { AUTH_KEY } from '@/shared/apis/constants/keys';
+import type { MeResponse, AuthStatusResponse } from '@/shared/apis/auth/auth';
 
 export const useMeQuery = () =>
   useQuery<MeResponse>({
