@@ -92,6 +92,21 @@ export type DiscoverFilterResponse = {
   results: DiscoverItem[];
 };
 
+export type AiRecommendRequest = {
+  categories: string[]; // ['일식','한식']
+  maxPrice?: number | null; // 최대 가격 (없으면 null)
+  deliveryMethod: 'all' | 'delivery' | 'pickup';
+  lat: number;
+  lng: number;
+  limit?: number;
+};
+
+export type AiRecommendResponse = {
+  success: boolean;
+  message?: string;
+  recommendations: DiscoverItem[];
+};
+
 export const createDiscoverApi = (http: HttpClient) => ({
   search: ({ type, place, lat, lng }: DiscoverParams) =>
     http.post<DiscoverResponse, { lat: number; lng: number }>(
@@ -103,6 +118,11 @@ export const createDiscoverApi = (http: HttpClient) => ({
   filter: (body: DiscoverFilterRequest) =>
     http.post<DiscoverFilterResponse, DiscoverFilterRequest>(
       END_POINT.DISCOVER_FILTER,
+      body,
+    ),
+  aiRecommend: (body: AiRecommendRequest) =>
+    http.post<AiRecommendResponse, AiRecommendRequest>(
+      END_POINT.DISCOVER_AI_RECOMMEND,
       body,
     ),
 });

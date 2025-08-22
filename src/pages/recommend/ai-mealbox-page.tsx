@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// src/pages/recommend/AiMealboxPage.tsx
+import { useState, useMemo, useEffect } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
 import { cn } from '@/shared/libs/cn';
 import Stepper from '@/pages/recommend/components/stepper';
@@ -10,11 +11,20 @@ import Step3Method from '@/pages/recommend/steps/step3-method';
 import RecommendLoading from '@/pages/recommend/steps/recommend-loading';
 import ProductCard from '@/pages/main/components/product/product-card';
 import type { Product } from '@/shared/types';
-import { mockDeliveryProducts } from '@/shared/mocks';
 import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
+import { useGeolocation } from '@/shared/hooks/use-geolocation';
+import { SOONGSIL_BASE } from '@/pages/menu/constants/menu';
+import { useAiRecommendMutation } from '@/shared/apis/discover/discover-mutations';
+import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 
 type Props = {
   onClose?: () => void;
+};
+
+const toApiDeliveryMethod = (m?: string): 'all' | 'delivery' | 'pickup' => {
+  if (m === 'pickup') return 'pickup';
+  if (m === 'team' || m === 'delivery') return 'delivery';
+  return 'all';
 };
 
 export default function AiMealboxPage({ onClose }: Props) {
@@ -33,8 +43,22 @@ export default function AiMealboxPage({ onClose }: Props) {
     payload,
   } = useAiMealboxForm();
 
+  const { loc } = useGeolocation({
+    immediate: true,
+    watch: false,
+    options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
+  });
+  const center = loc ?? SOONGSIL_BASE;
+
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [results, setResults] = useState<Product[] | null>(null);
+  const isResult = results !== null;
+
+  const aiRecommend = useAiRecommendMutation();
+
+  useEffect(() => {
+    setShowLoading(aiRecommend.isPending);
+  }, [aiRecommend.isPending, setShowLoading]);
 
   const onNext = () => {
     if (step === 1 && canNext1) setStep(2);
@@ -43,17 +67,31 @@ export default function AiMealboxPage({ onClose }: Props) {
 
   const onSubmit = () => {
     if (!canSubmit) return;
-    setShowLoading(true);
-    setTimeout(() => {
-      const demo = [...mockDeliveryProducts].slice(0, 10);
-      setResults(demo);
-      setShowLoading(false);
-    }, 900);
+
+    aiRecommend.mutate(
+      {
+        categories: foods,
+        maxPrice: maxPrice || null,
+        deliveryMethod: toApiDeliveryMethod(method),
+        lat: center.lat,
+        lng: center.lng,
+        limit: 10,
+      },
+      {
+        onSuccess: (res) => {
+          const mapped = (res.recommendations ?? []).map(toProductCardModel);
+          setResults(mapped);
+        },
+        onError: () => {
+          setResults([]);
+        },
+      },
+    );
+
     console.log('submit payload:', payload);
   };
 
-  const isResult = results !== null;
-  const list = results ?? [];
+  const list = useMemo(() => results ?? [], [results]);
 
   return (
     <div
@@ -86,6 +124,12 @@ export default function AiMealboxPage({ onClose }: Props) {
           </div>
         ) : (
           <section className="mx-auto w-full px-[2.0rem] py-[0.8rem]">
+            {aiRecommend.isError && (
+              <div className="mb-[1rem] rounded bg-red-50 p-[1rem] text-red-600">
+                추천을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.
+              </div>
+            )}
+
             {list.length === 0 ? (
               <div className="flex min-h-[calc(100dvh-10rem)] items-center justify-center">
                 <EmptyRecommend />
@@ -138,10 +182,10 @@ export default function AiMealboxPage({ onClose }: Props) {
             <Button
               variant={canSubmit ? 'black' : 'white'}
               className="w-full"
-              disabled={!canSubmit}
+              disabled={!canSubmit || aiRecommend.isPending}
               onClick={onSubmit}
             >
-              AI에게 추천 받기
+              {aiRecommend.isPending ? '추천 불러오는 중…' : 'AI에게 추천 받기'}
             </Button>
           )}
         </div>

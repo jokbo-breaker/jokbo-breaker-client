@@ -13,6 +13,7 @@ export const END_POINT = {
     `/discover?type=${type}&place=${encodeURIComponent(place)}`,
   DISCOVER_MENU_DETAIL: (menuId: string) => `/discover/menu/${menuId}`,
   DISCOVER_FILTER: `/discover/filter`,
+  DISCOVER_AI_RECOMMEND: `/discover/ai-recommend`,
   ORDER_CREATE: '/order',
 } as const;
 
