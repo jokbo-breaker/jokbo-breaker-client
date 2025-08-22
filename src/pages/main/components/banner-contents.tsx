@@ -5,6 +5,17 @@ import Icon from '@/shared/components/icon';
 
 export default function BannerContents() {
   const [open, setOpen] = React.useState(false);
+  const [slide, setSlide] = React.useState(0); // 0: 콘텐츠, 1: 회색
+
+  // 드래그 상태
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const dragRef = React.useRef({
+    active: false,
+    startX: 0,
+    dx: 0,
+  });
+  const [, force] = React.useReducer((c) => c + 1, 0); // 드래그 중 리렌더 트리거
+  const suppressClickRef = React.useRef(false); // 드래그 후 클릭 억제
 
   const openModal = React.useCallback(() => setOpen(true), []);
   const onKeyOpen = React.useCallback((e: React.KeyboardEvent) => {
@@ -14,99 +25,191 @@ export default function BannerContents() {
     }
   }, []);
 
+  // 드래그 핸들러(마우스/터치 겸용 Pointer Events)
+  const onPointerDown = (e: React.PointerEvent) => {
+    // 마우스는 좌클릭만
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    dragRef.current.active = true;
+    dragRef.current.startX = e.clientX;
+    dragRef.current.dx = 0;
+    force();
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current.active) return;
+    dragRef.current.dx = e.clientX - dragRef.current.startX;
+    force();
+  };
+
+  const endDrag = () => {
+    if (!dragRef.current.active) return;
+    const dx = dragRef.current.dx;
+    const w = wrapRef.current?.clientWidth ?? 1;
+    const threshold = Math.max(28, w * 0.08); // 28px 또는 너비의 8%
+
+    let next = slide;
+    if (Math.abs(dx) > threshold) {
+      if (dx < 0 && slide < 1) next = slide + 1;
+      if (dx > 0 && slide > 0) next = slide - 1;
+    }
+    setSlide(next);
+
+    // 드래그했다면 바로 이어지는 click 억제
+    if (Math.abs(dx) > 5) suppressClickRef.current = true;
+
+    dragRef.current.active = false;
+    dragRef.current.startX = 0;
+    dragRef.current.dx = 0;
+    force();
+  };
+
+  const onPointerUp = () => endDrag();
+  const onPointerCancel = () => endDrag();
+  const onPointerLeave = () => endDrag();
+
+  // 배너의 click 에서 드래그 후 클릭만 억제
+  const onClickCapture = (e: React.SyntheticEvent) => {
+    if (suppressClickRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      suppressClickRef.current = false;
+    }
+  };
+
+  // 트랙 이동 계산: 트랙 너비가 200%이므로 px → % 로 변환 시 50을 곱/나눔
+  const base = slide === 0 ? 0 : -50;
+  const w = wrapRef.current?.clientWidth ?? 1;
+  const dragPercent = dragRef.current.active
+    ? (dragRef.current.dx / w) * 50
+    : 0;
+  const transform = `translateX(calc(${base}% + ${dragPercent}%))`;
+
+  // 배너 클릭이 인디케이터로 버블링되지 않도록(그리고 그 반대도)
+  const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
+
   return (
     <>
       <div
+        ref={wrapRef}
         role="button"
         tabIndex={0}
         onClick={openModal}
         onKeyDown={onKeyOpen}
+        onClickCapture={onClickCapture}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
+        onPointerLeave={onPointerLeave}
         aria-label="오늘 절약 성과 안내 배너"
-        className="relative h-[20rem] w-full overflow-hidden bg-gray-900 text-gray-50 select-none"
+        className="relative h-[20rem] w-full touch-pan-y overflow-hidden bg-gray-900 text-gray-50 select-none"
       >
-        <img
-          src="/food1.svg"
-          alt=""
-          className="absolute top-[1.8rem] left-[3rem] -rotate-12 opacity-90"
-        />
-        <img
-          src="/food5.svg"
-          alt=""
-          className="absolute bottom-[1.7rem] left-[1.6rem] opacity-90"
-        />
-        <img
-          src="/food3.svg"
-          alt=""
-          className="absolute top-[3.5rem] right-[3rem] rotate-[10deg] opacity-90"
-        />
-        <img
-          src="/food4.svg"
-          alt=""
-          className="absolute top-[9rem] right-[2.1rem] rotate-5 opacity-90"
-        />
-
-        <img
-          src="/food2.svg"
-          alt=""
-          className="absolute top-[0.25rem] right-[14rem] opacity-90"
-        />
-
-        <div className="mx-auto flex h-full flex-col items-center justify-center px-5 pt-[3.7rem] text-center">
-          <div>
-            <div className="flex items-center justify-center gap-[0.6rem]">
-              <span className="body3">오늘</span>
-              <span className="relative px-1">
-                <Icon
-                  name="logo-title"
-                  className="text-primary relative z-[1]"
-                  width={7.8}
-                />
-              </span>
-              <span className="body3">에서</span>
-            </div>
-
-            <div className="flex-row-center gap-[0.2rem]">
-              <span className="text-primary head1">28</span>
-              <span className="body3">
-                <span className="text-primary">명</span>
-                <span>의 사용자가</span>
-              </span>
-            </div>
-
-            <div className="flex-row-center gap-[0.2rem]">
-              <span className="text-primary head1">1,506</span>
-              <span className="body4">
-                <span className="text-primary">g</span>
-                <span>의 음식물류 폐기물을 절약했어요!</span>
-              </span>
-            </div>
-          </div>
-          <div className="flex-col-center">
-            <div className="flex-row-center gap-[0.6rem] whitespace-nowrap">
-              <span className="caption1 text-gray-300">이는</span>
-              <span className="text-primary head3">1.4</span>
-              <span className="caption1 text-gray-300">
-                개 식당에서 평균적으로 나오는 음식물류 폐기물 양이에요
-              </span>
-            </div>
-            <div className="caption4 w-full text-end text-gray-500">
-              (종사자 수 기준 매장당 1일 2,191g, 환경부, 2021)
-            </div>
-          </div>
-
-          <div
-            className="mt-auto"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-          >
-            <Indicator
-              total={2}
-              index={0}
-              onSelect={() => {}}
-              className="bg-transparent"
+        <div
+          className="absolute inset-0 flex w-[200%] transition-transform duration-300"
+          style={{
+            transform,
+            transitionDuration: dragRef.current.active ? '0ms' : undefined,
+          }}
+        >
+          <div className="relative h-full w-1/2">
+            <img
+              src="/food1.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute top-[1.8rem] left-[3rem] -rotate-12 opacity-90"
             />
+            <img
+              src="/food5.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute bottom-[1.7rem] left-[1.6rem] opacity-90"
+            />
+            <img
+              src="/food3.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute top-[3.5rem] right-[3rem] rotate-[10deg] opacity-90"
+            />
+            <img
+              src="/food4.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute top-[9rem] right-[2.1rem] rotate-5 opacity-90"
+            />
+            <img
+              src="/food2.svg"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute top-[0.25rem] right-[14rem] opacity-90"
+            />
+
+            <div className="mx-auto flex h-full flex-col items-center justify-center px-5 pt-[2rem] text-center">
+              <div>
+                <div className="flex items-center justify-center gap-[0.6rem]">
+                  <span className="body3">오늘</span>
+                  <span className="relative px-1">
+                    <Icon
+                      name="logo-title"
+                      className="text-primary relative z-[1]"
+                      width={7.8}
+                    />
+                  </span>
+                  <span className="body3">에서</span>
+                </div>
+
+                <div className="flex-row-center gap-[0.2rem]">
+                  <span className="head1 text-primary">28</span>
+                  <span className="body3">
+                    <span className="text-primary">명</span>의 사용자가
+                  </span>
+                </div>
+
+                <div className="flex-row-center gap-[0.2rem]">
+                  <span className="head1 text-primary">1,506</span>
+                  <span className="body4">
+                    <span className="text-primary">g</span>의 음식물류 폐기물을
+                    절약했어요!
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex-col-center">
+                <div className="flex-row-center gap-[0.6rem] whitespace-nowrap">
+                  <span className="caption1 text-gray-300">이는</span>
+                  <span className="head3 text-primary">1.4</span>
+                  <span className="caption1 text-gray-300">
+                    개 식당에서 평균적으로 나오는 음식물류 폐기물 양이에요
+                  </span>
+                </div>
+                <div className="caption4 w-full text-end text-gray-500">
+                  (종사자 수 기준 매장당 1일 2,191g, 환경부, 2021)
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div className="h-full w-1/2 bg-gray-800" />
+        </div>
+
+        <div
+          className="absolute inset-x-0 bottom-3 z-20 flex justify-center"
+          onPointerDown={stopBubble}
+          onClick={stopBubble}
+          onTouchStart={stopBubble}
+          onMouseDown={stopBubble}
+        >
+          <Indicator
+            total={2}
+            index={slide}
+            onSelect={setSlide}
+            className="bg-transparent"
+          />
         </div>
       </div>
 
