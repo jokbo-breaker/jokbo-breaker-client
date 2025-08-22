@@ -248,7 +248,7 @@ export default function Tooltip({
             id={id}
             role="tooltip"
             ref={tipRef}
-            className="tooltip-root pointer-events-auto fixed z-[60]"
+            className="tooltip-root pointer-events-auto fixed z-[var(--z-tooltip)]"
           >
             <div className={`${bubble} ${className}`}>
               {content}
