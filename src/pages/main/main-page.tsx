@@ -65,8 +65,8 @@ export default function MainPage() {
     ) as Record<SectionKey, any[]>;
   }, [data]);
 
-  const SKELETON_COUNT = 8;
-  const skeletons = Array.from({ length: SKELETON_COUNT });
+  const MAX_PER_SECTION = 3;
+  const SKELETON_COUNT = 3;
 
   return (
     <div className="h-full w-full bg-white pb-[2rem]">
@@ -114,7 +114,9 @@ export default function MainPage() {
           )}
 
           {SECTION_KEYS.map((uiKey) => {
-            const list = lists[uiKey] ?? [];
+            const fullList = lists[uiKey] ?? [];
+            const list = fullList.slice(0, MAX_PER_SECTION);
+
             return (
               <Section
                 key={uiKey}
@@ -124,7 +126,7 @@ export default function MainPage() {
                 itemWidthClass="w-[16.5rem]"
               >
                 {isLoading
-                  ? skeletons.map((_, i) => (
+                  ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
                       <ProductCardSkeleton
                         key={`s-${uiKey}-${i}`}
                         variant="compact"
