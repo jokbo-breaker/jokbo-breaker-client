@@ -18,6 +18,7 @@ const OrderPage = lazy(() => import('@/pages/order/order-page'));
 const LoginPage = lazy(() => import('@/pages/login/login-page'));
 const LoginSucessPage = lazy(() => import('@/pages/login/login-success'));
 const CheckoutPage = lazy(() => import('@/pages/main/checkout/checkout-page'));
+const OnboardingPage = lazy(() => import('@/pages/onboarding/onboarding-page'));
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <MainPage /> },
       { path: '/login', element: <LoginPage /> },
+      { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/auth/success', element: <LoginSucessPage /> },
       { path: '/main/:section', element: <SectionListPage /> },
       { path: '/product/:id', element: <ProductDetailPage /> },
