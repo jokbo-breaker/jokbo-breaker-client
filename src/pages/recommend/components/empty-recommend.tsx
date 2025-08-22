@@ -1,4 +1,4 @@
-import Icon from '@/shared/components/icon'; // Icon name="empty-recommend" size={25}
+import Icon from '@/shared/components/icon';
 
 export default function EmptyRecommend() {
   return (

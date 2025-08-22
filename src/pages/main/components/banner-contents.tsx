@@ -74,7 +74,9 @@ export default function BannerContents() {
 
   const base = slide === 0 ? 0 : -50;
   const w = wrapRef.current?.clientWidth ?? 1;
-  const dragPercent = dragRef.current.active ? (dragRef.current.dx / w) * 50 : 0;
+  const dragPercent = dragRef.current.active
+    ? (dragRef.current.dx / w) * 50
+    : 0;
   const transform = `translateX(calc(${base}% + ${dragPercent}%))`;
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
@@ -145,7 +147,11 @@ export default function BannerContents() {
                 <div className="flex items-center justify-center gap-[0.6rem]">
                   <span className="body3">오늘</span>
                   <span className="relative px-1">
-                    <Icon name="logo-title" className="text-primary relative z-[1]" width={7.8} />
+                    <Icon
+                      name="logo-title"
+                      className="text-primary relative z-[1]"
+                      width={7.8}
+                    />
                   </span>
                   <span className="body3">에서</span>
                 </div>
@@ -160,7 +166,8 @@ export default function BannerContents() {
                 <div className="flex-row-center gap-[0.2rem]">
                   <span className="head1 text-primary">1,506</span>
                   <span className="body4">
-                    <span className="text-primary">g</span>의 음식물류 폐기물을 절약했어요!
+                    <span className="text-primary">g</span>의 음식물류 폐기물을
+                    절약했어요!
                   </span>
                 </div>
               </div>
@@ -184,13 +191,18 @@ export default function BannerContents() {
         </div>
 
         <div
-          className="absolute inset-x-0 bottom-3 z-20 flex justify-center"
+          className="absolute inset-x-0 bottom-3 z-[var(--z-tooltip)] flex justify-center"
           onPointerDown={stopBubble}
           onClick={stopBubble}
           onTouchStart={stopBubble}
           onMouseDown={stopBubble}
         >
-          <Indicator total={2} index={slide} onSelect={setSlide} className="bg-transparent" />
+          <Indicator
+            total={2}
+            index={slide}
+            onSelect={setSlide}
+            className="bg-transparent"
+          />
         </div>
       </div>
 
