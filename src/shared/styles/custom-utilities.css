@@ -73,4 +73,37 @@
   .bottom-modal {
     @apply fixed bottom-0 left-1/2 z-[1] w-full max-w-[43rem] -translate-x-1/2;
   }
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* 툴팁 루트: 좌표/너비 */
+  .tooltip-root {
+    top: var(--tt-top, -9999px);
+    left: var(--tt-left, -9999px);
+    max-width: var(--tt-max-w, 280px);
+  }
+
+  .tooltip-arrow {
+    position: absolute;
+    background: #1f2937;
+  }
+
+  /* 방향별 꼬리 위치 */
+  .tooltip-arrow--bottom {
+    top: -4px;
+    left: var(--tt-arrow-left, 0);
+  }
+  .tooltip-arrow--top {
+    bottom: -4px;
+    left: var(--tt-arrow-left, 0);
+  }
+  .tooltip-arrow--left {
+    right: -4px;
+    top: var(--tt-arrow-top, 0);
+  }
+  .tooltip-arrow--right {
+    left: -4px;
+    top: var(--tt-arrow-top, 0);
+  }
 }

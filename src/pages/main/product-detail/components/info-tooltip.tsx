@@ -110,7 +110,7 @@ export default function Tooltip({
     }
 
     if (lockToTriggerRight && (side === 'top' || side === 'bottom')) {
-      left = Math.max(tRect.right - tipRect.width, margin); // 오른쪽을 고정, 왼쪽만 마진
+      left = Math.max(tRect.right - tipRect.width, margin);
     } else {
       left = clamp(left, margin, vw - tipRect.width - margin);
     }
@@ -136,13 +136,13 @@ export default function Tooltip({
     const onResize = () => updatePosition();
     window.addEventListener('scroll', onScroll, true);
     window.addEventListener('resize', onResize);
-    const ro = new ResizeObserver(updatePosition);
+    const ro = new (window as any).ResizeObserver(updatePosition);
     tipRef.current && ro.observe(tipRef.current);
     triggerRef.current && ro.observe(triggerRef.current);
     return () => {
       window.removeEventListener('scroll', onScroll, true);
       window.removeEventListener('resize', onResize);
-      ro.disconnect();
+      ro.disconnect?.();
     };
   }, [isOpen, updatePosition]);
 
@@ -206,9 +206,31 @@ export default function Tooltip({
           onBlur: scheduleClose,
         };
 
+  useEffect(() => {
+    const el = tipRef.current;
+    if (!el) return;
+    const top = coords?.top ?? -9999;
+    const left = coords?.left ?? -9999;
+    el.style.setProperty('--tt-top', `${top}px`);
+    el.style.setProperty('--tt-left', `${left}px`);
+    el.style.setProperty('--tt-max-w', `${maxWidth}px`);
+  }, [coords, maxWidth, isOpen]);
+
+  useEffect(() => {
+    const el = tipRef.current;
+    if (!el) return;
+    if (side === 'top' || side === 'bottom') {
+      el.style.setProperty('--tt-arrow-left', `${arrowPos.left ?? 0}px`);
+      el.style.removeProperty('--tt-arrow-top');
+    } else {
+      el.style.setProperty('--tt-arrow-top', `${arrowPos.top ?? 0}px`);
+      el.style.removeProperty('--tt-arrow-left');
+    }
+  }, [arrowPos, side]);
+
   const bubble =
     'relative rounded-[4px] bg-gray-800 text-white px-[1.2rem] py-[0.9rem] caption2 shadow-xl';
-  const arrowBase = 'absolute w-2.5 h-2.5 rotate-45 bg-gray-800';
+  const arrowBase = 'tooltip-arrow w-2.5 h-2.5 rotate-45 bg-gray-800';
 
   return (
     <>
@@ -227,39 +249,22 @@ export default function Tooltip({
           <div
             id={id}
             role="tooltip"
-            className="pointer-events-auto fixed z-[60]"
-            style={{
-              top: coords?.top ?? -9999,
-              left: coords?.left ?? -9999,
-              maxWidth,
-            }}
             ref={tipRef}
+            className="tooltip-root pointer-events-auto fixed z-[60]"
           >
             <div className={`${bubble} ${className}`}>
               {content}
               {side === 'bottom' && (
-                <div
-                  className={arrowBase}
-                  style={{ top: -4, left: arrowPos.left }}
-                />
+                <div className={`${arrowBase} tooltip-arrow--bottom`} />
               )}
               {side === 'top' && (
-                <div
-                  className={arrowBase}
-                  style={{ bottom: -4, left: arrowPos.left }}
-                />
+                <div className={`${arrowBase} tooltip-arrow--top`} />
               )}
               {side === 'left' && (
-                <div
-                  className={arrowBase}
-                  style={{ right: -4, top: arrowPos.top }}
-                />
+                <div className={`${arrowBase} tooltip-arrow--left`} />
               )}
               {side === 'right' && (
-                <div
-                  className={arrowBase}
-                  style={{ left: -4, top: arrowPos.top }}
-                />
+                <div className={`${arrowBase} tooltip-arrow--right`} />
               )}
             </div>
           </div>,
@@ -300,8 +305,7 @@ export function InfoTooltipButton({
       <button
         type="button"
         aria-label={text}
-        style={{ touchAction: 'manipulation' }}
-        className="caption4 flex cursor-pointer items-center gap-[0.2rem] rounded-[4px] bg-gray-100 py-[0.45rem] pr-[0.6rem] pl-[0.2rem] text-gray-600 hover:bg-gray-200/90"
+        className="caption4 flex cursor-pointer touch-manipulation items-center gap-[0.2rem] rounded-[4px] bg-gray-100 py-[0.45rem] pr-[0.6rem] pl-[0.2rem] text-gray-600 hover:bg-gray-200/90"
       >
         <Icon name="info" size={1.6} className="text-gray-500" />
         <span>{text}</span>
