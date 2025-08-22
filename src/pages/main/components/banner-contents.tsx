@@ -22,33 +22,33 @@ export default function BannerContents() {
         onClick={openModal}
         onKeyDown={onKeyOpen}
         aria-label="오늘 절약 성과 안내 배너"
-        className="relative h-[20rem] w-full overflow-hidden rounded-[12px] bg-gray-900 text-gray-50 select-none"
+        className="relative h-[20rem] w-full overflow-hidden bg-gray-900 text-gray-50 select-none"
       >
         <img
           src="/food1.svg"
           alt=""
-          className="absolute top-4 left-12 -rotate-12 opacity-90"
+          className="absolute top-[1.8rem] left-[3rem] -rotate-12 opacity-90"
         />
         <img
-          src="/food2.svg"
+          src="/food5.svg"
           alt=""
-          className="absolute bottom-6 left-4 opacity-90"
+          className="absolute bottom-[1.7rem] left-[1.6rem] opacity-90"
         />
         <img
           src="/food3.svg"
           alt=""
-          className="absolute top-10 right-6 rotate-[10deg] opacity-90"
+          className="absolute top-[3.5rem] right-[3rem] rotate-[10deg] opacity-90"
         />
         <img
           src="/food4.svg"
           alt=""
-          className="absolute top-[9rem] right-[2.2rem] rotate-5 opacity-90"
+          className="absolute top-[9rem] right-[2.1rem] rotate-5 opacity-90"
         />
 
         <img
-          src="/food5.svg"
+          src="/food2.svg"
           alt=""
-          className="absolute top-1 left-1/2 -translate-x-1/2 opacity-90"
+          className="absolute top-[0.25rem] right-[14rem] opacity-90"
         />
 
         <div className="mx-auto flex h-full flex-col items-center justify-center px-5 pt-[3.7rem] text-center">
@@ -82,7 +82,7 @@ export default function BannerContents() {
             </div>
           </div>
           <div className="flex-col-center">
-            <div className="flex-row-center gap-[0.6rem]">
+            <div className="flex-row-center gap-[0.6rem] whitespace-nowrap">
               <span className="caption1 text-gray-300">이는</span>
               <span className="text-primary head3">1.4</span>
               <span className="caption1 text-gray-300">
