@@ -166,7 +166,7 @@ export default function BannerContents() {
                 <div className="flex-row-center gap-[0.2rem]">
                   <span className="head1 text-primary">1,506</span>
                   <span className="body4">
-                    <span className="text-primary">g</span>의 음식물류 폐기물을
+                    <span className="text-primary">kg</span>의 음식물류 폐기물을
                     절약했어요!
                   </span>
                 </div>
