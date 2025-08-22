@@ -18,6 +18,8 @@ import { DEFAULT_LOCATION_LABEL } from '@/pages/main/constants/section';
 import { useDiscoverQuery } from '@/shared/apis/discover/discover-queries';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
+import { useMeQuery } from '@/shared/apis/auth/auth-queries';
+import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
 
 const PLACE = '동작';
 const DEFAULT_LAT = 37.563;
@@ -40,6 +42,23 @@ const UI_TO_API: Record<SectionKey, ApiSectionKey> = {
 export default function MainPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>('pickup'); // 'delivery' | 'pickup'
+  const { data: meData } = useMeQuery();
+
+  const { mutate: logout, isPending: logoutLoading } = useLogoutMutation();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        navigate('/login', { replace: true });
+        setTimeout(() => window.location.reload(), 0);
+      },
+    });
+  };
+
+  const profileUser = {
+    name: meData?.user?.name ?? '게스트',
+    email: meData?.user?.email ?? '로그인 전',
+  };
 
   const { data, isLoading, isError } = useDiscoverQuery({
     type: mode,
@@ -95,10 +114,7 @@ export default function MainPage() {
             >
               <Icon name="search" width={2.4} />
             </button>
-            <ProfileModal
-              user={{ name: '닉네임', email: 'aaaa@gmail.com' }}
-              onLogout={() => console.log('logout')}
-            />
+            <ProfileModal user={profileUser} onLogout={handleLogout} />
           </>
         }
       />
