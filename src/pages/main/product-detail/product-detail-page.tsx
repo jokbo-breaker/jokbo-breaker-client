@@ -8,6 +8,7 @@ import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
 import InfoTooltipButton from '@/pages/main/product-detail/components/info-tooltip';
+import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,10 +34,13 @@ export default function ProductDetailPage() {
     hours,
     teamDeliveryAfter,
     phone,
-    remainingBadge,
+    stockLeft,
     description,
   } = product as typeof product & { images?: string[] };
-
+  const remainingBadge = useMemo(
+    () => getRemainingBadge(stockLeft ?? null),
+    [stockLeft],
+  );
   const [idx, setIdx] = useState(0);
   const startX = useRef<number | null>(null);
 
@@ -110,7 +114,9 @@ export default function ProductDetailPage() {
             </div>
             <div className="flex-col gap-[0.8rem]">
               <div className="flex-items-center gap-[0.4rem]">
-                {discount > 0 && <span className="text-primary body1">{discount}%</span>}
+                {discount > 0 && (
+                  <span className="text-primary body1">{discount}%</span>
+                )}
                 <span className="head3 font-bold">{formatKRW(price)}원</span>
                 {originalPrice && (
                   <span className="body2 text-gray-300 line-through">
@@ -144,7 +150,9 @@ export default function ProductDetailPage() {
               />
             )}
             {hours && <InfoRow icon="clock" text={hours} />}
-            {teamDeliveryAfter && <InfoRow icon="cart" text={teamDeliveryAfter} />}
+            {teamDeliveryAfter && (
+              <InfoRow icon="cart" text={teamDeliveryAfter} />
+            )}
             {phone && <InfoRow icon="phone" text={phone} />}
           </section>
           {teamDeliveryAfter && (
@@ -158,13 +166,13 @@ export default function ProductDetailPage() {
             <h2 className="body1 text-black">상품 설명</h2>
             <p className="body4 text-black">{description}</p>
             <p className="caption1 text-primary pb-[2rem] break-words">
-              *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한 재료로 준비된 밀키트를
-              안심하고 드셔보세요.
+              *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
+              재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>
           </section>
         </div>
         <BottomCTA
-          label={`주문하기 · ${remainingBadge ?? '재고 확인'}`}
+          label={`주문하기 · ${remainingBadge}`}
           onClick={() => navigate(`/checkout/${id}`)}
         />
       </main>
