@@ -65,6 +65,15 @@ export default function MainPage() {
     ) as Record<SectionKey, any[]>;
   }, [data]);
 
+  // 로딩 중엔 전체 섹션에 스켈레톤 표시, 로딩 후엔 아이템 있는 섹션만 표시
+  const keysToRender = useMemo(
+    () =>
+      isLoading
+        ? [...SECTION_KEYS]
+        : SECTION_KEYS.filter((k) => (lists[k]?.length ?? 0) > 0),
+    [isLoading, lists],
+  );
+
   const MAX_PER_SECTION = 3;
   const SKELETON_COUNT = 3;
 
@@ -113,7 +122,7 @@ export default function MainPage() {
             </div>
           )}
 
-          {SECTION_KEYS.map((uiKey) => {
+          {keysToRender.map((uiKey) => {
             const fullList = lists[uiKey] ?? [];
             const list = fullList.slice(0, MAX_PER_SECTION);
 
