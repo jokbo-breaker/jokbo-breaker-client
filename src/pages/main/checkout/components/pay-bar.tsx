@@ -16,7 +16,7 @@ export default function PayBar({ total, onPay, canPay }: Props) {
       </div>
       <Button
         variant={canPay ? 'black' : 'gray'}
-        className="flex-2 rounded-[1.2rem]"
+        className="flex-3 rounded-[1.2rem]"
         onClick={onPay}
         disabled={!canPay}
       >
