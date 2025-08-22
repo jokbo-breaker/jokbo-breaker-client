@@ -12,17 +12,20 @@ export type DiscoverItem = {
   discountedMenuPrice: number;
   discountedPercentage: number;
   pickUpStartTime: string; // "YYYYMMDD HH:mm:ss"
-  pickUpEndTime: string; // ^
+  pickUpEndTime: string; // "
   storeDistance: number; // km
-  category?: string;
-  supportsDelivery: boolean;
-  gramPerUnit: number;
   pickupPrice: number;
-  totalSoldCount: number;
+
+  // ✅ 응답에 항상 오지 않을 수 있는 필드들은 optional 로
+  category?: string;
+  supportsDelivery?: boolean;
+  gramPerUnit?: number;
+  totalSoldCount?: number;
 };
 
 export type DiscoverResponse = {
   success: boolean;
+  totalMenus: number; // ✅ 샘플 응답에 존재
   nearBy: DiscoverItem[];
   brandNew: DiscoverItem[];
   lowInStock: DiscoverItem[];
@@ -34,8 +37,8 @@ export type DiscoverResponse = {
 export type DiscoverParams = {
   type: 'pickup' | 'delivery';
   place: string; // 예: "동작"
-  lat: number; // 위도 (필수)
-  lng: number; // 경도 (필수)
+  lat: number;
+  lng: number;
 };
 
 export const createDiscoverApi = (http: HttpClient) => ({

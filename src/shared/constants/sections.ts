@@ -1,4 +1,11 @@
-export const SECTION_KEYS = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'] as const;
+export const SECTION_KEYS = [
+  'nearby',
+  'new',
+  'lastcall',
+  'breakfast',
+  'dessert',
+  'now',
+] as const;
 
 export type SectionKey = (typeof SECTION_KEYS)[number];
 
