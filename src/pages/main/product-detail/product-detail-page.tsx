@@ -7,7 +7,7 @@ import Indicator from '@/pages/main/product-detail/components/indicator';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import Icon from '@/shared/components/icon';
 import { formatKRW } from '@/shared/utils/format-krw';
-import { InfoTooltipButton } from '@/pages/main/product-detail/components/info-tooltip';
+import InfoTooltipButton from '@/pages/main/product-detail/components/info-tooltip';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();

@@ -86,24 +86,24 @@
 
   .tooltip-arrow {
     position: absolute;
-    background: #1f2937;
+    background: #33373b;
   }
 
   /* 방향별 꼬리 위치 */
   .tooltip-arrow--bottom {
-    top: -4px;
+    top: -3px;
     left: var(--tt-arrow-left, 0);
   }
   .tooltip-arrow--top {
-    bottom: -4px;
+    bottom: -3px;
     left: var(--tt-arrow-left, 0);
   }
   .tooltip-arrow--left {
-    right: -4px;
+    right: -3px;
     top: var(--tt-arrow-top, 0);
   }
   .tooltip-arrow--right {
-    left: -4px;
+    left: -3px;
     top: var(--tt-arrow-top, 0);
   }
 }
