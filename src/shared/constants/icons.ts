@@ -30,5 +30,6 @@ export const ICONS = [
   "profile",
   "profile-filled",
   "search",
+  "walk",
   "x-icon"
 ] as const;

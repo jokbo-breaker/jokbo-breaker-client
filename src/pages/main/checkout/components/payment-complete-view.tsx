@@ -2,6 +2,7 @@ import TopBar from '@/shared/layouts/top-bar';
 import Button from '@/shared/components/button/button';
 import Icon from '@/shared/components/icon';
 import { useNavigate } from 'react-router-dom';
+
 // === 데이터 (샘플) ===
 const current = 642;
 const reference = 1148;
@@ -16,14 +17,13 @@ type PaymentCompleteViewProps = {
 
 export default function PaymentCompleteView({
   savedG,
-  remainingBadge,
-  onPrimary,
-  onBack,
+  onBack: _onBack,
 }: PaymentCompleteViewProps) {
   const navigate = useNavigate();
+  const handleClose = () => navigate('/', { replace: true });
   return (
     <div className="scrollbar-hide h-dvh flex-col overflow-y-auto">
-      <TopBar title="결제 완료" showClose onClose={onBack} sticky />
+      <TopBar title="결제 완료" showClose onClose={handleClose} sticky />
 
       <main className="flex-col-center gap-[3.2rem] px-[2rem] py-[4rem]">
         <section className="flex-col-center gap-[1.6rem]">
@@ -61,7 +61,7 @@ export default function PaymentCompleteView({
         <section className="flex w-full flex-col items-center justify-center gap-[1.6rem] text-center">
           <div className="flex items-center gap-[0.3rem]">
             <span className="body1 text-black">이번주 나의 따뜻한 발걸음</span>
-            <span aria-hidden>👣</span>
+            <Icon name="walk" size={2.8} />
           </div>
           <div className="w-full flex-col gap-[1.2rem]">
             <div className="w-full flex-col gap-[0.6rem]">

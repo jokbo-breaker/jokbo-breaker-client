@@ -195,7 +195,7 @@ export default function BannerContents() {
                 <span className="body1 text-gray-50">
                   이번주 나의 따뜻한 발걸음
                 </span>
-                <span aria-hidden>👣</span>
+                <Icon name="walk" size={2.8} />
               </div>
               <div className="w-full flex-col gap-[1.2rem]">
                 <div className="w-full flex-col gap-[0.6rem]">
