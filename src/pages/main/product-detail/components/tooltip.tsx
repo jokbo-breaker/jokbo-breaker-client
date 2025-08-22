@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  PropsWithChildren,
-} from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState, PropsWithChildren } from 'react';
 import { createPortal } from 'react-dom';
 
 export type Side = 'top' | 'bottom' | 'left' | 'right';
@@ -61,13 +54,10 @@ export default function Tooltip({
   const showTimer = useRef<number | null>(null);
   const hideTimer = useRef<number | null>(null);
 
-  const [coords, setCoords] = useState<{ top: number; left: number } | null>(
-    null,
-  );
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
   const [arrowPos, setArrowPos] = useState<{ left?: number; top?: number }>({});
 
-  const clamp = (v: number, min: number, max: number) =>
-    Math.min(Math.max(v, min), max);
+  const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 
   const updatePosition = useCallback(() => {
     const triggerEl = triggerRef.current;
@@ -178,8 +168,7 @@ export default function Tooltip({
     if (!(isOpen && trigger === 'click')) return;
     const onDown = (e: PointerEvent) => {
       const t = e.target as Node;
-      if (triggerRef.current?.contains(t) || tipRef.current?.contains(t))
-        return;
+      if (triggerRef.current?.contains(t) || tipRef.current?.contains(t)) return;
       setOpen(false);
     };
     document.addEventListener('pointerdown', onDown, true);
@@ -252,18 +241,10 @@ export default function Tooltip({
           >
             <div className={`${bubble} ${className}`}>
               {content}
-              {side === 'bottom' && (
-                <div className={`${arrowBase} tooltip-arrow--bottom`} />
-              )}
-              {side === 'top' && (
-                <div className={`${arrowBase} tooltip-arrow--top`} />
-              )}
-              {side === 'left' && (
-                <div className={`${arrowBase} tooltip-arrow--left`} />
-              )}
-              {side === 'right' && (
-                <div className={`${arrowBase} tooltip-arrow--right`} />
-              )}
+              {side === 'bottom' && <div className={`${arrowBase} tooltip-arrow--bottom`} />}
+              {side === 'top' && <div className={`${arrowBase} tooltip-arrow--top`} />}
+              {side === 'left' && <div className={`${arrowBase} tooltip-arrow--left`} />}
+              {side === 'right' && <div className={`${arrowBase} tooltip-arrow--right`} />}
             </div>
           </div>,
           document.body,

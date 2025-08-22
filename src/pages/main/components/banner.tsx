@@ -6,7 +6,7 @@ type PromoModalProps = {
   onClose: () => void;
 };
 
-function PromoModal({ open, onClose }: PromoModalProps) {
+export default function PromoModal({ open, onClose }: PromoModalProps) {
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -47,21 +47,11 @@ function PromoModal({ open, onClose }: PromoModalProps) {
                 </div>
               </div>
 
-              <img
-                src="/promo.svg"
-                alt=""
-                aria-hidden
-                className="w-[20rem] object-contain"
-              />
+              <img src="/promo.svg" alt="" aria-hidden className="w-[20rem] object-contain" />
             </section>
 
             <section className="mr-[2rem] flex items-center justify-center pt-[2.8rem]">
-              <img
-                src="/promo2.svg"
-                alt=""
-                aria-hidden
-                className="z-0 w-[18rem] object-contain"
-              />
+              <img src="/promo2.svg" alt="" aria-hidden className="z-0 w-[18rem] object-contain" />
               <div className="z-10 -ml-[4rem] flex-col gap-[2rem] text-right">
                 <div className="flex-col gap-[0.4rem]">
                   <p className="body1 whitespace-nowrap text-black">
@@ -85,30 +75,12 @@ function PromoModal({ open, onClose }: PromoModalProps) {
               />
               <div className="flex-col gap-[0.2rem]">
                 <p className="body2 text-black">잔반없는날과 함께</p>
-                <p className="text-primary head1">
-                  지구를 살리는 여정에 동참해주세요!
-                </p>
+                <p className="text-primary head1">지구를 살리는 여정에 동참해주세요!</p>
               </div>
             </section>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function Banner() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="h-[20rem] w-full cursor-pointer bg-gray-100"
-        aria-label="프로모션 배너 자리"
-      />
-      <PromoModal open={open} onClose={() => setOpen(false)} />
-    </>
   );
 }

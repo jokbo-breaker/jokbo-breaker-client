@@ -20,9 +20,7 @@ export default function SortFilterRow({
   onToggleSoldOut: () => void;
 }) {
   return (
-    <div
-      className={`mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem] ${className}`}
-    >
+    <div className={`mt-[1.2rem] flex items-center gap-[0.8rem] px-[2rem] ${className}`}>
       <Tag selected onClick={onOpenSort}>
         {SORT_LABEL[sort]}
       </Tag>

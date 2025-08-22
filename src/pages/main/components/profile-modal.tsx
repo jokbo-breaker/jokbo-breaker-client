@@ -46,10 +46,7 @@ export function ProfileModal({
 
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-[30]"
-            onClick={() => setOpen(false)}
-          />
+          <div className="fixed inset-0 z-[30]" onClick={() => setOpen(false)} />
 
           <div
             ref={cardRef}

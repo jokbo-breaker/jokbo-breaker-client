@@ -4,7 +4,7 @@ import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
 import ProductCard from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
-import HeroBanner from '@/pages/main/components/banner';
+import Banner from '@/pages/main/components/banner-contents';
 import { mockDeliveryProducts, mockPickupProducts } from '@/shared/mocks';
 import { ProfileModal } from './components/profile-modal';
 import { SECTION_META, type SectionKey } from '@/shared/constants/sections';
@@ -23,14 +23,7 @@ export default function MainPage() {
     [mode],
   );
 
-  const ordered: SectionKey[] = [
-    'nearby',
-    'new',
-    'lastcall',
-    'breakfast',
-    'dessert',
-    'now',
-  ];
+  const ordered: SectionKey[] = ['nearby', 'new', 'lastcall', 'breakfast', 'dessert', 'now'];
 
   const getTitle = (key: SectionKey) => {
     const t = SECTION_META[key].title;
@@ -69,12 +62,12 @@ export default function MainPage() {
       />
 
       <div className="space-y-[2.4rem]">
-        <div className="flex-col gap-[1.6rem] px-[2rem] pt-[1.6rem]">
-          <div className="flex items-center gap-[0.4rem]">
+        <div className="flex-col gap-[1.6rem] pt-[1.6rem]">
+          <div className="flex items-center gap-[0.4rem] px-[2rem]">
             <Icon name="location" size={2.4} className="text-primary" />
             <span className="body3 text-black">{DEFAULT_LOCATION_LABEL}</span>
           </div>
-          <HeroBanner />
+          <Banner />
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
@@ -87,11 +80,7 @@ export default function MainPage() {
               itemWidthClass="w-[16.5rem]"
             >
               {data.map((p) => (
-                <ProductCard
-                  key={`${key}-${p.id}`}
-                  product={p}
-                  variant="compact"
-                />
+                <ProductCard key={`${key}-${p.id}`} product={p} variant="compact" />
               ))}
             </Section>
           ))}
