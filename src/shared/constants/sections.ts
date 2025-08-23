@@ -17,7 +17,7 @@ export const SECTION_META: Record<SectionKey, SectionMeta> = {
   nearby: { title: '내 주변 상점을 둘러보세요' },
   new: { title: '새로 입점했어요' },
   lastcall: { title: '곧 품절이에요' },
-  breakfast: { title: '아침 드실 시간이에요' },
+  breakfast: { title: '저녁 드실 시간이에요' },
   dessert: { title: '달달한 게 땡길 때' },
   now: {
     title: {
