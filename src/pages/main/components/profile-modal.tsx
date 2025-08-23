@@ -1,16 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 
 export function ProfileModal({
   user,
   onLogout,
+  isAuthed, // ★ 추가
+  loginPath = '/login', // ★ 커스터마이즈 가능
 }: {
   user: { name: string; email: string };
-  onLogout: () => void;
+  onLogout?: () => void;
+  isAuthed?: boolean;
+  loginPath?: string;
 }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  // 명시 prop 우선, 없으면 email 값으로 추정
+  const authed = isAuthed ?? (user?.email && user.email !== '로그인 전');
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -31,6 +40,15 @@ export function ProfileModal({
     return () => document.removeEventListener('mousedown', onDown);
   }, [open]);
 
+  const handleClickPrimary = () => {
+    setOpen(false);
+    if (authed) {
+      onLogout?.();
+    } else {
+      navigate(loginPath);
+    }
+  };
+
   return (
     <div className="relative">
       <button
@@ -50,7 +68,6 @@ export function ProfileModal({
             className="fixed inset-0 z-[30]"
             onClick={() => setOpen(false)}
           />
-
           <div
             ref={cardRef}
             role="menu"
@@ -66,13 +83,10 @@ export function ProfileModal({
 
               <button
                 className="caption4 flex w-full cursor-pointer items-center gap-[0.4rem] rounded-[0.8rem] text-gray-600 hover:bg-gray-100"
-                onClick={() => {
-                  setOpen(false);
-                  onLogout();
-                }}
+                onClick={handleClickPrimary}
               >
-                <Icon name="logout" size={1.7} />
-                <span>로그아웃</span>
+                <Icon name={authed ? 'logout' : 'google'} size={1.7} />
+                <span>{authed ? '로그아웃' : '로그인'}</span>
               </button>
             </div>
           </div>
