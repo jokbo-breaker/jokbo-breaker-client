@@ -91,7 +91,7 @@ function ProductCard({
         alt={name}
         className={cn(
           variant === 'wide'
-            ? 'aspect-[21/10] min-h-[16rem] w-full min-w-[35rem] rounded-[4px] object-cover'
+            ? 'aspect-[21/10] w-full min-w-[90%] rounded-[4px] object-cover'
             : 'h-[14rem] w-full rounded-[4px] object-cover',
           soldOut && 'opacity-70',
         )}
