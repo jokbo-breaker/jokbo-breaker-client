@@ -101,11 +101,11 @@ export default function MainPage() {
         rightSlot={
           <>
             <button
-              onClick={() => navigate('/menu')}
-              aria-label="메뉴"
+              onClick={() => navigate('/orders')}
+              aria-label="주문내역"
               className="cursor-pointer text-gray-700"
             >
-              <Icon name="bag" width={2.4} />
+              <Icon name="order" width={2.4} />
             </button>
             <button
               onClick={() => navigate('/search')}
