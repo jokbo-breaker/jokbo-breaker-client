@@ -42,7 +42,7 @@ const UI_TO_API: Record<SectionKey, ApiSectionKey> = {
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<Mode>('pickup'); // 'delivery' | 'pickup'
+  const [mode, setMode] = useState<Mode>('delivery'); // 'delivery' | 'pickup'
   const { data: meData } = useMeQuery();
   const { showToast } = useToast();
 
