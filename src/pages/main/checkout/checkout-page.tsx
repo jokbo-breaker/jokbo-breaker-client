@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import TopBar from '@/shared/layouts/top-bar';
 import ProductSummaryCard from '@/pages/main/checkout/components/product-summary-card';
@@ -90,29 +90,52 @@ export default function CheckoutPage() {
 
   const total = unit * qty;
 
-  const ORDER_TYPE_OPTIONS = [
-    {
-      value: 'team' as const,
-      label: '팀배달 · 17-32분',
-      right: teamDeliveryRight,
-      below: (
-        <p className="caption1 text-primary">
-          *출발 시각에 맞추어 순차적으로 배달됩니다
-        </p>
-      ),
-    },
-    { value: 'pickup' as const, label: '픽업', right: pickupRight },
-  ];
-  const PAYMENT_OPTIONS = [
-    { value: 'card' as const, label: PAYMENT_LABEL.card },
-    { value: 'cash' as const, label: PAYMENT_LABEL.cash },
+  const supportsTeam = !!vm?.isDeliveryAvailable;
+
+  useEffect(() => {
+    if (supportsTeam) return;
+    if (orderType !== 'pickup') setOrderType('pickup');
+  }, [supportsTeam, orderType]);
+
+  const ORDER_TYPE_OPTIONS = useMemo(() => {
+    // 기본은 픽업
+    const list: Array<{
+      value: OrderType;
+      label: string;
+      right: string;
+      below?: React.ReactNode;
+    }> = [
+      { value: 'pickup', label: '픽업', right: pickupRight },
+    ];
+    // 팀배달 지원 시에만 옵션 추가
+    if (supportsTeam) {
+      list.unshift({
+        value: 'team',
+        label: '팀배달 · 17-32분',
+        right: teamDeliveryRight,
+        below: (
+          <p className="caption1 text-primary">
+            *출발 시각에 맞추어 순차적으로 배달됩니다
+          </p>
+        ),
+      });
+    }
+    return list;
+  }, [supportsTeam, pickupRight, teamDeliveryRight]);
+
+  const PAYMENT_OPTIONS: Array<{
+    value: PaymentMethod;
+    label: string;
+  }> = [
+    { value: 'card', label: PAYMENT_LABEL.card },
+    { value: 'cash', label: PAYMENT_LABEL.cash },
   ];
   const canPay = !!orderType && !!payment && !!vm && !isLoading && !isError;
 
   const { mutate, isPending } = useCreateOrderMutation();
 
   const SAVED_PER_ORDER_G = 34;
-  const handlePay = () => {
+  const handlePay = useCallback(() => {
     if (!canPay || !vm || !id) return;
 
     const apiOrderType = orderType === 'team' ? 'delivery' : 'pickup';
@@ -133,7 +156,7 @@ export default function CheckoutPage() {
         },
       },
     );
-  };
+  }, [canPay, vm, id, orderType, payment, qty, mutate]);
 
   return stage === 'done' && vm ? (
     <PaymentCompleteView
@@ -156,7 +179,7 @@ export default function CheckoutPage() {
 
         {vm && (
           <>
-            <section className="pt>[2rem] flex-col gap-[1.6rem]">
+            <section className="flex-col gap-[1.6rem] pt-[2rem]">
               <h3 className="body1 text-black">상품 정보</h3>
               <ProductSummaryCard
                 product={{
@@ -204,6 +227,7 @@ export default function CheckoutPage() {
 
             <section className="flex-col gap-[1.2rem] pt-[3.2rem]">
               <h3 className="body1 text-black">주문 유형</h3>
+
               <RadioTileGroup
                 name="orderType"
                 value={orderType}
