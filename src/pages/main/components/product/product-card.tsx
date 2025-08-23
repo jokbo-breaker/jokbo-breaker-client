@@ -78,6 +78,28 @@ function ProductCard({
   } = product;
   const navigate = useNavigate();
 
+  // ★ 문자열 "0"도 안전하게 처리
+  const stock =
+    typeof stockLeft === 'number' ? stockLeft : Number(stockLeft ?? 0);
+  const soldOut = Number.isFinite(stock) && stock <= 0;
+  const hasStock = Number.isFinite(stock) && stock > 0;
+
+  const ImageArea = (
+    <div className="relative">
+      <img
+        src={image || undefined /* 빈 문자열 방지 */}
+        alt={name}
+        className={cn(
+          variant === 'wide'
+            ? 'aspect-[21/10] min-h-[16rem] w-full min-w-[35rem] rounded-[4px] object-cover'
+            : 'h-[14rem] w-full rounded-[4px] object-cover',
+          soldOut && 'opacity-70',
+        )}
+      />
+      {soldOut ? <></> : hasStock && <Badge>{stock}개 남음</Badge>}
+    </div>
+  );
+
   if (variant === 'wide') {
     return (
       <article
@@ -87,14 +109,7 @@ function ProductCard({
         )}
         onClick={() => navigate(`/product/${product.id}`)}
       >
-        <div className="relative">
-          <img
-            src={image}
-            alt={name}
-            className="aspect-[21/10] min-h-[16rem] w-full min-w-[35rem] rounded-[4px] object-cover"
-          />
-          {stockLeft && <Badge>{stockLeft}개 남음</Badge>}
-        </div>
+        {ImageArea}
         <div className="flex-col gap-[0.2rem]">
           <div className="flex-col">
             <h4 className="caption1 text-black">{store}</h4>
@@ -119,14 +134,7 @@ function ProductCard({
       )}
       onClick={() => navigate(`/product/${product.id}`)}
     >
-      <div className="relative">
-        <img
-          src={image}
-          alt={name}
-          className="h-[14rem] w-full rounded-[4px] object-cover"
-        />
-        {stockLeft && <Badge>{stockLeft}개 남음</Badge>}
-      </div>
+      {ImageArea}
       <div className="mt-[1rem] flex-col gap-[0.2rem]">
         <div className="flex-col">
           <h4 className="caption3 text-black">{store}</h4>
