@@ -77,11 +77,11 @@ export default function OrderHistoryPage() {
         topOffsetRem={4.4}
       />
 
-      <main className="flex flex-col gap-[2rem] px-[2rem] py-[1.6rem]">
+      <main className="flex-col gap-[2rem] px-[2rem] py-[1.6rem]">
         {isFetching && <p className="caption1 text-gray-400">불러오는 중…</p>}
 
         {list.map((item) => (
-          <section key={item.id} className="flex flex-col gap-[0.8rem]">
+          <section key={item.id} className="flex-col gap-[1.6rem]">
             <p className="caption1 text-gray-400">
               {formatDateLine(item.orderedAt, item.status, item.method)}
             </p>
