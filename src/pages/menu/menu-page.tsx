@@ -1,5 +1,5 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { Product } from '@/shared/types';
 import { hasActiveFilters } from '@/pages/menu/utils/has-active-filters';
 import {
@@ -106,6 +106,7 @@ const buildFilterParams = (
 
 export default function MenuPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { loc } = useGeolocation({
     immediate: true,
@@ -127,6 +128,15 @@ export default function MenuPage() {
   const center = loc ?? SOONGSIL_BASE;
   const lat = center.lat;
   const lng = center.lng;
+
+  // location.state에서 검색어를 받아와서 초기값으로 설정
+  useEffect(() => {
+    if (location.state?.searchQuery) {
+      const searchQuery = location.state.searchQuery;
+      setQuery(searchQuery);
+      setSubmitted(searchQuery);
+    }
+  }, [location.state?.searchQuery]);
 
   const { data, isLoading, isError } = useDiscoverFilterQuery(
     buildFilterParams(lat, lng, submitted, filter, sort),
@@ -251,6 +261,9 @@ export default function MenuPage() {
             products={allProducts}
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => setPreview(null)}
+            onStoreFocus={(storeId: string) => {
+              // 스토어 포커스 기능이 필요한 경우 여기에 구현
+            }}
           />
 
           {preview ? (

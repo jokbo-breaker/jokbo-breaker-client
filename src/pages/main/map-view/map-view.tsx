@@ -10,7 +10,7 @@ import { SortKey } from '@/pages/menu/constants/sort';
 
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import BottomSheet from '@/shared/components/bottom-sheet';
-
+import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
 import ProductCard from '@/pages/main/components/product/product-card';
 import FilterModal from '@/pages/menu/components/filter-modal';
 import MenuHeader from '@/pages/menu/components/menu-header';
@@ -23,10 +23,6 @@ import { SOONGSIL_BASE, SHEET } from '@/pages/menu/constants/menu';
 import { useDiscoverFilterQuery } from '@/shared/apis/discover/discover-queries';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 
-type NavState = {
-  center?: { lat?: number; lng?: number };
-  focusStoreId?: string;
-};
 const mapSortKeyToApi = (
   k: SortKey,
 ): '인기순' | '가격 낮은 순' | '가격 높은 순' | '거리순' => {
@@ -106,24 +102,16 @@ const buildFilterParams = (
     sortBy: mapSortKeyToApi(sort),
   };
 };
+
 export default function MenuPage() {
   const navigate = useNavigate();
-  const { state } = useLocation() as { state?: NavState };
+  const location = useLocation();
 
-  // 지점 A) 네비게이션으로 넘어온 좌표 & 포커스할 메뉴ID
-  const stateCenter = state?.center;
-
-  const { loc, loading, error, request } = useGeolocation({
-    immediate: !stateCenter, // 좌표를 받았으면 굳이 위치요청 안 함
+  const { loc } = useGeolocation({
+    immediate: true,
     watch: false,
     options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
   });
-
-  // 지점 B) API payload로 사용할 지도 중심 좌표
-  const center =
-    stateCenter && stateCenter.lat && stateCenter.lng
-      ? { lat: stateCenter.lat!, lng: stateCenter.lng! }
-      : (loc ?? SOONGSIL_BASE);
 
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
@@ -134,40 +122,177 @@ export default function MenuPage() {
   const [filter, setFilter] = useState<FilterState>(FILTER_DEFAULT);
   const [filterOpen, setFilterOpen] = useState(false);
   const [includeSoldOut, setIncludeSoldOut] = useState(false);
+  const [focusedStoreName, setFocusedStoreName] = useState<string | null>(
+    location.state?.storeName || null,
+  );
+
+  // focusedStoreName 상태 변경 로깅
+  useEffect(() => {
+    console.log('focusedStoreName changed to:', focusedStoreName);
+  }, [focusedStoreName]);
   const filterSelected = hasActiveFilters(filter);
 
+  const center = loc ?? SOONGSIL_BASE;
   const lat = center.lat;
   const lng = center.lng;
 
   const { data, isLoading, isError } = useDiscoverFilterQuery(
     buildFilterParams(lat, lng, submitted, filter, sort),
   );
+
+  // location.state가 변경될 때 focusedStoreName 업데이트
+  useEffect(() => {
+    console.log('location.state:', location.state);
+    if (location.state?.storeName) {
+      console.log('Setting focusedStoreName to:', location.state.storeName);
+      setFocusedStoreName(location.state.storeName);
+      // 스토어가 포커스되면 자동으로 첫 번째 상품을 프리뷰로 설정
+      if (data?.results && data.results.length > 0) {
+        const firstProduct = toProductCardModel(data.results[0]);
+        setPreview(firstProduct);
+      }
+    }
+  }, [location.state?.storeName, data?.results]);
+
   const allProducts: Product[] = useMemo(() => {
     const rows = data?.results ?? [];
     const mapped = rows.map(toProductCardModel);
-    return includeSoldOut
+    let filtered = includeSoldOut
       ? mapped
       : mapped.filter((p) => (p.stockLeft ?? 0) > 0);
-  }, [data?.results, includeSoldOut]);
-  const focusStoreId = state?.focusStoreId ?? null;
 
-  const displayed: Product[] = useMemo(() => {
-    if (focusStoreId)
-      return allProducts.filter((p) => p.storeId === focusStoreId);
-    return allProducts;
-  }, [allProducts, focusStoreId]);
-
-  useEffect(() => {
-    if (focusStoreId) {
-      setPreview(displayed[0] ?? null);
-      setMode('map');
+    // 스토어 이름으로 필터링
+    if (focusedStoreName !== null) {
+      filtered = filtered.filter((p) => p.store === focusedStoreName);
     }
-  }, [displayed, focusStoreId]);
 
-  const handleSearchSubmit = useCallback((v: string) => {
-    setQuery(v);
-    setSubmitted(v);
-  }, []);
+    return filtered;
+  }, [data?.results, includeSoldOut, focusedStoreName]);
+
+  const isEmpty = !isLoading && !isError && allProducts.length === 0;
+  // === API 결과 -> 지도 마커 변환 ===
+  type RestaurantCandidate = {
+    id: number;
+    name: string;
+    lat: number;
+    lng: number;
+  };
+
+  const markers = useMemo<RestaurantCandidate[]>(() => {
+    const rows: any[] = data?.results ?? [];
+    const seen = new Set<string>();
+    let seq = 1;
+
+    const toNum = (v: any): number | null => {
+      if (typeof v === 'number' && Number.isFinite(v)) return v;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const pickNum = (...vals: any[]) => {
+      for (const v of vals) {
+        const n = toNum(v);
+        if (n !== null) return n;
+      }
+      return null;
+    };
+
+    const out: RestaurantCandidate[] = [];
+
+    for (const row of rows) {
+      const store = row.store ?? {};
+
+      const lat = pickNum(
+        row.storeLat,
+        row.lat,
+        store.lat,
+        store.latitude,
+        store?.location?.lat,
+        row.store?.location?.lat,
+      );
+      const lng = pickNum(
+        row.storeLng,
+        row.lng,
+        store.lng,
+        store.longitude,
+        store?.location?.lng,
+        row.store?.location?.lng,
+      );
+      if (lat === null || lng === null) continue;
+
+      const name =
+        row.storeName ??
+        store.name ??
+        row.store?.storeName ??
+        row.name ??
+        '매장';
+
+      const key = `${row.storeId ?? store.id ?? row.id ?? name}|${lat}|${lng}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const id =
+        pickNum(row.storeId, store.id, row.store?.storeId, row.id) ??
+        toNum(row.storeCode) ??
+        toNum(row.menuId) ??
+        seq++;
+
+      out.push({ id, name, lat, lng });
+    }
+
+    // focusedStoreName이 있을 때 해당 스토어만 필터링
+    if (focusedStoreName !== null) {
+      // focusedStoreName과 일치하는 상품들의 위치만 마커로 표시
+      const focusedStoreProducts = rows.filter(
+        (row) => row.storeName === focusedStoreName,
+      );
+      const focusedLocations = new Set<string>();
+
+      focusedStoreProducts.forEach((row) => {
+        const lat = pickNum(
+          row.storeLat,
+          row.lat,
+          row.store?.lat,
+          row.store?.latitude,
+          row.store?.location?.lat,
+          row.store?.location?.lat,
+        );
+        const lng = pickNum(
+          row.storeLng,
+          row.lng,
+          row.store?.lng,
+          row.store?.longitude,
+          row.store?.location?.lng,
+          row.store?.location?.lng,
+        );
+
+        if (lat !== null && lng !== null) {
+          focusedLocations.add(`${lat},${lng}`);
+        }
+      });
+
+      return out.filter((marker) =>
+        focusedLocations.has(`${marker.lat},${marker.lng}`),
+      );
+    }
+
+    return out;
+  }, [data?.results, focusedStoreName]);
+
+  const handleSearchSubmit = useCallback(
+    (v: string) => {
+      const trimmedQuery = v.trim();
+      if (trimmedQuery) {
+        // 검색어가 있을 때 menu-page로 이동
+        navigate('/menu', { state: { searchQuery: trimmedQuery } });
+      } else {
+        // 검색어가 없을 때는 기존 로직 유지
+        setQuery(v);
+        setSubmitted(v);
+      }
+    },
+    [navigate],
+  );
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden">
@@ -192,12 +317,17 @@ export default function MenuPage() {
       {mode === 'map' ? (
         <>
           <MapSection
-            center={center} // ★ 상세에서 받은 좌표로 센터
+            center={center}
             defaultCenter={SOONGSIL_BASE}
-            restaurants={[]} // 테스트 데이터 제거
-            products={displayed} // ★ 단일(또는 전체) 상품 마커
+            restaurants={markers}
+            products={allProducts}
+            focusedStoreId={focusedStoreName}
             onPickPreview={(p) => setPreview(p)}
-            onMapTap={() => setPreview(null)}
+            onMapTap={() => {
+              setPreview(null);
+              setFocusedStoreName(null); // 지도 탭 시 스토어 포커스 해제
+            }}
+            onStoreFocus={(storeName: string) => setFocusedStoreName(storeName)}
           />
 
           {preview ? (
@@ -210,25 +340,36 @@ export default function MenuPage() {
               onOverExpand={() => setMode('list')}
             >
               <section className="mx-auto w-full">
-                {isError && (
-                  <div className="p-[1rem] text-red-600">
-                    데이터를 불러오지 못했습니다.
+                {isEmpty ? (
+                  <div className="flex-col-center h-full">
+                    <EmptyRecommend
+                      title="조건에 맞는 메뉴가 없어요"
+                      subtitle="검색어나 필터를 조정해 보세요!"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex-col gap-[2.0rem]">
+                    {(isLoading ? [] : allProducts).slice(0, 10).map((p) => (
+                      <div key={p.id}>
+                        <ProductCard product={p} variant="wide" />
+                      </div>
+                    ))}
                   </div>
                 )}
-                <div className="flex-col gap-[2.0rem]">
-                  {(isLoading ? [] : displayed).slice(0, 10).map((p) => (
-                    <div key={p.id}>
-                      <ProductCard product={p} variant="wide" />
-                    </div>
-                  ))}
-                </div>
               </section>
             </BottomSheet>
           )}
         </>
+      ) : isEmpty ? (
+        <div className="flex-col-center h-full">
+          <EmptyRecommend
+            title="조건에 맞는 메뉴가 없어요"
+            subtitle="검색어나 필터를 조정해 보세요!"
+          />
+        </div>
       ) : (
         <ListSection
-          products={(isLoading ? [] : displayed).slice(0, 20)}
+          products={(isLoading ? [] : allProducts).slice(0, 20)}
           sort={sort}
           onOpenSort={() => setSortOpen(true)}
           onOpenFilter={() => setFilterOpen(true)}
@@ -251,19 +392,6 @@ export default function MenuPage() {
         onApply={(next) => setFilter(next)}
         onClose={() => setFilterOpen(false)}
       />
-
-      {error && !stateCenter && (
-        <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
-          위치 권한/가져오기 실패: {error.message}
-          <button
-            className="ml-[0.8rem] underline"
-            onClick={request}
-            disabled={loading}
-          >
-            다시 시도
-          </button>
-        </div>
-      )}
     </div>
   );
 }

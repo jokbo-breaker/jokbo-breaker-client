@@ -11,8 +11,10 @@ type Props = {
   defaultCenter: { lat: number; lng: number };
   restaurants: Restaurant[];
   products: Product[];
+  focusedStoreId?: string | null;
   onPickPreview: (p: Product) => void;
   onMapTap: () => void;
+  onStoreFocus: (storeName: string) => void;
 };
 
 export default function MapSection({
@@ -20,8 +22,10 @@ export default function MapSection({
   defaultCenter,
   restaurants,
   products,
+  focusedStoreId,
   onPickPreview,
   onMapTap,
+  onStoreFocus,
 }: Props) {
   const mapRef = useRef<any>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
@@ -45,6 +49,14 @@ export default function MapSection({
     return () => off.forEach((h) => n.maps.Event.removeListener(h));
   }, [mapInstance, onMapTap]);
 
+  const handleMarkerClick = (restaurant: Restaurant, index: number) => {
+    const product = products[index % products.length];
+    if (product.store) {
+      onStoreFocus(product.store);
+    }
+    onPickPreview(product);
+  };
+
   return (
     <MapDiv
       style={{
@@ -62,7 +74,7 @@ export default function MapSection({
             key={r.id}
             position={{ lat: r.lat, lng: r.lng }}
             icon={restaurantMarkerIcon as any}
-            onClick={() => onPickPreview(products[idx % products.length])}
+            onClick={() => handleMarkerClick(r, idx)}
           />
         ))}
       </NaverMap>

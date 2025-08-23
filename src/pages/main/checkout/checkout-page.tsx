@@ -31,6 +31,7 @@ export default function CheckoutPage() {
 
   const [stage, setStage] = useState<'form' | 'done'>('form');
   const [savedG, setSavedG] = useState(0);
+  const [totalGrams, setTotalGrams] = useState(0);
   const [qty, setQty] = useState<number>(DEFAULT_QTY);
   const [orderType, setOrderType] = useState<OrderType | ''>(''); // 'team' | 'pickup'
   const [payment, setPayment] = useState<PaymentMethod | ''>(''); // 'card' | 'cash'
@@ -149,9 +150,12 @@ export default function CheckoutPage() {
         paymentMethod: apiPayment,
       },
       {
-        onSuccess: () => {
-          const g = orderType === 'team' ? SAVED_PER_ORDER_G * qty : 0;
-          setSavedG(Math.max(0, Math.round(g)));
+        onSuccess: (response) => {
+          // API 응답에서 items[0].totalGrams를 savedG로 설정
+          const itemTotalGrams = response?.order?.items?.[0]?.totalGrams || 0;
+          const orderTotalGrams = response?.order?.totalGrams || 0;
+          setSavedG(itemTotalGrams);
+          setTotalGrams(orderTotalGrams);
           setStage('done');
         },
       },
@@ -161,6 +165,7 @@ export default function CheckoutPage() {
   return stage === 'done' && vm ? (
     <PaymentCompleteView
       savedG={savedG}
+      totalGrams={totalGrams}
       remainingBadge={getRemainingBadge(vm.stockLeft)}
       onBack={() => setStage('form')}
       onPrimary={() => setStage('form')}

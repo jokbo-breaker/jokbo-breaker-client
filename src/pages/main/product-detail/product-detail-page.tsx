@@ -172,14 +172,15 @@ export default function ProductDetailPage() {
               text={address || '주소 정보가 없습니다.'}
               trailing={
                 <button
-                  onClick={() =>
-                    navigate('/menu', {
+                  onClick={() => {
+                    console.log('Navigating to map-view with storeName:', data?.storeName);
+                    navigate('/map-view', {
                       state: {
                         center: { lat: data?.storeLat, lng: data?.storeLng },
-                        focusStoreId: data?.storeId,
+                        storeName: data?.storeName,
                       },
-                    })
-                  }
+                    });
+                  }}
                   className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
                 >
                   <Icon name="map" size={2.4} />
