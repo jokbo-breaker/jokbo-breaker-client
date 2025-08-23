@@ -222,7 +222,7 @@ export default function ProductDetailPage() {
               {description || '설명 정보가 없습니다.'}
             </p>
             <p className="caption1 text-primary pb-[2rem] break-words">
-              *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
+              *본 업소는 잔반없는날의 신선도 관리 기준을 준수합니다. 신선한
               재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>
           </section>
