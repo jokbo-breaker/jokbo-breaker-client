@@ -16,6 +16,7 @@ export const toProductCardModel = (x: DiscoverItem): Product => {
   return {
     id: x.menuId,
     name: x.menuName,
+    storeId: x.storeId,
     store: x.storeName,
     image: x.menuImageUrls?.[0] ?? '',
     images: x.menuImageUrls ?? [],

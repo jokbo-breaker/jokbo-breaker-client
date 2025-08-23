@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
 import { ORDER_TABS, type OrderTabKey } from './constants/order';
+import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
 import type { OrderItem } from './types/order';
 import OrderCard from './components/order-card';
 import OrderTabs from './components/order-tabs';
@@ -10,6 +11,8 @@ import { useOrdersQuery } from '@/shared/apis/order/order-queries';
 import { useCancelOrderMutation } from '@/shared/apis/order/order-mutations';
 import { mapOrderToUI } from '@/shared/utils/map-order-to-ui';
 import { ORDER_STATUS } from './constants/order';
+import { useQueryClient } from '@tanstack/react-query';
+import { ORDER_KEY } from '@/shared/apis/constants/keys';
 
 const formatDateLine = (
   iso: string,
@@ -37,6 +40,7 @@ const formatDateLine = (
 export default function OrderHistoryPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<OrderTabKey>('delivery');
+  const queryClient = useQueryClient();
 
   const { data, isFetching } = useOrdersQuery();
   const { mutate: cancelOrder } = useCancelOrderMutation();
@@ -53,6 +57,10 @@ export default function OrderHistoryPage() {
       {
         onSuccess: () => {
           showToast('주문이 취소되었습니다.', 'success');
+          // 토스트가 표시된 후 데이터 리프레시
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: ORDER_KEY.LIST() });
+          }, 500);
         },
         onError: () => {
           showToast('주문 취소에 실패했습니다. 다시 시도해주세요.', 'error');
@@ -78,8 +86,6 @@ export default function OrderHistoryPage() {
       />
 
       <main className="flex-col gap-[2rem] px-[2rem] py-[1.6rem]">
-        {isFetching && <p className="caption1 text-gray-400">불러오는 중…</p>}
-
         {list.map((item) => (
           <section key={item.id} className="flex-col gap-[1.6rem]">
             <p className="caption1 text-gray-400">
@@ -90,9 +96,12 @@ export default function OrderHistoryPage() {
         ))}
 
         {!isFetching && list.length === 0 && (
-          <p className="caption1 py-[2.4rem] text-center text-gray-400">
-            주문 내역이 없어요.
-          </p>
+          <div className="py-[6rem]">
+            <EmptyRecommend
+              title="주문 내역이 없어요"
+              subtitle="상품을 주문하여 음식물류 폐기물 절약에 참여하세요!"
+            />
+          </div>
         )}
       </main>
     </div>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
@@ -20,6 +20,7 @@ import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
 import { useMeQuery } from '@/shared/apis/auth/auth-queries';
 import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
+import { useToast } from '@/shared/contexts/ToastContext';
 
 const PLACE = '동작';
 const DEFAULT_LAT = 37.563;
@@ -43,14 +44,18 @@ export default function MainPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>('pickup'); // 'delivery' | 'pickup'
   const { data: meData } = useMeQuery();
+  const { showToast } = useToast();
 
   const { mutate: logout, isPending: logoutLoading } = useLogoutMutation();
 
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
-        navigate('/login', { replace: true });
-        setTimeout(() => window.location.reload(), 0);
+        showToast('로그아웃되었습니다.', 'info');
+        setTimeout(() => {
+          navigate('/login', { replace: true });
+          setTimeout(() => window.location.reload(), 500);
+        }, 1000);
       },
     });
   };
@@ -108,7 +113,7 @@ export default function MainPage() {
               <Icon name="order" width={2.4} />
             </button>
             <button
-              onClick={() => navigate('/search')}
+              onClick={() => navigate('/menu')}
               aria-label="검색"
               className="cursor-pointer text-gray-700"
             >
@@ -129,12 +134,6 @@ export default function MainPage() {
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
-          {isError && (
-            <div className="px-[2rem] text-red-600">
-              데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-            </div>
-          )}
-
           {keysToRender.map((uiKey) => {
             const fullList = lists[uiKey] ?? [];
             const list = fullList.slice(0, MAX_PER_SECTION);

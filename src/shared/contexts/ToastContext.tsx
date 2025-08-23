@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={contextValue}>
       {children}
       {createPortal(
-        <div className="fixed bottom-[10rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 space-y-[1.2rem] px-[2.5rem]">
+        <div className="fixed top-[2rem] left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 space-y-[1.2rem] px-[2.5rem]">
           {toasts.map((toast) => (
             <Toast key={toast.id} type={toast.type} message={toast.message} />
           ))}

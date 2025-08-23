@@ -10,6 +10,7 @@ import InfoTooltipButton from '@/pages/main/product-detail/components/info-toolt
 import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import Badge from '@/pages/main/product-detail/components/badge';
 import { useMenuDetailQuery } from '@/shared/apis/discover/discover-queries';
+import LoopLoading from '@/shared/components/loop-loading';
 
 const hhmm = (ts?: string | null) => {
   if (!ts) return '';
@@ -29,16 +30,15 @@ export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useMenuDetailQuery(id ?? '');
+  const { data, isLoading } = useMenuDetailQuery(id ?? '');
 
   const [idx, setIdx] = useState(0);
   const startX = useRef<number | null>(null);
 
   const images = useMemo(
-    () => (data?.menuImageUrls?.length ? data.menuImageUrls : ['']),
+    () => (data?.menuImageUrls ? data.menuImageUrls.filter(Boolean) : []),
     [data?.menuImageUrls],
   );
-  const image = images[0];
 
   const store = data?.storeName ?? '';
   const name = data?.menuName ?? '';
@@ -65,6 +65,11 @@ export default function ProductDetailPage() {
         : '',
     [data],
   );
+
+  // ★ 품절 여부 계산
+  const stockNum =
+    typeof stockLeft === 'number' ? stockLeft : Number(stockLeft ?? 0);
+  const isSoldOut = Number.isFinite(stockNum) && stockNum <= 0;
 
   const remainingBadge = useMemo(
     () => getRemainingBadge(stockLeft),
@@ -120,11 +125,7 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
-          {isLoading && <div className="body3 text-gray-500">불러오는 중…</div>}
-          {isError && (
-            <div className="body3 text-red-600">상품을 찾을 수 없습니다.</div>
-          )}
-
+          {isLoading && <LoopLoading />}
           <section className="space-y-2">
             <div className="flex-row-between">
               <div className="flex-col gap-[0.2rem]">
@@ -173,7 +174,18 @@ export default function ProductDetailPage() {
               text={address || '주소 정보가 없습니다.'}
               trailing={
                 <button
-                  onClick={() => navigate('/map-view')}
+                  onClick={() => {
+                    console.log(
+                      'Navigating to map-view with storeName:',
+                      data?.storeName,
+                    );
+                    navigate('/map-view', {
+                      state: {
+                        center: { lat: data?.storeLat, lng: data?.storeLng },
+                        storeName: data?.storeName,
+                      },
+                    });
+                  }}
                   className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
                 >
                   <Icon name="map" size={2.4} />
@@ -181,7 +193,6 @@ export default function ProductDetailPage() {
                 </button>
               }
             />
-
             <div className="flex-col gap-[0.4rem]">
               <InfoRow
                 icon="cart"
@@ -202,29 +213,27 @@ export default function ProductDetailPage() {
             {phone && <InfoRow icon="phone" text={phone} />}
           </section>
 
-          {data?.isDeliveryAvailable && (
-            <section>
-              <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
-                팀배달이 가능한 상품이에요
-              </div>
-            </section>
-          )}
-
           <section className="flex-col gap-[1.2rem]">
             <h2 className="body1 text-black">상품 설명</h2>
             <p className="body4 text-black">
               {description || '설명 정보가 없습니다.'}
             </p>
             <p className="caption1 text-primary pb-[2rem] break-words">
-              *본 업소는 (서비스명)의 신선도 관리 기준을 준수합니다. 신선한
+              *본 업소는 잔반없는날의 신선도 관리 기준을 준수합니다. 신선한
               재료로 준비된 밀키트를 안심하고 드셔보세요.
             </p>
           </section>
         </div>
 
         <BottomCTA
-          label={`주문하기 · ${remainingBadge}`}
-          onClick={() => navigate(`/checkout/${id}`)}
+          label={
+            isSoldOut ? '품절된 상품이에요' : `주문하기 · ${remainingBadge}`
+          }
+          disabled={isSoldOut}
+          onClick={() => {
+            if (isSoldOut) return;
+            navigate(`/checkout/${id}`);
+          }}
         />
       </main>
     </div>
