@@ -5,12 +5,14 @@ import {
   useAuthStatusQuery,
 } from '@/shared/apis/auth/auth-queries';
 import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
+import { useToast } from '@/shared/contexts/ToastContext';
 import Icon from '@/shared/components/icon';
 
 export default function LoginPage() {
   const { isFetching: meLoading } = useMeQuery();
   const { isFetching: statusLoading } = useAuthStatusQuery();
   const { isPending: logoutLoading } = useLogoutMutation();
+  const { showToast } = useToast();
 
   const [waking, setWaking] = useState(false);
   const googleStartUrl = useMemo(() => {
@@ -28,16 +30,22 @@ export default function LoginPage() {
 
   const wakeAndGoGoogle = useCallback(async () => {
     setWaking(true);
+    showToast('Google 로그인으로 이동합니다...', 'info');
+    
     try {
       const baseNoApi = BASE_URL.replace(/\/api\/?$/, '/');
       const health = `${baseNoApi.replace(/\/$/, '')}/health`;
 
       await fetch(health, { mode: 'no-cors' });
     } catch {
+      // 에러가 발생해도 Google 로그인으로 진행
     } finally {
-      window.location.assign(googleStartUrl);
+      // 토스트가 표시될 시간을 주기 위해 약간의 지연
+      setTimeout(() => {
+        window.location.assign(googleStartUrl);
+      }, 1000);
     }
-  }, [googleStartUrl]);
+  }, [googleStartUrl, showToast]);
 
   const busy = meLoading || statusLoading || logoutLoading || waking;
 

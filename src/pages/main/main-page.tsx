@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
@@ -20,6 +20,7 @@ import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
 import { useMeQuery } from '@/shared/apis/auth/auth-queries';
 import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
+import { useToast } from '@/shared/contexts/ToastContext';
 
 const PLACE = '동작';
 const DEFAULT_LAT = 37.563;
@@ -43,14 +44,18 @@ export default function MainPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>('pickup'); // 'delivery' | 'pickup'
   const { data: meData } = useMeQuery();
+  const { showToast } = useToast();
 
   const { mutate: logout, isPending: logoutLoading } = useLogoutMutation();
 
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
-        navigate('/login', { replace: true });
-        setTimeout(() => window.location.reload(), 0);
+        showToast('로그아웃되었습니다.', 'info');
+        setTimeout(() => {
+          navigate('/login', { replace: true });
+          setTimeout(() => window.location.reload(), 500);
+        }, 1000);
       },
     });
   };
