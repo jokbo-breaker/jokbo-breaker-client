@@ -1,4 +1,3 @@
-// src/pages/main/product-detail/components/bottom-cta.tsx
 import { cn } from '@/shared/libs/cn';
 
 function BottomCTA({

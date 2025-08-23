@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ScrollToTop from '@/shared/layouts/scroll-to-top';
 // import BottomNavigation from '@/shared/layouts/bottom-navbar';
 import FloatingButton from '@/shared/layouts/floating-button';
@@ -9,7 +9,15 @@ export default function Layout() {
   const [openMealbox, setOpenMealbox] = useState(false);
   const { pathname } = useLocation();
 
-  const isHiddenRoute = /^\/(checkout|menu)(\/|$)/.test(pathname);
+  const HIDDEN_PREFIXES = useMemo(
+    () => ['/checkout', '/menu', '/login', '/auth/success', '/onboarding'],
+    [],
+  );
+
+  const isHiddenRoute = useMemo(
+    () => HIDDEN_PREFIXES.some((p) => pathname.startsWith(p)),
+    [pathname, HIDDEN_PREFIXES],
+  );
 
   return (
     <div className="flex max-h-dvh flex-col overflow-hidden">
