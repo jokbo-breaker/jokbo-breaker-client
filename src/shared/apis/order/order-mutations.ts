@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/apis/factory';
 import { ORDER_KEY } from '@/shared/apis/constants/keys';
 import type { CancelOrderResponse } from './order';
+import type { CreateOrderBody, CreateOrderResponse } from './order';
 
 export const useCancelOrderMutation = () => {
   const qc = useQueryClient();
@@ -13,3 +14,8 @@ export const useCancelOrderMutation = () => {
     },
   });
 };
+
+export const useCreateOrderMutation = () =>
+  useMutation<CreateOrderResponse, unknown, CreateOrderBody>({
+    mutationFn: (body) => api.order.create(body),
+  });
