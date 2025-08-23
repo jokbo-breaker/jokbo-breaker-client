@@ -10,7 +10,7 @@ interface Props {
 }
 
 const SavedBadge = ({ g }: { g: number }) => (
-  <span className="caption1 inline-flex items-center rounded-[999px] bg-[#ffe7e4] px-[1.2rem] py-[0.6rem] text-[#ff6a6a]">
+  <span className="caption1 bg-secondary text-primary flex w-[10.6rem] items-center rounded-[20px] px-[1.2rem] py-[0.5rem]">
     {g.toLocaleString()}g 절약했어요
   </span>
 );
@@ -33,28 +33,32 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
   return (
     <article className="rounded-[12px] border border-gray-200 bg-white p-[1.6rem] shadow-[0_0.2rem_0.6rem_rgba(0,0,0,0.04)]">
       {/* 상단: 썸네일 + 텍스트 */}
-      <div className="flex gap-[1.2rem]">
+      <div className="flex gap-[1rem]">
         <img
           src={item.image}
           alt=""
-          className="h-[7.2rem] w-[7.2rem] rounded-[8px] object-cover"
+          className="h-[8rem] w-[8rem] rounded-[8px] object-cover"
           draggable={false}
         />
         <div className="min-w-0 flex-1">
-          <p className="body3 truncate text-gray-500">{item.store}</p>
-          <p className="body2 truncate text-black">{item.name}</p>
+          <p className="caption1 truncate text-black">{item.store}</p>
+          <p className="body4 truncate text-black">{item.name}</p>
 
-          <div className="mt-[0.6rem] flex flex-wrap items-center gap-x-[0.8rem] gap-y-[0.4rem]">
-            <span className="body4 text-[#ff6a6a]">{item.discountRate}%</span>
-            <span className="head4 text-black">
-              {formatKRW(item.salePrice)}
-            </span>
-            <s className="caption1 text-gray-400">
-              {formatKRW(item.originalPrice)}
-            </s>
-            <span className="caption1 text-gray-400">· {item.qty}개</span>
+          <div className="flex flex-wrap items-center">
+            <div className="flex flex-wrap items-center gap-[0.4rem]">
+              <span className="caption1 text-primary">
+                {item.discountRate}%
+              </span>
+              <span className="body3 text-black">
+                {formatKRW(item.salePrice)}
+              </span>
+              <s className="caption2 text-gray-300">
+                {formatKRW(item.originalPrice)}
+              </s>
+            </div>
+            <span className="caption1 text-gray-700">・</span>
+            <span className="caption2 text-gray-700">{item.qty}개</span>
           </div>
-
           {item.pickupPriceText && (
             <div className="mt-[0.4rem]">
               <span className="caption1 rounded-[6px] bg-[#eaf2ff] px-[0.6rem] py-[0.2rem] text-[#2f6dff]">
@@ -69,19 +73,23 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
       <div className="my-[1.2rem] h-[0.1rem] w-full bg-gray-200/80" />
 
       {/* 총 결제금액 + 절약 배지 */}
-      <div className="flex items-end justify-between gap-[1.2rem]">
-        <div className="flex items-end gap-[0.8rem]">
-          <span className="body2 text-black">총 결제금액</span>
+      <div className="w-full flex-col gap-[0.6rem]">
+        <div className="flex items-center justify-between gap-[0.8rem]">
+          <span className="body2 whitespace-nowrap text-black">
+            총 결제금액
+          </span>
           <div className="flex items-baseline gap-[0.6rem]">
             <span className="head3 text-black">{formatKRW(total)}</span>
             <s className="caption1 text-gray-400">{formatKRW(originalTotal)}</s>
           </div>
         </div>
-        <SavedBadge g={item.savedGram} />
+        <div className="w-full flex-col items-end justify-start">
+          <SavedBadge g={item.savedGram} />
+        </div>
       </div>
 
       {/* 하단 버튼 */}
-      <div className="mt-[1.2rem]">
+      <div>
         {showReorder ? (
           <Button
             variant="black"

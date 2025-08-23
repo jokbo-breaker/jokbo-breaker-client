@@ -1,86 +1,19 @@
 import { useMemo, useState } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
-import { ORDER_STATUS, ORDER_TABS, type OrderTabKey } from './constants/order';
+import { ORDER_TABS, type OrderTabKey } from './constants/order';
 import type { OrderItem } from './types/order';
 import OrderCard from './components/order-card';
+import OrderTabs from './components/order-tabs';
 import { useNavigate } from 'react-router-dom';
-
-// --- 샘플 데이터 (API 연동 전 UI 확인용) ---
-const base: Omit<OrderItem, 'id' | 'orderedAt' | 'method' | 'status'> = {
-  image: '/sample/order-thumb.jpg', // 실제 이미지 경로로 교체
-  store: '스타벅스 송실대입구역점',
-  name: '시크릿 런치 밀박스',
-  discountRate: 20,
-  salePrice: 10800,
-  originalPrice: 13500,
-  qty: 2,
-  savedGram: 560,
-  pickupPriceText: '픽업 시 9,800원',
-};
-
-const mockOrders: OrderItem[] = [
-  {
-    id: 'd1',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'delivery',
-    status: ORDER_STATUS.CANCELLABLE,
-    ...base,
-  },
-  {
-    id: 'd2',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'delivery',
-    status: ORDER_STATUS.IN_PROGRESS,
-    ...base,
-  },
-  {
-    id: 'd3',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'delivery',
-    status: ORDER_STATUS.DELIVERED,
-    ...base,
-  },
-  {
-    id: 'd4',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'delivery',
-    status: ORDER_STATUS.SOLD_OUT,
-    ...base,
-  },
-
-  {
-    id: 'p1',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'pickup',
-    status: ORDER_STATUS.CANCELLABLE,
-    ...base,
-  },
-  {
-    id: 'p2',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'pickup',
-    status: ORDER_STATUS.IN_PROGRESS,
-    ...base,
-  },
-  {
-    id: 'p3',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'pickup',
-    status: ORDER_STATUS.DELIVERED,
-    ...base,
-  },
-  {
-    id: 'p4',
-    orderedAt: '2025-08-16T22:16:00+09:00',
-    method: 'pickup',
-    status: ORDER_STATUS.SOLD_OUT,
-    ...base,
-  },
-];
+import { useToast } from '@/shared/contexts/ToastContext';
+import { useOrdersQuery } from '@/shared/apis/order/order-queries';
+import { useCancelOrderMutation } from '@/shared/apis/order/order-mutations';
+import { mapOrderToUI } from '@/shared/utils/map-order-to-ui';
+import { ORDER_STATUS } from './constants/order';
 
 const formatDateLine = (
   iso: string,
-  status: string,
+  status: OrderItem['status'],
   method: OrderItem['method'],
 ) => {
   const d = new Date(iso);
@@ -105,14 +38,31 @@ export default function OrderHistoryPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<OrderTabKey>('delivery');
 
-  const list = useMemo(() => mockOrders.filter((o) => o.method === tab), [tab]);
+  const { data, isFetching } = useOrdersQuery();
+  const { mutate: cancelOrder } = useCancelOrderMutation();
+  const { showToast } = useToast();
+
+  const list: OrderItem[] = useMemo(() => {
+    const orders = data?.orders ?? [];
+    return orders.filter((o) => o.orderType === tab).map(mapOrderToUI);
+  }, [data?.orders, tab]);
 
   const onCancel = (id: string) => {
-    // TODO: 주문취소 모달/API 연결
-    console.log('cancel', id);
+    cancelOrder(
+      { orderId: id },
+      {
+        onSuccess: () => {
+          showToast('주문이 취소되었습니다.', 'success');
+        },
+        onError: () => {
+          showToast('주문 취소에 실패했습니다. 다시 시도해주세요.', 'error');
+        },
+      },
+    );
   };
+
   const onReorder = (id: string) => {
-    // TODO: 같은상품 주문하기 이동
+    // TODO: 재주문 흐름 연결
     console.log('reorder', id);
   };
 
@@ -120,42 +70,30 @@ export default function OrderHistoryPage() {
     <div className="scrollbar-hide h-dvh flex-col overflow-y-auto bg-white">
       <TopBar title="주문내역" showBack onBack={() => navigate(-1)} sticky />
 
-      {/* 탭 */}
-      <div className="px-[2rem]">
-        <div className="flex h-[4.8rem] items-center gap-[2.4rem]">
-          {ORDER_TABS.map((t) => {
-            const active = t.key === tab;
-            return (
-              <button
-                key={t.key}
-                type="button"
-                className="relative pb-[1.2rem]"
-                onClick={() => setTab(t.key)}
-              >
-                <span
-                  className={`body2 ${active ? 'text-black' : 'text-gray-400'}`}
-                >
-                  {t.label}
-                </span>
-                {active && (
-                  <span className="absolute right-0 bottom-0 left-0 h-[0.2rem] rounded-[999px] bg-black" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <OrderTabs
+        tabs={ORDER_TABS}
+        active={tab}
+        onChange={setTab}
+        topOffsetRem={4.4}
+      />
 
-      {/* 리스트 */}
-      <main className="flex flex-col gap-[2rem] px-[2rem] pb-[8rem]">
+      <main className="flex-col gap-[2rem] px-[2rem] py-[1.6rem]">
+        {isFetching && <p className="caption1 text-gray-400">불러오는 중…</p>}
+
         {list.map((item) => (
-          <section key={item.id} className="flex flex-col gap-[0.8rem]">
+          <section key={item.id} className="flex-col gap-[1.6rem]">
             <p className="caption1 text-gray-400">
               {formatDateLine(item.orderedAt, item.status, item.method)}
             </p>
             <OrderCard item={item} onCancel={onCancel} onReorder={onReorder} />
           </section>
         ))}
+
+        {!isFetching && list.length === 0 && (
+          <p className="caption1 py-[2.4rem] text-center text-gray-400">
+            주문 내역이 없어요.
+          </p>
+        )}
       </main>
     </div>
   );
