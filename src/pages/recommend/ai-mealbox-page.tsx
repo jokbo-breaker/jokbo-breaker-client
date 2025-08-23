@@ -15,7 +15,7 @@ import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import { SOONGSIL_BASE } from '@/pages/menu/constants/menu';
 import { useAiRecommendMutation } from '@/shared/apis/discover/discover-mutations';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
-
+import { useMeQuery } from '@/shared/apis/auth/auth-queries';
 type Props = {
   onClose?: () => void;
 };
@@ -41,7 +41,8 @@ export default function AiMealboxPage({ onClose }: Props) {
     setShowLoading,
     payload,
   } = useAiMealboxForm();
-
+  const { data: me } = useMeQuery();
+  const userName = me?.user?.name;
   const { loc } = useGeolocation({
     immediate: true,
     watch: false,
@@ -52,7 +53,7 @@ export default function AiMealboxPage({ onClose }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [results, setResults] = useState<Product[] | null>(null);
   const isResult = results !== null;
-
+  const displayName = (userName ?? '').trim() || '고객';
   const aiRecommend = useAiRecommendMutation();
 
   useEffect(() => {
@@ -114,7 +115,11 @@ export default function AiMealboxPage({ onClose }: Props) {
             </div>
 
             {step === 1 && (
-              <Step1Categories selected={foods} onToggle={toggleFood} />
+              <Step1Categories
+                selected={foods}
+                onToggle={toggleFood}
+                userName={displayName}
+              />
             )}
             {step === 2 && (
               <Step2Budget value={maxPrice} onChange={setMaxPrice} />
@@ -189,6 +194,7 @@ export default function AiMealboxPage({ onClose }: Props) {
         minLoops={2}
         forceOnceInSession={true}
         minOnceMs={1200}
+        userName={userName}
       />
     </div>
   );
