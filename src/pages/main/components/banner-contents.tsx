@@ -14,7 +14,42 @@ export default function BannerContents() {
   const dragRef = React.useRef({ active: false, startX: 0, dx: 0 });
   const suppressClickRef = React.useRef(false);
   const [, force] = React.useReducer((c) => c + 1, 0);
+  // 1) 컴포넌트 상단에 ref랑 onWheel 핸들러 추가
+  const wheelRef = React.useRef({ acc: 0, lockedUntil: 0 });
 
+  const onWheel = (e: React.WheelEvent) => {
+    const now = Date.now();
+    if (now < wheelRef.current.lockedUntil) return;
+
+    // 가로 휠이 우선, 없으면 Shift+세로휠로 가로처럼 처리
+    const dominantDx =
+      Math.abs(e.deltaX) > Math.abs(e.deltaY)
+        ? e.deltaX
+        : e.shiftKey
+          ? e.deltaY
+          : 0;
+
+    if (!dominantDx) return;
+
+    wheelRef.current.acc += dominantDx;
+    const threshold = 40; // 트랙패드 감도 대응
+
+    if (Math.abs(wheelRef.current.acc) > threshold) {
+      e.preventDefault(); // 페이지 스크롤 방지
+      e.stopPropagation();
+
+      // 슬라이드 전환 (0 ↔ 1)
+      setSlide((prev) => {
+        if (wheelRef.current.acc < 0 && prev < 1) return prev + 1; // 오른쪽으로
+        if (wheelRef.current.acc > 0 && prev > 0) return prev - 1; // 왼쪽으로
+        return prev;
+      });
+
+      suppressClickRef.current = true;
+      wheelRef.current.lockedUntil = now + 500; // 0.5s 쿨다운
+      wheelRef.current.acc = 0;
+    }
+  };
   const openModal = React.useCallback(() => setOpen(true), []);
   const onKeyOpen = React.useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -103,7 +138,7 @@ export default function BannerContents() {
         onClick={openModal}
         onKeyDown={onKeyOpen}
         onClickCapture={onClickCapture}
-        // 드래그 핸들러: Pointer + Touch 폴백 모두 부착
+        onWheel={onWheel}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -113,7 +148,7 @@ export default function BannerContents() {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
         aria-label="오늘 절약 성과 안내 배너"
-        className="relative h-[20rem] w-full touch-pan-y overflow-hidden bg-gray-900 text-gray-50 select-none"
+        className="relative h-[20rem] w-full cursor-pointer touch-pan-y overflow-hidden bg-gray-900 text-gray-50 select-none"
       >
         <div
           className="absolute inset-0 flex w-[200%] transition-transform duration-300"
