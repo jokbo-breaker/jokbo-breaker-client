@@ -141,6 +141,78 @@ export default function MenuPage() {
   }, [data?.results, includeSoldOut]);
 
   const isEmpty = !isLoading && !isError && allProducts.length === 0;
+  // === API 결과 -> 지도 마커 변환 ===
+  type RestaurantCandidate = {
+    id: number;
+    name: string;
+    lat: number;
+    lng: number;
+  };
+
+  const markers = useMemo<RestaurantCandidate[]>(() => {
+    const rows: any[] = data?.results ?? [];
+    const seen = new Set<string>();
+    let seq = 1;
+
+    const toNum = (v: any): number | null => {
+      if (typeof v === 'number' && Number.isFinite(v)) return v;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const pickNum = (...vals: any[]) => {
+      for (const v of vals) {
+        const n = toNum(v);
+        if (n !== null) return n;
+      }
+      return null;
+    };
+
+    const out: RestaurantCandidate[] = [];
+
+    for (const row of rows) {
+      const store = row.store ?? {};
+
+      const lat = pickNum(
+        row.storeLat,
+        row.lat,
+        store.lat,
+        store.latitude,
+        store?.location?.lat,
+        row.store?.location?.lat,
+      );
+      const lng = pickNum(
+        row.storeLng,
+        row.lng,
+        store.lng,
+        store.longitude,
+        store?.location?.lng,
+        row.store?.location?.lng,
+      );
+      if (lat === null || lng === null) continue;
+
+      const name =
+        row.storeName ??
+        store.name ??
+        row.store?.storeName ??
+        row.name ??
+        '매장';
+
+      const key = `${row.storeId ?? store.id ?? row.id ?? name}|${lat}|${lng}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const id =
+        pickNum(row.storeId, store.id, row.store?.storeId, row.id) ??
+        toNum(row.storeCode) ??
+        toNum(row.menuId) ??
+        seq++;
+
+      out.push({ id, name, lat, lng });
+    }
+
+    return out;
+  }, [data?.results]);
 
   const handleSearchSubmit = useCallback(
     (v: string) => {
@@ -175,7 +247,7 @@ export default function MenuPage() {
           <MapSection
             center={center}
             defaultCenter={SOONGSIL_BASE}
-            restaurants={testRestaurants}
+            restaurants={markers}
             products={allProducts}
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => setPreview(null)}

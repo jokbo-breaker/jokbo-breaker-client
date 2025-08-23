@@ -91,7 +91,7 @@ function ProductCard({
           <img
             src={image}
             alt={name}
-            className="aspect-[21/10] w-full rounded-[4px] object-cover"
+            className="aspect-[21/10] min-h-[16rem] w-full min-w-[35rem] rounded-[4px] object-cover"
           />
           {stockLeft && <Badge>{stockLeft}개 남음</Badge>}
         </div>

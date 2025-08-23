@@ -1,5 +1,6 @@
 export type Product = {
   id: string;
+  storeId?: string;
   image: string;
   images?: string[];
   store: string;

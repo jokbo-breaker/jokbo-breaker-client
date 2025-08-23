@@ -176,7 +176,7 @@ export default function ProductDetailPage() {
                     navigate('/menu', {
                       state: {
                         center: { lat: data?.storeLat, lng: data?.storeLng },
-                        focusMenuId: data?.menuId,
+                        focusStoreId: data?.storeId,
                       },
                     })
                   }

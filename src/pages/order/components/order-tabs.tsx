@@ -34,7 +34,7 @@ export default function OrderTabs({
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className="relative flex-1 pb-[1.2rem] text-center"
+                className="relative flex-1 cursor-pointer pb-[1.2rem] text-center"
                 onClick={() => onChange(t.key)}
               >
                 <span
