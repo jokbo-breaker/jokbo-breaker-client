@@ -134,12 +134,6 @@ export default function MainPage() {
         </div>
 
         <div className="flex-col gap-[2.8rem] pl-[2rem]">
-          {isError && (
-            <div className="px-[2rem] text-red-600">
-              데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-            </div>
-          )}
-
           {keysToRender.map((uiKey) => {
             const fullList = lists[uiKey] ?? [];
             const list = fullList.slice(0, MAX_PER_SECTION);

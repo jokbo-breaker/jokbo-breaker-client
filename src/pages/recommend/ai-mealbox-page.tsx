@@ -123,12 +123,6 @@ export default function AiMealboxPage({ onClose }: Props) {
           </div>
         ) : (
           <section className="mx-auto w-full px-[2.0rem] py-[0.8rem]">
-            {aiRecommend.isError && (
-              <div className="mb-[1rem] rounded bg-red-50 p-[1rem] text-red-600">
-                추천을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.
-              </div>
-            )}
-
             {list.length === 0 ? (
               <div className="flex min-h-[calc(100dvh-10rem)] items-center justify-center">
                 <EmptyRecommend />

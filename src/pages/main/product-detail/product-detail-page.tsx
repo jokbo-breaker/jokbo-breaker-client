@@ -10,6 +10,7 @@ import InfoTooltipButton from '@/pages/main/product-detail/components/info-toolt
 import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import Badge from '@/pages/main/product-detail/components/badge';
 import { useMenuDetailQuery } from '@/shared/apis/discover/discover-queries';
+import LoopLoading from '@/shared/components/loop-loading';
 
 const hhmm = (ts?: string | null) => {
   if (!ts) return '';
@@ -29,7 +30,7 @@ export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useMenuDetailQuery(id ?? '');
+  const { data, isLoading } = useMenuDetailQuery(id ?? '');
 
   const [idx, setIdx] = useState(0);
   const startX = useRef<number | null>(null);
@@ -119,11 +120,7 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="flex-col gap-[2.4rem] px-[2rem] pt-[2rem]">
-          {isLoading && <div className="body3 text-gray-500">불러오는 중…</div>}
-          {isError && (
-            <div className="body3 text-red-600">상품을 찾을 수 없습니다.</div>
-          )}
-
+          {isLoading && <LoopLoading />}
           <section className="space-y-2">
             <div className="flex-row-between">
               <div className="flex-col gap-[0.2rem]">
@@ -173,7 +170,10 @@ export default function ProductDetailPage() {
               trailing={
                 <button
                   onClick={() => {
-                    console.log('Navigating to map-view with storeName:', data?.storeName);
+                    console.log(
+                      'Navigating to map-view with storeName:',
+                      data?.storeName,
+                    );
                     navigate('/map-view', {
                       state: {
                         center: { lat: data?.storeLat, lng: data?.storeLng },
