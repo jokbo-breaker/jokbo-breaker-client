@@ -1,5 +1,5 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { Product } from '@/shared/types';
 import { hasActiveFilters } from '@/pages/menu/utils/has-active-filters';
 import {
@@ -10,7 +10,7 @@ import { SortKey } from '@/pages/menu/constants/sort';
 
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import BottomSheet from '@/shared/components/bottom-sheet';
-
+import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
 import ProductCard from '@/pages/main/components/product/product-card';
 import FilterModal from './components/filter-modal';
 import MenuHeader from '@/pages/menu/components/menu-header';
@@ -106,8 +106,9 @@ const buildFilterParams = (
 
 export default function MenuPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const { loc, loading, error, request } = useGeolocation({
+  const { loc } = useGeolocation({
     immediate: true,
     watch: false,
     options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
@@ -128,6 +129,15 @@ export default function MenuPage() {
   const lat = center.lat;
   const lng = center.lng;
 
+  // location.state에서 검색어를 받아와서 초기값으로 설정
+  useEffect(() => {
+    if (location.state?.searchQuery) {
+      const searchQuery = location.state.searchQuery;
+      setQuery(searchQuery);
+      setSubmitted(searchQuery);
+    }
+  }, [location.state?.searchQuery]);
+
   const { data, isLoading, isError } = useDiscoverFilterQuery(
     buildFilterParams(lat, lng, submitted, filter, sort),
   );
@@ -139,6 +149,80 @@ export default function MenuPage() {
       ? mapped
       : mapped.filter((p) => (p.stockLeft ?? 0) > 0);
   }, [data?.results, includeSoldOut]);
+
+  const isEmpty = !isLoading && !isError && allProducts.length === 0;
+  // === API 결과 -> 지도 마커 변환 ===
+  type RestaurantCandidate = {
+    id: number;
+    name: string;
+    lat: number;
+    lng: number;
+  };
+
+  const markers = useMemo<RestaurantCandidate[]>(() => {
+    const rows: any[] = data?.results ?? [];
+    const seen = new Set<string>();
+    let seq = 1;
+
+    const toNum = (v: any): number | null => {
+      if (typeof v === 'number' && Number.isFinite(v)) return v;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const pickNum = (...vals: any[]) => {
+      for (const v of vals) {
+        const n = toNum(v);
+        if (n !== null) return n;
+      }
+      return null;
+    };
+
+    const out: RestaurantCandidate[] = [];
+
+    for (const row of rows) {
+      const store = row.store ?? {};
+
+      const lat = pickNum(
+        row.storeLat,
+        row.lat,
+        store.lat,
+        store.latitude,
+        store?.location?.lat,
+        row.store?.location?.lat,
+      );
+      const lng = pickNum(
+        row.storeLng,
+        row.lng,
+        store.lng,
+        store.longitude,
+        store?.location?.lng,
+        row.store?.location?.lng,
+      );
+      if (lat === null || lng === null) continue;
+
+      const name =
+        row.storeName ??
+        store.name ??
+        row.store?.storeName ??
+        row.name ??
+        '매장';
+
+      const key = `${row.storeId ?? store.id ?? row.id ?? name}|${lat}|${lng}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const id =
+        pickNum(row.storeId, store.id, row.store?.storeId, row.id) ??
+        toNum(row.storeCode) ??
+        toNum(row.menuId) ??
+        seq++;
+
+      out.push({ id, name, lat, lng });
+    }
+
+    return out;
+  }, [data?.results]);
 
   const handleSearchSubmit = useCallback(
     (v: string) => {
@@ -173,10 +257,13 @@ export default function MenuPage() {
           <MapSection
             center={center}
             defaultCenter={SOONGSIL_BASE}
-            restaurants={testRestaurants}
+            restaurants={markers}
             products={allProducts}
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => setPreview(null)}
+            onStoreFocus={(storeId: string) => {
+              // 스토어 포커스 기능이 필요한 경우 여기에 구현
+            }}
           />
 
           {preview ? (
@@ -189,22 +276,33 @@ export default function MenuPage() {
               onOverExpand={() => setMode('list')}
             >
               <section className="mx-auto w-full">
-                {isError && (
-                  <div className="p-[1rem] text-red-600">
-                    데이터를 불러오지 못했습니다.
+                {isEmpty ? (
+                  <div className="flex-col-center h-full">
+                    <EmptyRecommend
+                      title="조건에 맞는 메뉴가 없어요"
+                      subtitle="검색어나 필터를 조정해 보세요!"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex-col gap-[2.0rem]">
+                    {(isLoading ? [] : allProducts).slice(0, 10).map((p) => (
+                      <div key={p.id}>
+                        <ProductCard product={p} variant="wide" />
+                      </div>
+                    ))}
                   </div>
                 )}
-                <div className="flex-col gap-[2.0rem]">
-                  {(isLoading ? [] : allProducts).slice(0, 10).map((p) => (
-                    <div key={p.id}>
-                      <ProductCard product={p} variant="wide" />
-                    </div>
-                  ))}
-                </div>
               </section>
             </BottomSheet>
           )}
         </>
+      ) : isEmpty ? (
+        <div className="flex-col-center h-full">
+          <EmptyRecommend
+            title="조건에 맞는 메뉴가 없어요"
+            subtitle="검색어나 필터를 조정해 보세요!"
+          />
+        </div>
       ) : (
         <ListSection
           products={(isLoading ? [] : allProducts).slice(0, 20)}
@@ -230,19 +328,6 @@ export default function MenuPage() {
         onApply={(next) => setFilter(next)}
         onClose={() => setFilterOpen(false)}
       />
-
-      {error && (
-        <div className="absolute top-[1.2rem] left-1/2 -translate-x-1/2 rounded bg-white/90 px-[1.2rem] py-[0.8rem] shadow">
-          위치 권한/가져오기 실패: {error.message}
-          <button
-            className="ml-[0.8rem] underline"
-            onClick={request}
-            disabled={loading}
-          >
-            다시 시도
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+// src/pages/main/components/banner-contents.tsx
 import React from 'react';
 import PromoModal from '@/pages/main/components/banner';
 import Indicator from '@/pages/main/product-detail/components/indicator';
@@ -11,9 +12,44 @@ export default function BannerContents() {
 
   const wrapRef = React.useRef<HTMLDivElement>(null);
   const dragRef = React.useRef({ active: false, startX: 0, dx: 0 });
-  const [, force] = React.useReducer((c) => c + 1, 0);
   const suppressClickRef = React.useRef(false);
+  const [, force] = React.useReducer((c) => c + 1, 0);
+  // 1) 컴포넌트 상단에 ref랑 onWheel 핸들러 추가
+  const wheelRef = React.useRef({ acc: 0, lockedUntil: 0 });
 
+  const onWheel = (e: React.WheelEvent) => {
+    const now = Date.now();
+    if (now < wheelRef.current.lockedUntil) return;
+
+    // 가로 휠이 우선, 없으면 Shift+세로휠로 가로처럼 처리
+    const dominantDx =
+      Math.abs(e.deltaX) > Math.abs(e.deltaY)
+        ? e.deltaX
+        : e.shiftKey
+          ? e.deltaY
+          : 0;
+
+    if (!dominantDx) return;
+
+    wheelRef.current.acc += dominantDx;
+    const threshold = 40; // 트랙패드 감도 대응
+
+    if (Math.abs(wheelRef.current.acc) > threshold) {
+      e.preventDefault(); // 페이지 스크롤 방지
+      e.stopPropagation();
+
+      // 슬라이드 전환 (0 ↔ 1)
+      setSlide((prev) => {
+        if (wheelRef.current.acc < 0 && prev < 1) return prev + 1; // 오른쪽으로
+        if (wheelRef.current.acc > 0 && prev > 0) return prev - 1; // 왼쪽으로
+        return prev;
+      });
+
+      suppressClickRef.current = true;
+      wheelRef.current.lockedUntil = now + 500; // 0.5s 쿨다운
+      wheelRef.current.acc = 0;
+    }
+  };
   const openModal = React.useCallback(() => setOpen(true), []);
   const onKeyOpen = React.useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -22,17 +58,16 @@ export default function BannerContents() {
     }
   }, []);
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  // 공통 드래그 유틸
+  const startDrag = (clientX: number) => {
     dragRef.current.active = true;
-    dragRef.current.startX = e.clientX;
+    dragRef.current.startX = clientX;
     dragRef.current.dx = 0;
-    force();
+    // 포인터 캡처는 PointerEvent에서만 가능
   };
-  const onPointerMove = (e: React.PointerEvent) => {
+  const moveDrag = (clientX: number) => {
     if (!dragRef.current.active) return;
-    dragRef.current.dx = e.clientX - dragRef.current.startX;
+    dragRef.current.dx = clientX - dragRef.current.startX;
     force();
   };
   const endDrag = () => {
@@ -55,9 +90,22 @@ export default function BannerContents() {
     dragRef.current.dx = 0;
     force();
   };
+
+  // Pointer 이벤트
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    startDrag(e.clientX);
+  };
+  const onPointerMove = (e: React.PointerEvent) => moveDrag(e.clientX);
   const onPointerUp = () => endDrag();
   const onPointerCancel = () => endDrag();
   const onPointerLeave = () => endDrag();
+
+  // ★ 터치 폴백 (iOS/구형 안드 지원)
+  const onTouchStart = (e: React.TouchEvent) => startDrag(e.touches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => moveDrag(e.touches[0].clientX);
+  const onTouchEnd = () => endDrag();
 
   const onClickCapture = (e: React.SyntheticEvent) => {
     if (suppressClickRef.current) {
@@ -76,7 +124,7 @@ export default function BannerContents() {
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
-  // === 배너 #2 데이터 (샘플) ===
+  // 샘플 데이터
   const current = 642;
   const reference = 1148;
   const percent = Math.min(100, (current / reference) * 100);
@@ -90,13 +138,17 @@ export default function BannerContents() {
         onClick={openModal}
         onKeyDown={onKeyOpen}
         onClickCapture={onClickCapture}
+        onWheel={onWheel}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
         onPointerLeave={onPointerLeave}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
         aria-label="오늘 절약 성과 안내 배너"
-        className="relative h-[20rem] w-full touch-pan-y overflow-hidden bg-gray-900 text-gray-50 select-none"
+        className="relative h-[20rem] w-full cursor-pointer touch-pan-y overflow-hidden bg-gray-900 text-gray-50 select-none"
       >
         <div
           className="absolute inset-0 flex w-[200%] transition-transform duration-300"
@@ -167,7 +219,7 @@ export default function BannerContents() {
                 <div className="flex-row-center gap-[0.2rem]">
                   <span className="head1 text-primary">1,506</span>
                   <span className="body4">
-                    <span className="text-primary">kg</span>의 음식물류 폐기물을
+                    <span className="text-primary">g</span>의 음식물류 폐기물을
                     절약했어요!
                   </span>
                 </div>
@@ -182,14 +234,15 @@ export default function BannerContents() {
                   </span>
                 </div>
                 <div className="caption4 w-full text-end text-gray-500">
-                  (종사자 수 기준 매장당 1일 2,191g, 환경부, 2021)
+                  (종사자 수 기준 매장당 1일 2.191kg, 환경부, 2021)
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ===== 배너 #2 ===== */}
+          {/* === 배너 #2 === */}
           <div className="relative h-full w-1/2 bg-gray-900">
+            {/* ... 기존 내용 그대로 ... */}
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-[1.6rem] px-[2.4rem] text-center">
               <div className="flex items-center gap-[0.3rem]">
                 <span className="body1 text-gray-50">
@@ -228,6 +281,7 @@ export default function BannerContents() {
           </div>
         </div>
 
+        {/* 페이지 인디케이터 */}
         <div
           className="absolute inset-x-0 bottom-3 z-[var(--z-tooltip)] flex justify-center"
           onPointerDown={stopBubble}

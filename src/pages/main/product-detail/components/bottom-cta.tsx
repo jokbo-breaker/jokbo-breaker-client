@@ -1,10 +1,27 @@
-function BottomCTA({ label, onClick }: { label: string; onClick: () => void }) {
+import { cn } from '@/shared/libs/cn';
+
+function BottomCTA({
+  label,
+  onClick,
+  disabled = false,
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
   return (
     <div className="mx-auto w-full bg-white px-[2rem] py-[1rem]">
       <button
         type="button"
         onClick={onClick}
-        className="body3 w-full cursor-pointer rounded-[10px] bg-gray-900 py-[1.6rem] text-white"
+        disabled={disabled}
+        aria-disabled={disabled}
+        className={cn(
+          'body3 w-full rounded-[10px] py-[1.6rem] transition-colors',
+          disabled
+            ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+            : 'cursor-pointer bg-gray-900 text-white',
+        )}
       >
         {label}
       </button>

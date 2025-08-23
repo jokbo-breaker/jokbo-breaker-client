@@ -12,7 +12,6 @@ export const FOOD_OPTIONS = [
   '비건',
   '할랄',
   '인도 음식',
-  '직접 입력',
 ] as const;
 export type FoodOption = (typeof FOOD_OPTIONS)[number];
 

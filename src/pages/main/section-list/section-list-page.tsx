@@ -65,12 +65,6 @@ export default function SectionListPage() {
     <div className="pb-8">
       <TopBar title={title} showBack onBack={() => navigate(-1)} sticky />
 
-      {isError && (
-        <div className="px-[2rem] pt-[1rem] text-red-600">
-          데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-        </div>
-      )}
-
       <div className="flex-col gap-[2rem] px-[2rem] pt-[0.8rem]">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => (

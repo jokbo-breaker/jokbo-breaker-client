@@ -4,12 +4,11 @@ import Icon from '@/shared/components/icon';
 import { useNavigate } from 'react-router-dom';
 
 // === 데이터 (샘플) ===
-const current = 642;
 const reference = 1148;
-const percent = Math.min(100, (current / reference) * 100);
 const formatGram = (n: number) => `${n.toLocaleString()}g`;
 type PaymentCompleteViewProps = {
   savedG: number;
+  totalGrams: number;
   remainingBadge?: string | number | null;
   onPrimary: () => void;
   onBack?: () => void;
@@ -17,6 +16,7 @@ type PaymentCompleteViewProps = {
 
 export default function PaymentCompleteView({
   savedG,
+  totalGrams,
   onBack: _onBack,
 }: PaymentCompleteViewProps) {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ export default function PaymentCompleteView({
           <div className="w-full flex-col gap-[1.2rem]">
             <div className="w-full flex-col gap-[0.6rem]">
               <div className="flex w-full items-center justify-between">
-                <span className="caption2">{formatGram(current)}</span>
+                <span className="caption2">{formatGram(totalGrams)}</span>
                 <span className="body3 text-primary">
                   {formatGram(reference)}
                 </span>
@@ -78,7 +78,9 @@ export default function PaymentCompleteView({
             >
               <div
                 className="absolute inset-y-0 left-0 rounded-[40px] bg-gradient-to-r from-[#ff6a3d] to-[#ff8a64]"
-                style={{ width: `${percent}%` }}
+                style={{
+                  width: `${Math.min(100, (totalGrams / reference) * 100)}%`,
+                }}
               />
             </div>
             <div className="w-full flex-col text-end">
