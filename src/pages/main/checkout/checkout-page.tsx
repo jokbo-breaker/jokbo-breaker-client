@@ -16,6 +16,7 @@ import { formatKRW } from '@/shared/utils/format-krw';
 import RadioTileGroup from '@/shared/components/text-field/radio-tile-group';
 import { useMenuDetailQuery } from '@/shared/apis/discover/discover-queries';
 import { useCreateOrderMutation } from '@/shared/apis/order/order-mutations';
+import LoopLoading from '@/shared/components/loop-loading';
 
 const hhmm = (ts?: string | null) => {
   if (!ts) return '';
@@ -146,11 +147,7 @@ export default function CheckoutPage() {
       <TopBar title="주문하기" showBack onBack={() => navigate(-1)} sticky />
 
       <main className="scrollbar-hide flex-1 overflow-y-auto px-[2rem] pb-[1rem]">
-        {isLoading && (
-          <p className="body3 pt-[2rem] text-gray-500">
-            상품 정보를 불러오는 중…
-          </p>
-        )}
+        {isLoading && <LoopLoading />}
         {isError && (
           <p className="body3 pt-[2rem] text-red-600">
             상품을 찾을 수 없습니다.

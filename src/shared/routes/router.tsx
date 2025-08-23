@@ -1,6 +1,8 @@
 import { Navigate } from 'react-router-dom';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import ProtectedRoute from '@/shared/components/protected-route';
+import PublicRoute from '@/shared/components/public-route';
 
 const Layout = lazy(() => import('@/shared/layouts/layout'));
 const MainPage = lazy(() => import('@/pages/main/main-page'));
@@ -25,17 +27,45 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
-      { path: '/login', element: <LoginPage /> },
+      { 
+        path: '/login', 
+        element: (
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        ) 
+      },
       { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/auth/success', element: <LoginSucessPage /> },
       { path: '/main/:section', element: <SectionListPage /> },
       { path: '/product/:id', element: <ProductDetailPage /> },
-      { path: '/checkout/:id', element: <CheckoutPage /> },
+      { 
+        path: '/checkout/:id', 
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ) 
+      },
       { path: '/map-view', element: <MapViewPage /> },
       { path: '/search', element: <SearchPage /> },
       { path: '/menu', element: <MenuPage /> },
-      { path: '/mypage', element: <MyPage /> },
-      { path: '/orders', element: <OrderPage /> },
+      { 
+        path: '/mypage', 
+        element: (
+          <ProtectedRoute>
+            <MyPage />
+          </ProtectedRoute>
+        ) 
+      },
+      { 
+        path: '/orders', 
+        element: (
+          <ProtectedRoute>
+            <OrderPage />
+          </ProtectedRoute>
+        ) 
+      },
     ],
   },
 ]);
