@@ -66,6 +66,11 @@ export default function ProductDetailPage() {
     [data],
   );
 
+  // ★ 품절 여부 계산
+  const stockNum =
+    typeof stockLeft === 'number' ? stockLeft : Number(stockLeft ?? 0);
+  const isSoldOut = Number.isFinite(stockNum) && stockNum <= 0;
+
   const remainingBadge = useMemo(
     () => getRemainingBadge(stockLeft),
     [stockLeft],
@@ -208,14 +213,6 @@ export default function ProductDetailPage() {
             {phone && <InfoRow icon="phone" text={phone} />}
           </section>
 
-          {data?.isDeliveryAvailable && (
-            <section>
-              <div className="body4 rounded-[4px] bg-gray-50 p-[1.6rem] text-center text-black">
-                팀배달이 가능한 상품이에요
-              </div>
-            </section>
-          )}
-
           <section className="flex-col gap-[1.2rem]">
             <h2 className="body1 text-black">상품 설명</h2>
             <p className="body4 text-black">
@@ -229,8 +226,14 @@ export default function ProductDetailPage() {
         </div>
 
         <BottomCTA
-          label={`주문하기 · ${remainingBadge}`}
-          onClick={() => navigate(`/checkout/${id}`)}
+          label={
+            isSoldOut ? '품절된 상품이에요' : `주문하기 · ${remainingBadge}`
+          }
+          disabled={isSoldOut}
+          onClick={() => {
+            if (isSoldOut) return;
+            navigate(`/checkout/${id}`);
+          }}
         />
       </main>
     </div>
