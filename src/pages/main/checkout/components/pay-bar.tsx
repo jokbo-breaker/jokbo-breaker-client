@@ -15,7 +15,7 @@ export default function PayBar({ total, onPay, canPay }: Props) {
         총 {formatKRW(total)}원
       </div>
       <Button
-        variant={canPay ? 'black' : 'gray'}
+        variant={canPay ? 'black' : 'white'}
         className="flex-3 rounded-[1.2rem] whitespace-nowrap"
         onClick={onPay}
         disabled={!canPay}

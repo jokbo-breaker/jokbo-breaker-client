@@ -1,98 +1,81 @@
+import { useCallback, useMemo, useState } from 'react';
 import { BASE_URL, END_POINT } from '@/shared/apis/constants/endpoints';
 import {
   useMeQuery,
   useAuthStatusQuery,
 } from '@/shared/apis/auth/auth-queries';
 import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
+import Icon from '@/shared/components/icon';
 
 export default function LoginPage() {
-  const {
-    data: meData,
-    refetch: refetchMe,
-    isFetching: meLoading,
-  } = useMeQuery();
-  const {
-    data: statusData,
-    refetch: refetchStatus,
-    isFetching: statusLoading,
-  } = useAuthStatusQuery();
-  const { mutate: logout, isPending: logoutLoading } = useLogoutMutation();
+  const { isFetching: meLoading } = useMeQuery();
+  const { isFetching: statusLoading } = useAuthStatusQuery();
+  const { isPending: logoutLoading } = useLogoutMutation();
 
-  const googleStartUrl = `${BASE_URL}${END_POINT.AUTH_GOOGLE_START}`;
+  const [waking, setWaking] = useState(false);
+  const googleStartUrl = useMemo(() => {
+    const base = BASE_URL.replace(/\/$/, '');
+    const path = END_POINT.AUTH_GOOGLE_START.replace(/^\//, '');
+    const url = new URL(`${base}/${path}`);
 
-  const wakeAndGoGoogle = async () => {
+    const isLocalHost = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(
+      window.location.hostname,
+    );
+    if (isLocalHost) url.searchParams.set('returnTo', 'local');
+
+    return url.toString();
+  }, []);
+
+  const wakeAndGoGoogle = useCallback(async () => {
+    setWaking(true);
     try {
-      const health = BASE_URL.replace(/\/api$/, '') + '/health';
+      const baseNoApi = BASE_URL.replace(/\/api\/?$/, '/');
+      const health = `${baseNoApi.replace(/\/$/, '')}/health`;
+
       await fetch(health, { mode: 'no-cors' });
-    } catch {}
-    window.location.assign(googleStartUrl);
-  };
+    } catch {
+    } finally {
+      window.location.assign(googleStartUrl);
+    }
+  }, [googleStartUrl]);
+
+  const busy = meLoading || statusLoading || logoutLoading || waking;
 
   return (
-    <div className="mx-auto max-w-[40rem] px-[1.6rem] py-[2.4rem]">
-      <h1 className="mb-[1.2rem] text-[2.4rem] font-semibold">
-        임시 로그인 페이지
-      </h1>
-
-      <section className="mb-[2.4rem] rounded-xl border p-[1.6rem]">
-        <h2 className="mb-[1.2rem] text-[1.8rem] font-medium">
-          1) 소셜 로그인
-        </h2>
-        <div className="flex flex-col gap-[1.2rem]">
-          <button
-            type="button"
-            onClick={wakeAndGoGoogle}
-            className="rounded-lg border px-[1.2rem] py-[0.8rem]"
-          >
-            Google로 로그인
-          </button>
-
-          <p className="text-[1.2rem] text-gray-500">
-            Google 시작 URL: <code>{googleStartUrl}</code>
-          </p>
+    <div className="flex-col-center mx-auto h-dvh gap-[4.8rem] py-[2.4rem]">
+      <div className="flex-col-center gap-[3.6rem]">
+        <div className="flex-col-center gap-[1.2rem]">
+          <h1 className="head3 text-black">환경을 지키는 가장 쉬운 습관</h1>
+          <Icon
+            name="logo-title"
+            width={20.4}
+            height={4.2}
+            className="text-primary"
+          />
         </div>
-      </section>
+        <Icon name="complete-order" size={20.4} />
+      </div>
 
-      <section className="mb-[2.4rem] rounded-xl border p-[1.6rem]">
-        <h2 className="mb-[1.2rem] text-[1.8rem] font-medium">
-          2) 상태/세션 확인
-        </h2>
-        <div className="flex gap-[0.8rem]">
-          <button
-            type="button"
-            onClick={() => refetchStatus()}
-            disabled={statusLoading}
-            className="rounded-lg border px-[1.2rem] py-[0.8rem]"
-          >
-            인증 상태 확인
-          </button>
-          <button
-            type="button"
-            onClick={() => refetchMe()}
-            disabled={meLoading}
-            className="rounded-lg border px-[1.2rem] py-[0.8rem]"
-          >
-            내 정보 조회(/auth/me)
-          </button>
-          <button
-            type="button"
-            onClick={() => logout()}
-            disabled={logoutLoading}
-            className="rounded-lg border px-[1.2rem] py-[0.8rem]"
-          >
-            로그아웃
-          </button>
-        </div>
+      <div className="flex-col-center w-full gap-[1.6rem] px-[3.2rem]">
+        <button
+          type="button"
+          onClick={wakeAndGoGoogle}
+          disabled={busy}
+          aria-busy={busy}
+          className="flex-row-center w-full cursor-pointer gap-[1.6rem] rounded-[100px] border border-gray-300 px-[1.2rem] py-[1.25rem] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <Icon name="google" size={1.6} />
+          <span className="body4">{'Google 계정으로 시작하기'}</span>
+        </button>
 
-        <div className="mt-[1.2rem] grid gap-[1.2rem]">
-          <pre className="overflow-auto rounded-lg border p-[1.2rem] text-[1.2rem]">
-            {JSON.stringify(statusData ?? {}, null, 2)}
-          </pre>
-          <pre className="overflow-auto rounded-lg border p-[1.2rem] text-[1.2rem]">
-            {JSON.stringify(meData ?? {}, null, 2)}
-          </pre>
-        </div>
-      </section>
+        <button
+          type="button"
+          className="caption1 cursor-pointer text-gray-500 hover:underline"
+          onClick={() => {}}
+        >
+          기업 로그인/회원가입
+        </button>
+      </div>
     </div>
   );
 }

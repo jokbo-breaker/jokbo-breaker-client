@@ -6,15 +6,18 @@ import queryClient from '@/shared/libs/query-client';
 import { router } from '@/shared/routes/router';
 import useSplash from '@/shared/hooks/use-splash';
 import Splash from '@/shared/components/splash/splash';
+import { ToastProvider } from '@/shared/contexts/ToastContext';
 
 export default function App() {
-  const { visible, hide } = useSplash({ minShowMs: 900 });
+  const { visible, hide } = useSplash({ minShowMs: 1000 });
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative">
         <Suspense fallback={<LoopLoading />}>
-          <RouterProvider router={router} />
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
         </Suspense>
 
         {visible && <Splash onFinish={hide} />}

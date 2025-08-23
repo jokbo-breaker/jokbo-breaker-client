@@ -7,3 +7,12 @@ export const AUTH_KEY = {
 } as const;
 
 export type AuthQueryKey = ReturnType<typeof AUTH_KEY.ME>;
+
+export const ORDER_KEY = {
+  ALL: ['order'] as const,
+  LIST: () => [...ORDER_KEY.ALL, 'list'] as const,
+  DETAIL: (orderId: string) => [...ORDER_KEY.ALL, 'detail', orderId] as const,
+} as const;
+
+export type OrderListKey = ReturnType<typeof ORDER_KEY.LIST>;
+export type OrderDetailKey = ReturnType<typeof ORDER_KEY.DETAIL>;

@@ -10,6 +10,7 @@ export const ICONS = [
   "empty-recommend",
   "filter",
   "floating",
+  "google",
   "header-profile",
   "home",
   "home-filled",
@@ -19,6 +20,9 @@ export const ICONS = [
   "logout",
   "map",
   "minus",
+  "onboarding1",
+  "onboarding2",
+  "onboarding3",
   "order",
   "order-filled",
   "phone",
@@ -26,5 +30,6 @@ export const ICONS = [
   "profile",
   "profile-filled",
   "search",
+  "walk",
   "x-icon"
 ] as const;
