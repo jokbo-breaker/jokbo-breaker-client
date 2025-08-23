@@ -53,7 +53,7 @@ export default function LoginPage() {
             className="text-primary"
           />
         </div>
-        <Icon name="complete-order" size={20.4} />
+        <Icon name="complete-order" className="animate-float" size={20.4} />
       </div>
 
       <div className="flex-col-center w-full gap-[1.6rem] px-[3.2rem]">
