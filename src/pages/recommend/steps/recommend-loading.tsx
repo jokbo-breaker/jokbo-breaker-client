@@ -19,6 +19,8 @@ type Props = {
   size?: number;
   /** ✅ 최소 재생 루프 수 (기본 2) */
   minLoops?: number;
+  /** ✅ 사용자 이름(없으면 '고객') */
+  userName?: string;
 };
 
 const DEFAULT_KEY = 'recommend_lottie_seen';
@@ -32,6 +34,7 @@ export default function RecommendLoading({
   loop = true,
   size = 320,
   minLoops = 2,
+  userName,
 }: Props) {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -39,6 +42,9 @@ export default function RecommendLoading({
   const [loopCount, setLoopCount] = useState(0);
   const [lockUntil, setLockUntil] = useState(0);
   const finishCalledRef = useRef(false);
+
+  // 표시용 이름 (공백이면 '고객')
+  const displayName = (userName ?? '').trim() || '고객';
 
   useEffect(() => {
     if (visible && !started) {
@@ -119,7 +125,7 @@ export default function RecommendLoading({
         <p className="body1 text-center text-black">
           AI가 주문 기록을 바탕으로
           <br />
-          000님이 좋아하실 만한
+          {displayName}님이 좋아하실 만한
           <br />
           상품을 고르고 있어요
         </p>

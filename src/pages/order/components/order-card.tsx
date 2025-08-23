@@ -10,7 +10,7 @@ interface Props {
 }
 
 const SavedBadge = ({ g }: { g: number }) => (
-  <span className="caption1 bg-secondary text-primary flex w-[10.6rem] items-center rounded-[20px] px-[1.2rem] py-[0.5rem]">
+  <span className="caption1 bg-secondary text-primary flex w-[10.6rem] items-center rounded-[20px] px-[1.2rem] py-[0.5rem] whitespace-nowrap">
     {g.toLocaleString()}g 절약했어요
   </span>
 );
@@ -22,27 +22,31 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
   // 주문한 지 10분이 지났는지 확인 (한국 시간 기준)
   const isOrderOver10Minutes = () => {
     if (!item.orderedAt) return false;
-    
+
     try {
       // orderedAt은 이미 ISO 문자열로 변환되어 있음 (mapOrderToUI에서 변환)
       const orderDate = new Date(item.orderedAt);
-      
+
       // 현재 시간을 한국 시간으로 설정
       const now = new Date();
       const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
-      const koreaTime = new Date(now.getTime() + (koreaTimeOffset * 60 * 1000));
-      
-      const diffInMinutes = (koreaTime.getTime() - orderDate.getTime()) / (1000 * 60);
-      
+      const koreaTime = new Date(now.getTime() + koreaTimeOffset * 60 * 1000);
+
+      const diffInMinutes =
+        (koreaTime.getTime() - orderDate.getTime()) / (1000 * 60);
+
       // 디버깅 로그
       console.log('주문 시간 (ISO):', item.orderedAt);
       console.log('주문 Date 객체:', orderDate);
-      console.log('주문 시간 (한국 시간):', orderDate.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
+      console.log(
+        '주문 시간 (한국 시간):',
+        orderDate.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+      );
       console.log('현재 시간 (UTC):', now);
       console.log('현재 시간 (한국 시간):', koreaTime);
       console.log('시간 차이 (분):', diffInMinutes);
       console.log('10분 초과 여부:', diffInMinutes > 10);
-      
+
       return diffInMinutes > 10;
     } catch (error) {
       console.error('주문 시간 파싱 오류:', error);
@@ -129,7 +133,7 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
           </Button>
         ) : (
           <Button
-            variant={canCancel ? "black" : "white"}
+            variant={canCancel ? 'black' : 'white'}
             className="w-full"
             disabled={!canCancel}
             onClick={() => onCancel?.(item.id)}
