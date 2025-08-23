@@ -175,21 +175,20 @@ export default function ProductDetailPage() {
               trailing={
                 <button
                   onClick={() => {
-                    console.log(
-                      'Navigating to map-view with storeName:',
-                      data?.storeName,
-                    );
+                    if (!data) return;
                     navigate('/map-view', {
                       state: {
-                        center: { lat: data?.storeLat, lng: data?.storeLng },
-                        storeName: data?.storeName,
+                        center: { lat: data.storeLat, lng: data.storeLng }, // ★ 상세 응답 좌표
+                        storeName: data.storeName, // ★ 포커스할 스토어 식별 (id가 더 안전하면 storeId로)
                       },
                     });
                   }}
                   className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
                 >
                   <Icon name="map" size={2.4} />
-                  <span className="caption2">지도에서 보기</span>
+                  <span className="caption2 whitespace-nowrap">
+                    지도에서 보기
+                  </span>
                 </button>
               }
             />

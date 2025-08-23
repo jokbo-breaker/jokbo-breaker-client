@@ -23,6 +23,11 @@ import { SOONGSIL_BASE, SHEET } from '@/pages/menu/constants/menu';
 import { useDiscoverFilterQuery } from '@/shared/apis/discover/discover-queries';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 
+type NavState = {
+  center?: { lat?: number; lng?: number };
+  storeName?: string; // 상세에서 넘어온 매장명
+};
+
 const mapSortKeyToApi = (
   k: SortKey,
 ): '인기순' | '가격 낮은 순' | '가격 높은 순' | '거리순' => {
@@ -39,6 +44,7 @@ const mapSortKeyToApi = (
       return '인기순';
   }
 };
+
 type ApiFoodType = '식사' | '디저트';
 type ApiDeliveryMethod = '배달' | '픽업' | '지금 바로' | '나중에';
 
@@ -103,15 +109,23 @@ const buildFilterParams = (
   };
 };
 
-export default function MenuPage() {
+export default function MapViewPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { state } = useLocation() as { state?: NavState };
 
+  // 상세에서 넘어온 좌표가 있으면 지오로케이션은 스킵
+  const stateCenter = state?.center;
   const { loc } = useGeolocation({
-    immediate: true,
+    immediate: !stateCenter,
     watch: false,
     options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
   });
+
+  // 지도/필터 중심 좌표
+  const center =
+    stateCenter?.lat && stateCenter?.lng
+      ? { lat: stateCenter.lat!, lng: stateCenter.lng! }
+      : (loc ?? SOONGSIL_BASE);
 
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
@@ -123,59 +137,53 @@ export default function MenuPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [includeSoldOut, setIncludeSoldOut] = useState(false);
   const [focusedStoreName, setFocusedStoreName] = useState<string | null>(
-    location.state?.storeName || null,
+    state?.storeName ?? null,
   );
 
-  // focusedStoreName 상태 변경 로깅
-  useEffect(() => {
-    console.log('focusedStoreName changed to:', focusedStoreName);
-  }, [focusedStoreName]);
   const filterSelected = hasActiveFilters(filter);
 
-  const center = loc ?? SOONGSIL_BASE;
-  const lat = center.lat;
-  const lng = center.lng;
-
+  // 상세에서 받은 좌표를 필터 API에도 사용
   const { data, isLoading, isError } = useDiscoverFilterQuery(
-    buildFilterParams(lat, lng, submitted, filter, sort),
+    buildFilterParams(center.lat, center.lng, submitted, filter, sort),
   );
 
-  // location.state가 변경될 때 focusedStoreName 업데이트
-  useEffect(() => {
-    console.log('location.state:', location.state);
-    if (location.state?.storeName) {
-      console.log('Setting focusedStoreName to:', location.state.storeName);
-      setFocusedStoreName(location.state.storeName);
-      // 스토어가 포커스되면 자동으로 첫 번째 상품을 프리뷰로 설정
-      if (data?.results && data.results.length > 0) {
-        const firstProduct = toProductCardModel(data.results[0]);
-        setPreview(firstProduct);
-      }
-    }
-  }, [location.state?.storeName, data?.results]);
-
+  // API → Product 모델 매핑 + (필요시) 스토어명으로 필터
   const allProducts: Product[] = useMemo(() => {
     const rows = data?.results ?? [];
     const mapped = rows.map(toProductCardModel);
-    let filtered = includeSoldOut
+    const stocked = includeSoldOut
       ? mapped
       : mapped.filter((p) => (p.stockLeft ?? 0) > 0);
-
-    // 스토어 이름으로 필터링
-    if (focusedStoreName !== null) {
-      filtered = filtered.filter((p) => p.store === focusedStoreName);
-    }
-
-    return filtered;
+    return focusedStoreName
+      ? stocked.filter((p) => p.store === focusedStoreName)
+      : stocked;
   }, [data?.results, includeSoldOut, focusedStoreName]);
 
-  const isEmpty = !isLoading && !isError && allProducts.length === 0;
+  // 스토어 포커스가 있으면 첫 상품을 미리보기로
+  useEffect(() => {
+    if (!focusedStoreName) return;
+    const first = allProducts[0];
+    if (first) {
+      setPreview(first);
+      setMode('map');
+    }
+  }, [focusedStoreName, allProducts]);
+
   // === API 결과 -> 지도 마커 변환 ===
   type RestaurantCandidate = {
     id: number;
     name: string;
     lat: number;
     lng: number;
+  };
+
+  const hashToInt = (s: string) => {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+      h = (h << 5) - h + s.charCodeAt(i);
+      h |= 0; // 32-bit
+    }
+    return Math.abs(h);
   };
 
   const markers = useMemo<RestaurantCandidate[]>(() => {
@@ -188,7 +196,6 @@ export default function MenuPage() {
       const n = Number(v);
       return Number.isFinite(n) ? n : null;
     };
-
     const pickNum = (...vals: any[]) => {
       for (const v of vals) {
         const n = toNum(v);
@@ -227,66 +234,44 @@ export default function MenuPage() {
         row.name ??
         '매장';
 
-      const key = `${row.storeId ?? store.id ?? row.id ?? name}|${lat}|${lng}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
+      const dedupKey = `${row.storeId ?? store.id ?? row.id ?? name}|${lat}|${lng}`;
+      if (seen.has(dedupKey)) continue;
+      seen.add(dedupKey);
 
-      const id =
-        pickNum(row.storeId, store.id, row.store?.storeId, row.id) ??
+      // 항상 number로 보장
+      let numericId =
+        toNum(row.storeId) ??
+        toNum(store.id) ??
+        toNum(row.store?.storeId) ??
+        toNum(row.id) ??
         toNum(row.storeCode) ??
-        toNum(row.menuId) ??
-        seq++;
+        toNum(row.menuId);
 
-      out.push({ id, name, lat, lng });
+      if (numericId == null) {
+        numericId = hashToInt(
+          String(row.storeId ?? store.id ?? row.id ?? name),
+        );
+      }
+      if (!Number.isFinite(numericId)) {
+        numericId = seq++;
+      }
+
+      out.push({ id: numericId, name, lat, lng });
     }
 
-    // focusedStoreName이 있을 때 해당 스토어만 필터링
-    if (focusedStoreName !== null) {
-      // focusedStoreName과 일치하는 상품들의 위치만 마커로 표시
-      const focusedStoreProducts = rows.filter(
-        (row) => row.storeName === focusedStoreName,
-      );
-      const focusedLocations = new Set<string>();
-
-      focusedStoreProducts.forEach((row) => {
-        const lat = pickNum(
-          row.storeLat,
-          row.lat,
-          row.store?.lat,
-          row.store?.latitude,
-          row.store?.location?.lat,
-          row.store?.location?.lat,
-        );
-        const lng = pickNum(
-          row.storeLng,
-          row.lng,
-          row.store?.lng,
-          row.store?.longitude,
-          row.store?.location?.lng,
-          row.store?.location?.lng,
-        );
-
-        if (lat !== null && lng !== null) {
-          focusedLocations.add(`${lat},${lng}`);
-        }
-      });
-
-      return out.filter((marker) =>
-        focusedLocations.has(`${marker.lat},${marker.lng}`),
-      );
-    }
-
-    return out;
+    return focusedStoreName
+      ? out.filter((m) => m.name === focusedStoreName)
+      : out;
   }, [data?.results, focusedStoreName]);
+
+  const isEmpty = !isLoading && !isError && allProducts.length === 0;
 
   const handleSearchSubmit = useCallback(
     (v: string) => {
-      const trimmedQuery = v.trim();
-      if (trimmedQuery) {
-        // 검색어가 있을 때 menu-page로 이동
-        navigate('/menu', { state: { searchQuery: trimmedQuery } });
+      const trimmed = v.trim();
+      if (trimmed) {
+        navigate('/menu', { state: { searchQuery: trimmed } });
       } else {
-        // 검색어가 없을 때는 기존 로직 유지
         setQuery(v);
         setSubmitted(v);
       }
@@ -317,15 +302,15 @@ export default function MenuPage() {
       {mode === 'map' ? (
         <>
           <MapSection
-            center={center}
+            center={center} // 상세 좌표를 우선 적용
             defaultCenter={SOONGSIL_BASE}
-            restaurants={markers}
+            restaurants={markers} // id: number로 보장
             products={allProducts}
-            focusedStoreId={focusedStoreName}
+            focusedStoreName={focusedStoreName} // 하이라이트용(컴포넌트에 맞춰 prop 명 사용)
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => {
               setPreview(null);
-              setFocusedStoreName(null); // 지도 탭 시 스토어 포커스 해제
+              setFocusedStoreName(null);
             }}
             onStoreFocus={(storeName: string) => setFocusedStoreName(storeName)}
           />
@@ -385,7 +370,6 @@ export default function MenuPage() {
         onChange={setSort}
         onClose={() => setSortOpen(false)}
       />
-
       <FilterModal
         open={filterOpen}
         value={filter}
