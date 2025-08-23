@@ -5,7 +5,7 @@ import type { OrderItem } from './types/order';
 import OrderCard from './components/order-card';
 import OrderTabs from './components/order-tabs';
 import { useNavigate } from 'react-router-dom';
-
+import { useToast } from '@/shared/contexts/ToastContext';
 import { useOrdersQuery } from '@/shared/apis/order/order-queries';
 import { useCancelOrderMutation } from '@/shared/apis/order/order-mutations';
 import { mapOrderToUI } from '@/shared/utils/map-order-to-ui';
@@ -40,6 +40,7 @@ export default function OrderHistoryPage() {
 
   const { data, isFetching } = useOrdersQuery();
   const { mutate: cancelOrder } = useCancelOrderMutation();
+  const { showToast } = useToast();
 
   const list: OrderItem[] = useMemo(() => {
     const orders = data?.orders ?? [];
@@ -47,7 +48,17 @@ export default function OrderHistoryPage() {
   }, [data?.orders, tab]);
 
   const onCancel = (id: string) => {
-    cancelOrder({ orderId: id });
+    cancelOrder(
+      { orderId: id },
+      {
+        onSuccess: () => {
+          showToast('주문이 취소되었습니다.', 'success');
+        },
+        onError: () => {
+          showToast('주문 취소에 실패했습니다. 다시 시도해주세요.', 'error');
+        },
+      },
+    );
   };
 
   const onReorder = (id: string) => {
