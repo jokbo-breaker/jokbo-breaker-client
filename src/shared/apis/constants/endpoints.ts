@@ -15,6 +15,9 @@ export const END_POINT = {
   DISCOVER_FILTER: `/discover/filter`,
   DISCOVER_AI_RECOMMEND: `/discover/ai-recommend`,
   ORDER_CREATE: '/order',
+  ORDER_LIST: '/order',
+  ORDER_DETAIL: (orderId: string) => `\/order/${orderId}`,
+  ORDER_CANCEL: (orderId: string) => `/order/${orderId}`,
 } as const;
 
 export const withBase = (path: string): string =>
