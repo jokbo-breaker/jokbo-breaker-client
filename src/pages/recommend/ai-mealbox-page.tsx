@@ -1,4 +1,3 @@
-// src/pages/recommend/AiMealboxPage.tsx
 import { useState, useMemo, useEffect } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
 import { cn } from '@/shared/libs/cn';

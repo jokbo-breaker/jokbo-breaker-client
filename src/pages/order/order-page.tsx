@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import TopBar from '@/shared/layouts/top-bar';
 import { ORDER_TABS, type OrderTabKey } from './constants/order';
+import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
 import type { OrderItem } from './types/order';
 import OrderCard from './components/order-card';
 import OrderTabs from './components/order-tabs';
@@ -78,8 +79,6 @@ export default function OrderHistoryPage() {
       />
 
       <main className="flex-col gap-[2rem] px-[2rem] py-[1.6rem]">
-        {isFetching && <p className="caption1 text-gray-400">불러오는 중…</p>}
-
         {list.map((item) => (
           <section key={item.id} className="flex-col gap-[1.6rem]">
             <p className="caption1 text-gray-400">
@@ -90,9 +89,12 @@ export default function OrderHistoryPage() {
         ))}
 
         {!isFetching && list.length === 0 && (
-          <p className="caption1 py-[2.4rem] text-center text-gray-400">
-            주문 내역이 없어요.
-          </p>
+          <div className="py-[6rem]">
+            <EmptyRecommend
+              title="주문 내역이 없어요"
+              subtitle="상품을 주문하여 음식물류 폐기물 절약에 참여하세요!"
+            />
+          </div>
         )}
       </main>
     </div>

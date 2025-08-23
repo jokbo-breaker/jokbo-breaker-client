@@ -75,12 +75,12 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
       {/* 총 결제금액 + 절약 배지 */}
       <div className="w-full flex-col gap-[0.6rem]">
         <div className="flex items-center justify-between gap-[0.8rem]">
-          <span className="body2 whitespace-nowrap text-black">
+          <span className="body1 whitespace-nowrap text-black">
             총 결제금액
           </span>
           <div className="flex items-baseline gap-[0.6rem]">
-            <span className="head3 text-black">{formatKRW(total)}</span>
-            <s className="caption1 text-gray-400">{formatKRW(originalTotal)}</s>
+            <span className="body1 text-black">{formatKRW(total)}</span>
+            <s className="body3 text-gray-400">{formatKRW(originalTotal)}</s>
           </div>
         </div>
         <div className="w-full flex-col items-end justify-start">

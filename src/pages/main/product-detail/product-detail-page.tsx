@@ -35,10 +35,9 @@ export default function ProductDetailPage() {
   const startX = useRef<number | null>(null);
 
   const images = useMemo(
-    () => (data?.menuImageUrls?.length ? data.menuImageUrls : ['']),
+    () => (data?.menuImageUrls ? data.menuImageUrls.filter(Boolean) : []),
     [data?.menuImageUrls],
   );
-  const image = images[0];
 
   const store = data?.storeName ?? '';
   const name = data?.menuName ?? '';
@@ -173,7 +172,14 @@ export default function ProductDetailPage() {
               text={address || '주소 정보가 없습니다.'}
               trailing={
                 <button
-                  onClick={() => navigate('/map-view')}
+                  onClick={() =>
+                    navigate('/menu', {
+                      state: {
+                        center: { lat: data?.storeLat, lng: data?.storeLng },
+                        focusMenuId: data?.menuId,
+                      },
+                    })
+                  }
                   className="text-primary flex-row-center cursor-pointer gap-[0.4rem]"
                 >
                   <Icon name="map" size={2.4} />
@@ -181,7 +187,6 @@ export default function ProductDetailPage() {
                 </button>
               }
             />
-
             <div className="flex-col gap-[0.4rem]">
               <InfoRow
                 icon="cart"

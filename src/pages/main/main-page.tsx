@@ -108,7 +108,7 @@ export default function MainPage() {
               <Icon name="order" width={2.4} />
             </button>
             <button
-              onClick={() => navigate('/search')}
+              onClick={() => navigate('/map-view')}
               aria-label="검색"
               className="cursor-pointer text-gray-700"
             >
