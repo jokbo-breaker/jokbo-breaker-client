@@ -31,7 +31,7 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
       : '주문 취소하기';
 
   return (
-    <article className="rounded-[12px] border border-gray-200 bg-white p-[1.6rem] shadow-[0_0.2rem_0.6rem_rgba(0,0,0,0.04)]">
+    <article className="flex-col gap-[1.2rem] rounded-[12px] border border-gray-200 bg-white p-[1.6rem] shadow-[0_0.2rem_0.6rem_rgba(0,0,0,0.04)]">
       {/* 상단: 썸네일 + 텍스트 */}
       <div className="flex gap-[1rem]">
         <img
@@ -60,17 +60,15 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
             <span className="caption2 text-gray-700">{item.qty}개</span>
           </div>
           {item.pickupPriceText && (
-            <div className="mt-[0.4rem]">
-              <span className="caption1 rounded-[6px] bg-[#eaf2ff] px-[0.6rem] py-[0.2rem] text-[#2f6dff]">
-                {item.pickupPriceText}
-              </span>
-            </div>
+            <span className="caption1 rounded-[6px] bg-[#eaf2ff] px-[0.6rem] py-[0.2rem] text-[#2f6dff]">
+              {item.pickupPriceText}
+            </span>
           )}
         </div>
       </div>
 
       {/* 구분선 */}
-      <div className="my-[1.2rem] h-[0.1rem] w-full bg-gray-200/80" />
+      <div className="h-[0.1rem] w-full bg-gray-200/80" />
 
       {/* 총 결제금액 + 절약 배지 */}
       <div className="w-full flex-col gap-[0.6rem]">

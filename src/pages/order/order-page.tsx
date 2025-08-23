@@ -11,6 +11,8 @@ import { useOrdersQuery } from '@/shared/apis/order/order-queries';
 import { useCancelOrderMutation } from '@/shared/apis/order/order-mutations';
 import { mapOrderToUI } from '@/shared/utils/map-order-to-ui';
 import { ORDER_STATUS } from './constants/order';
+import { useQueryClient } from '@tanstack/react-query';
+import { ORDER_KEY } from '@/shared/apis/constants/keys';
 
 const formatDateLine = (
   iso: string,
@@ -38,6 +40,7 @@ const formatDateLine = (
 export default function OrderHistoryPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<OrderTabKey>('delivery');
+  const queryClient = useQueryClient();
 
   const { data, isFetching } = useOrdersQuery();
   const { mutate: cancelOrder } = useCancelOrderMutation();
@@ -54,6 +57,10 @@ export default function OrderHistoryPage() {
       {
         onSuccess: () => {
           showToast('주문이 취소되었습니다.', 'success');
+          // 토스트가 표시된 후 데이터 리프레시
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: ORDER_KEY.LIST() });
+          }, 500);
         },
         onError: () => {
           showToast('주문 취소에 실패했습니다. 다시 시도해주세요.', 'error');
