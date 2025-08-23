@@ -19,16 +19,44 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
   const total = item.salePrice * item.qty;
   const originalTotal = item.originalPrice * item.qty;
 
+  // 주문한 지 10분이 지났는지 확인 (한국 시간 기준)
+  const isOrderOver10Minutes = () => {
+    if (!item.orderedAt) return false;
+    
+    try {
+      // orderedAt은 이미 ISO 문자열로 변환되어 있음 (mapOrderToUI에서 변환)
+      const orderDate = new Date(item.orderedAt);
+      
+      // 현재 시간을 한국 시간으로 설정
+      const now = new Date();
+      const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
+      const koreaTime = new Date(now.getTime() + (koreaTimeOffset * 60 * 1000));
+      
+      const diffInMinutes = (koreaTime.getTime() - orderDate.getTime()) / (1000 * 60);
+      
+      // 디버깅 로그
+      console.log('주문 시간 (ISO):', item.orderedAt);
+      console.log('주문 Date 객체:', orderDate);
+      console.log('주문 시간 (한국 시간):', orderDate.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
+      console.log('현재 시간 (UTC):', now);
+      console.log('현재 시간 (한국 시간):', koreaTime);
+      console.log('시간 차이 (분):', diffInMinutes);
+      console.log('10분 초과 여부:', diffInMinutes > 10);
+      
+      return diffInMinutes > 10;
+    } catch (error) {
+      console.error('주문 시간 파싱 오류:', error);
+      return false;
+    }
+  };
+
   const canCancel =
-    item.status === ORDER_STATUS.CANCELLABLE ||
-    item.status === ORDER_STATUS.IN_PROGRESS;
+    (item.status === ORDER_STATUS.CANCELLABLE ||
+      item.status === ORDER_STATUS.IN_PROGRESS) &&
+    !isOrderOver10Minutes();
   const showReorder =
     item.status === ORDER_STATUS.DELIVERED ||
     item.status === ORDER_STATUS.SOLD_OUT;
-  const disabledMsg =
-    item.status === ORDER_STATUS.SOLD_OUT
-      ? '품절된 상품이에요'
-      : '주문 취소하기';
 
   return (
     <article className="flex-col gap-[1.2rem] rounded-[12px] border border-gray-200 bg-white p-[1.6rem] shadow-[0_0.2rem_0.6rem_rgba(0,0,0,0.04)]">
@@ -101,12 +129,12 @@ export default function OrderCard({ item, onCancel, onReorder }: Props) {
           </Button>
         ) : (
           <Button
-            variant="black"
+            variant={canCancel ? "black" : "white"}
             className="w-full"
             disabled={!canCancel}
             onClick={() => onCancel?.(item.id)}
           >
-            {canCancel ? '주문 취소하기' : disabledMsg}
+            {canCancel ? '주문 취소하기' : '주문 취소 불가 (10분 초과)'}
           </Button>
         )}
       </div>
