@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Icon from '@/shared/components/icon';
 import { cn } from '@/shared/libs/cn';
 import { clamp } from '@/pages/main/checkout/utils/checkout';
@@ -11,7 +10,13 @@ type Props = {
   className?: string;
 };
 
-export default function QtyStepper({ value, onChange, min = 1, max = 99, className }: Props) {
+export default function QtyStepper({
+  value,
+  onChange,
+  min = 1,
+  max = 99,
+  className,
+}: Props) {
   const canDec = value > min;
   const canInc = value < max;
 
@@ -30,7 +35,9 @@ export default function QtyStepper({ value, onChange, min = 1, max = 99, classNa
         disabled={!canDec}
         className={cn(
           'grid h-[1.6rem] w-[1.6rem] place-items-center',
-          canDec ? 'cursor-pointer text-gray-600' : 'cursor-not-allowed text-gray-300',
+          canDec
+            ? 'cursor-pointer text-gray-600'
+            : 'cursor-not-allowed text-gray-300',
         )}
       >
         <Icon name="minus" size={1.6} ariaHidden />
@@ -52,7 +59,9 @@ export default function QtyStepper({ value, onChange, min = 1, max = 99, classNa
         disabled={!canInc}
         className={cn(
           'grid h-[1.6rem] w-[1.6rem] place-items-center',
-          canInc ? 'cursor-pointer text-gray-600' : 'cursor-not-allowed text-gray-300',
+          canInc
+            ? 'cursor-pointer text-gray-600'
+            : 'cursor-not-allowed text-gray-300',
         )}
       >
         <Icon name="plus" size={1.6} ariaHidden />

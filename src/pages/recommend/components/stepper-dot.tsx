@@ -5,7 +5,7 @@ import {
   StepState,
 } from '@/pages/recommend/constants/stepper';
 
-type Props = {
+type StepDotProps = {
   index: number;
   state: StepState;
   stepLabel?: string;
@@ -17,7 +17,7 @@ export default function StepDot({
   state,
   stepLabel = '단계',
   doneLabel = '완료',
-}: Props) {
+}: StepDotProps) {
   const isDone = state === 'done';
   const isCurrent = state === 'current';
   const number = index + 1;

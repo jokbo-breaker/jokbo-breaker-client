@@ -78,7 +78,6 @@ function ProductCard({
   } = product;
   const navigate = useNavigate();
 
-  // ★ 문자열 "0"도 안전하게 처리
   const stock =
     typeof stockLeft === 'number' ? stockLeft : Number(stockLeft ?? 0);
   const soldOut = Number.isFinite(stock) && stock <= 0;
@@ -87,7 +86,7 @@ function ProductCard({
   const ImageArea = (
     <div className="relative">
       <img
-        src={image || undefined /* 빈 문자열 방지 */}
+        src={image || undefined}
         alt={name}
         className={cn(
           variant === 'wide'

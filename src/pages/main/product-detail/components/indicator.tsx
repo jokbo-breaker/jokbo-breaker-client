@@ -1,17 +1,18 @@
 import { cn } from '@/shared/libs/cn';
 
 type Props = {
-  /** 전체 점 개수 */
   total: number;
-  /** 현재 활성 인덱스 (0-base) */
   index: number;
-  /** 점 클릭/키보드 선택 시 호출 */
   onSelect?: (i: number) => void;
-  /** 확장 클래스 (컨테이너) */
   className?: string;
 };
 
-export default function Indicator({ total, index, onSelect, className }: Props) {
+export default function Indicator({
+  total,
+  index,
+  onSelect,
+  className,
+}: Props) {
   if (total <= 0) return null;
 
   return (

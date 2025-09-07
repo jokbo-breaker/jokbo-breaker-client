@@ -66,7 +66,6 @@ export default function ProductDetailPage() {
     [data],
   );
 
-  // ★ 품절 여부 계산
   const stockNum =
     typeof stockLeft === 'number' ? stockLeft : Number(stockLeft ?? 0);
   const isSoldOut = Number.isFinite(stockNum) && stockNum <= 0;
@@ -178,8 +177,8 @@ export default function ProductDetailPage() {
                     if (!data) return;
                     navigate('/map-view', {
                       state: {
-                        center: { lat: data.storeLat, lng: data.storeLng }, // ★ 상세 응답 좌표
-                        storeName: data.storeName, // ★ 포커스할 스토어 식별 (id가 더 안전하면 storeId로)
+                        center: { lat: data.storeLat, lng: data.storeLng },
+                        storeName: data.storeName,
                       },
                     });
                   }}

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/shared/components/icon';
 import Header, { type Mode } from '@/pages/main/components/main-header';
@@ -7,42 +7,31 @@ import ProductCard, {
 } from '@/pages/main/components/product/product-card';
 import Section from '@/pages/main/components/section-list';
 import Banner from '@/pages/main/components/banner-contents';
-import { ProfileModal } from './components/profile-modal';
+import { ProfileModal } from '@/pages/main/components/profile-modal';
+import {
+  MAX_PER_SECTION,
+  SKELETON_COUNT,
+  PLACE,
+  DEFAULT_LAT,
+  DEFAULT_LNG,
+} from '@/pages/main/constants/count';
 import {
   SECTION_KEYS,
   SECTION_META,
   type SectionKey,
 } from '@/shared/constants/sections';
 import { DEFAULT_LOCATION_LABEL } from '@/pages/main/constants/section';
-
 import { useDiscoverQuery } from '@/shared/apis/discover/discover-queries';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
 import { useMeQuery } from '@/shared/apis/auth/auth-queries';
 import { useLogoutMutation } from '@/shared/apis/auth/auth-mutations';
 import { useToast } from '@/shared/contexts/ToastContext';
-
-const PLACE = '동작';
-const DEFAULT_LAT = 37.563;
-const DEFAULT_LNG = 126.978;
-
-type ApiSectionKey = keyof Pick<
-  DiscoverResponse,
-  'nearBy' | 'brandNew' | 'lowInStock' | 'mealTime' | 'sweet' | 'pickUpRightNow'
->;
-
-const UI_TO_API: Record<SectionKey, ApiSectionKey> = {
-  nearby: 'nearBy',
-  new: 'brandNew',
-  lastcall: 'lowInStock',
-  breakfast: 'mealTime',
-  dessert: 'sweet',
-  now: 'pickUpRightNow',
-};
+import { UI_TO_API } from '@/pages/main/constants/api';
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<Mode>('delivery'); // 'delivery' | 'pickup'
+  const [mode, setMode] = useState<Mode>('delivery');
   const { data: meData } = useMeQuery();
   const { showToast } = useToast();
 
@@ -65,7 +54,7 @@ export default function MainPage() {
     email: meData?.user?.email ?? '로그인 전',
   };
 
-  const { data, isLoading, isError } = useDiscoverQuery({
+  const { data, isLoading } = useDiscoverQuery({
     type: mode,
     place: PLACE,
     lat: DEFAULT_LAT,
@@ -94,9 +83,6 @@ export default function MainPage() {
         : SECTION_KEYS.filter((k) => (lists[k]?.length ?? 0) > 0),
     [isLoading, lists],
   );
-
-  const MAX_PER_SECTION = 3;
-  const SKELETON_COUNT = 3;
 
   return (
     <div className="h-full w-full bg-white pb-[2rem]">

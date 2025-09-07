@@ -28,7 +28,6 @@ export default function LoginSuccess() {
       try {
         await api.auth.me();
         showToast('로그인되었습니다!', 'success');
-        // 토스트가 표시될 시간을 주기 위해 약간의 지연
         setTimeout(() => {
           navigate('/onboarding', { replace: true });
         }, 500);
