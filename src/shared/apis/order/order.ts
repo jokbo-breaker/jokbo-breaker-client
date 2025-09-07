@@ -1,8 +1,6 @@
-// src/shared/apis/order/order.ts
 import { END_POINT } from '@/shared/apis/constants/endpoints';
 import type { HttpClient } from '@/shared/apis/base/http';
 
-/** 주문 생성 */
 export type CreateOrderBody = {
   menuId: string;
   quantity: number;
@@ -68,8 +66,8 @@ export type OrderItemApi = {
   totalAmount: number;
   totalGrams: number;
   finalAmount: number;
-  status: string; // ex) 'pending' | 'delivered' ...
-  orderDate: string; // "YYYYMMDD HH:mm:ss"
+  status: string;
+  orderDate: string;
 };
 
 export type OrdersResponse = {
@@ -92,7 +90,7 @@ export type CancelOrderResponse = {
     orderId: string;
     storeName: string;
     finalAmount: number;
-    cancelledAt: string; // "YYYYMMDD HH:mm:ss"
+    cancelledAt: string;
   };
 };
 

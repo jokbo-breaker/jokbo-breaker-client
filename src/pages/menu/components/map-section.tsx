@@ -64,7 +64,6 @@ export default function MapSection({
   }, [focusedStoreName, mapInstance, restaurants]);
 
   const handleMarkerClick = (r: Restaurant) => {
-    // 매장명으로 해당 상품 찾기 → 없으면 첫 상품 폴백
     const hit = products.find((p) => p.store === r.name) || products[0];
     onStoreFocus(r.name);
     if (hit) onPickPreview(hit);

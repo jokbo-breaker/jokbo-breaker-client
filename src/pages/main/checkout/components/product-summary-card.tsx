@@ -1,5 +1,4 @@
 import type { Product } from '@/shared/types';
-import QtyStepper from '@/pages/main/checkout/components/qty-stepper';
 
 type Props = {
   product: Product;

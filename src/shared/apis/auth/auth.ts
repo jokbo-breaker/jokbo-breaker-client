@@ -1,5 +1,5 @@
-import { END_POINT, BASE_URL } from '../constants/endpoints';
-import type { HttpClient } from '../base/http';
+import { END_POINT, BASE_URL } from '@/shared/apis/constants/endpoints';
+import type { HttpClient } from '@/shared/apis/base/http';
 
 export type Preferences = {
   favoriteCategories?: string[];

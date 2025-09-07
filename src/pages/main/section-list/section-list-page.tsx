@@ -13,17 +13,13 @@ import TopBar from '@/shared/layouts/top-bar';
 import { useDiscoverQuery } from '@/shared/apis/discover/discover-queries';
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
-
-const PLACE = '동작';
-const DEFAULT_LAT = 37.563;
-const DEFAULT_LNG = 126.978;
+import { PLACE, DEFAULT_LAT, DEFAULT_LNG } from '@/pages/main/constants/count';
 
 type ApiSectionKey = keyof Pick<
   DiscoverResponse,
   'nearBy' | 'brandNew' | 'lowInStock' | 'mealTime' | 'sweet' | 'pickUpRightNow'
 >;
 
-// UI 섹션키 → API 응답키 매핑
 const UI_TO_API: Record<SectionKey, ApiSectionKey> = {
   nearby: 'nearBy',
   new: 'brandNew',
@@ -47,15 +43,13 @@ export default function SectionListPage() {
   const rawTitle = SECTION_META[section].title;
   const title = typeof rawTitle === 'string' ? rawTitle : rawTitle[mode];
 
-  // 데이터 요청
-  const { data, isLoading, isError } = useDiscoverQuery({
+  const { data, isLoading } = useDiscoverQuery({
     type: mode,
     place: PLACE,
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,
   });
 
-  // 현재 섹션에 해당하는 리스트 추출
   const list = useMemo(() => {
     const apiKey = UI_TO_API[section];
     return (data?.[apiKey] ?? []) as DiscoverResponse[ApiSectionKey];

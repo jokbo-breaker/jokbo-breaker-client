@@ -1,5 +1,3 @@
-import type { OnboardingIllustration } from './icons';
-
 export const ONBOARDING_STEPS = [
   {
     id: 1,

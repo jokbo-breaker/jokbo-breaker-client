@@ -33,8 +33,8 @@ export default function CheckoutPage() {
   const [savedG, setSavedG] = useState(0);
   const [totalGrams, setTotalGrams] = useState(0);
   const [qty, setQty] = useState<number>(DEFAULT_QTY);
-  const [orderType, setOrderType] = useState<OrderType | ''>(''); // 'team' | 'pickup'
-  const [payment, setPayment] = useState<PaymentMethod | ''>(''); // 'card' | 'cash'
+  const [orderType, setOrderType] = useState<OrderType | ''>('');
+  const [payment, setPayment] = useState<PaymentMethod | ''>('');
 
   const { data, isLoading, isError } = useMenuDetailQuery(id ?? '');
 
@@ -99,15 +99,12 @@ export default function CheckoutPage() {
   }, [supportsTeam, orderType]);
 
   const ORDER_TYPE_OPTIONS = useMemo(() => {
-    // 기본은 픽업
     const list: Array<{
       value: OrderType;
       label: string;
       right: string;
       below?: React.ReactNode;
-    }> = [
-      { value: 'pickup', label: '픽업', right: pickupRight },
-    ];
+    }> = [{ value: 'pickup', label: '픽업', right: pickupRight }];
     // 팀배달 지원 시에만 옵션 추가
     if (supportsTeam) {
       list.unshift({
@@ -151,7 +148,6 @@ export default function CheckoutPage() {
       },
       {
         onSuccess: (response) => {
-          // API 응답에서 items[0].totalGrams를 savedG로 설정
           const itemTotalGrams = response?.order?.items?.[0]?.totalGrams || 0;
           const orderTotalGrams = response?.order?.totalGrams || 0;
           setSavedG(itemTotalGrams);

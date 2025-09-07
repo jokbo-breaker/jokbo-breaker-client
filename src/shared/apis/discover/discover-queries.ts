@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../factory';
+import { api } from '@/shared/apis/factory';
 import type {
   DiscoverParams,
   DiscoverResponse,
   MenuDetailResponse,
   DiscoverFilterRequest,
   DiscoverFilterResponse,
-} from './discover';
+} from '@/shared/apis/discover/discover';
 
 export const useDiscoverQuery = (params: DiscoverParams) =>
   useQuery<DiscoverResponse>({

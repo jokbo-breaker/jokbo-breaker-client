@@ -93,8 +93,8 @@ export type DiscoverFilterResponse = {
 };
 
 export type AiRecommendRequest = {
-  categories: string[]; // ['일식','한식']
-  maxPrice?: number | null; // 최대 가격 (없으면 null)
+  categories: string[];
+  maxPrice?: number | null;
   deliveryMethod: 'all' | 'delivery' | 'pickup';
   lat: number;
   lng: number;

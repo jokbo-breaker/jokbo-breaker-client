@@ -8,16 +8,16 @@ export const STEPPER_SIZE = {
 
 export const STEPPER_COLOR = {
   dot: {
-    current: 'bg-color-gray-900 text-color-white',
-    upcoming: 'bg-color-gray-200 text-color-gray-900',
-    done: 'bg-color-gray-900 text-color-white',
+    current: 'bg-gray-900 text-white',
+    upcoming: 'bg-gray-200 text-gray-900',
+    done: 'bg-gray-900 text-white',
   },
   line: {
     active: 'bg-gray-200',
-    inactive: 'bg-color-gray-800/30',
+    inactive: 'bg-gray-800/30',
   },
   label: {
-    default: 'text-color-gray-400',
-    dim: 'text-color-gray-600',
+    default: 'text-gray-400',
+    dim: 'text-gray-600',
   },
 } as const;

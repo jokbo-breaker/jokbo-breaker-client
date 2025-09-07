@@ -129,7 +129,6 @@ export default function MenuPage() {
   const lat = center.lat;
   const lng = center.lng;
 
-  // location.state에서 검색어를 받아와서 초기값으로 설정
   useEffect(() => {
     if (location.state?.searchQuery) {
       const searchQuery = location.state.searchQuery;
@@ -151,7 +150,6 @@ export default function MenuPage() {
   }, [data?.results, includeSoldOut]);
 
   const isEmpty = !isLoading && !isError && allProducts.length === 0;
-  // === API 결과 -> 지도 마커 변환 ===
   type RestaurantCandidate = {
     id: number;
     name: string;
@@ -261,9 +259,7 @@ export default function MenuPage() {
             products={allProducts}
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => setPreview(null)}
-            onStoreFocus={(storeId: string) => {
-              // 스토어 포커스 기능이 필요한 경우 여기에 구현
-            }}
+            onStoreFocus={(storeId: string) => {}}
           />
 
           {preview ? (

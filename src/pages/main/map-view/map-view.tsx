@@ -7,7 +7,6 @@ import {
   type FilterState,
 } from '@/pages/menu/constants/filter';
 import { SortKey } from '@/pages/menu/constants/sort';
-
 import { useGeolocation } from '@/shared/hooks/use-geolocation';
 import BottomSheet from '@/shared/components/bottom-sheet';
 import EmptyRecommend from '@/pages/recommend/components/empty-recommend';
@@ -18,51 +17,18 @@ import MapSection from '@/pages/menu/components/map-section';
 import PreviewCard from '@/pages/menu/components/preview-card';
 import SortModal from '@/pages/menu/components/sort-modal';
 import ListSection from '@/pages/menu/components/list-section';
-
+import {
+  mapSortKeyToApi,
+  toApiDeliveryMethod,
+  toApiFoodType,
+} from '@/pages/main/map-view/utils/map-sort-key';
 import { SOONGSIL_BASE, SHEET } from '@/pages/menu/constants/menu';
 import { useDiscoverFilterQuery } from '@/shared/apis/discover/discover-queries';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
 
 type NavState = {
   center?: { lat?: number; lng?: number };
-  storeName?: string; // 상세에서 넘어온 매장명
-};
-
-const mapSortKeyToApi = (
-  k: SortKey,
-): '인기순' | '가격 낮은 순' | '가격 높은 순' | '거리순' => {
-  switch (k) {
-    case 'popular':
-      return '인기순';
-    case 'priceAsc':
-      return '가격 낮은 순';
-    case 'priceDesc':
-      return '가격 높은 순';
-    case 'distance':
-      return '거리순';
-    default:
-      return '인기순';
-  }
-};
-
-type ApiFoodType = '식사' | '디저트';
-type ApiDeliveryMethod = '배달' | '픽업' | '지금 바로' | '나중에';
-
-const toApiFoodType = (v: any): ApiFoodType | null => {
-  if (v === 'meal') return '식사';
-  if (v === 'dessert') return '디저트';
-  if (v === '식사' || v === '디저트') return v;
-  return null;
-};
-
-const toApiDeliveryMethod = (v: any): ApiDeliveryMethod | null => {
-  if (v === 'team' || v === 'delivery') return '배달';
-  if (v === 'pickup') return '픽업';
-  if (v === 'now') return '지금 바로';
-  if (v === 'later') return '나중에';
-  if (v === '배달' || v === '픽업' || v === '지금 바로' || v === '나중에')
-    return v;
-  return null;
+  storeName?: string;
 };
 
 const pickCategory = (filter: any): string | null => {
@@ -113,7 +79,6 @@ export default function MapViewPage() {
   const navigate = useNavigate();
   const { state } = useLocation() as { state?: NavState };
 
-  // 상세에서 넘어온 좌표가 있으면 지오로케이션은 스킵
   const stateCenter = state?.center;
   const { loc } = useGeolocation({
     immediate: !stateCenter,
@@ -121,7 +86,6 @@ export default function MapViewPage() {
     options: { enableHighAccuracy: true, timeout: 8000, maximumAge: 30_000 },
   });
 
-  // 지도/필터 중심 좌표
   const center =
     stateCenter?.lat && stateCenter?.lng
       ? { lat: stateCenter.lat!, lng: stateCenter.lng! }
@@ -142,12 +106,10 @@ export default function MapViewPage() {
 
   const filterSelected = hasActiveFilters(filter);
 
-  // 상세에서 받은 좌표를 필터 API에도 사용
   const { data, isLoading, isError } = useDiscoverFilterQuery(
     buildFilterParams(center.lat, center.lng, submitted, filter, sort),
   );
 
-  // API → Product 모델 매핑 + (필요시) 스토어명으로 필터
   const allProducts: Product[] = useMemo(() => {
     const rows = data?.results ?? [];
     const mapped = rows.map(toProductCardModel);
@@ -159,7 +121,6 @@ export default function MapViewPage() {
       : stocked;
   }, [data?.results, includeSoldOut, focusedStoreName]);
 
-  // 스토어 포커스가 있으면 첫 상품을 미리보기로
   useEffect(() => {
     if (!focusedStoreName) return;
     const first = allProducts[0];
@@ -169,7 +130,6 @@ export default function MapViewPage() {
     }
   }, [focusedStoreName, allProducts]);
 
-  // === API 결과 -> 지도 마커 변환 ===
   type RestaurantCandidate = {
     id: number;
     name: string;
@@ -181,7 +141,7 @@ export default function MapViewPage() {
     let h = 0;
     for (let i = 0; i < s.length; i++) {
       h = (h << 5) - h + s.charCodeAt(i);
-      h |= 0; // 32-bit
+      h |= 0;
     }
     return Math.abs(h);
   };
@@ -238,7 +198,6 @@ export default function MapViewPage() {
       if (seen.has(dedupKey)) continue;
       seen.add(dedupKey);
 
-      // 항상 number로 보장
       let numericId =
         toNum(row.storeId) ??
         toNum(store.id) ??
@@ -302,11 +261,11 @@ export default function MapViewPage() {
       {mode === 'map' ? (
         <>
           <MapSection
-            center={center} // 상세 좌표를 우선 적용
+            center={center}
             defaultCenter={SOONGSIL_BASE}
-            restaurants={markers} // id: number로 보장
+            restaurants={markers}
             products={allProducts}
-            focusedStoreName={focusedStoreName} // 하이라이트용(컴포넌트에 맞춰 prop 명 사용)
+            focusedStoreName={focusedStoreName}
             onPickPreview={(p) => setPreview(p)}
             onMapTap={() => {
               setPreview(null);

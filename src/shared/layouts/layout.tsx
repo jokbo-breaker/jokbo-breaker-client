@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import ScrollToTop from '@/shared/layouts/scroll-to-top';
 // import BottomNavigation from '@/shared/layouts/bottom-navbar';
 import FloatingButton from '@/shared/layouts/floating-button';
-import AiMealboxPage from '@/pages/recommend/ai-mealbox-page';
+import AiMealboxPage from '@/pages/recommend/ai-mealbox';
 
 export default function Layout() {
   const [openMealbox, setOpenMealbox] = useState(false);

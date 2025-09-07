@@ -3,23 +3,15 @@ import Player, { LottieRefCurrentProps } from 'lottie-react';
 import loadingLottie from '@/assets/lotties/loading.json';
 
 type Props = {
-  /** 외부 제어용 표시 여부 (true가 되는 순간부터 시작) */
   visible: boolean;
-  /** 최종 완료 시 1회 호출 */
   onFinish?: () => void;
-  /** 세션당 최소 1회는 노출 (시작 후에만 적용) */
   forceOnceInSession?: boolean;
-  /** 강제 노출 최소 시간(ms) */
   minOnceMs?: number;
-  /** 세션 키 */
   sessionKey?: string;
-  /** 라티 loop 여부 */
   loop?: boolean;
-  /** 크기 */
   size?: number;
-  /** ✅ 최소 재생 루프 수 (기본 2) */
+  /** 최소 재생 루프 수 (기본 2) */
   minLoops?: number;
-  /** ✅ 사용자 이름(없으면 '고객') */
   userName?: string;
 };
 
@@ -43,7 +35,6 @@ export default function RecommendLoading({
   const [lockUntil, setLockUntil] = useState(0);
   const finishCalledRef = useRef(false);
 
-  // 표시용 이름 (공백이면 '고객')
   const displayName = (userName ?? '').trim() || '고객';
 
   useEffect(() => {

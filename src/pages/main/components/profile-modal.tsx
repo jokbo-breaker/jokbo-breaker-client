@@ -5,8 +5,8 @@ import Icon from '@/shared/components/icon';
 export function ProfileModal({
   user,
   onLogout,
-  isAuthed, // ★ 추가
-  loginPath = '/login', // ★ 커스터마이즈 가능
+  isAuthed,
+  loginPath = '/login',
 }: {
   user: { name: string; email: string };
   onLogout?: () => void;
@@ -18,7 +18,6 @@ export function ProfileModal({
   const cardRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // 명시 prop 우선, 없으면 email 값으로 추정
   const authed = isAuthed ?? (user?.email && user.email !== '로그인 전');
 
   useEffect(() => {

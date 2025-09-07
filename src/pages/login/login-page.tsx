@@ -31,7 +31,7 @@ export default function LoginPage() {
   const wakeAndGoGoogle = useCallback(async () => {
     setWaking(true);
     showToast('Google 로그인으로 이동합니다...', 'info');
-    
+
     try {
       const baseNoApi = BASE_URL.replace(/\/api\/?$/, '/');
       const health = `${baseNoApi.replace(/\/$/, '')}/health`;
@@ -40,7 +40,6 @@ export default function LoginPage() {
     } catch {
       // 에러가 발생해도 Google 로그인으로 진행
     } finally {
-      // 토스트가 표시될 시간을 주기 위해 약간의 지연
       setTimeout(() => {
         window.location.assign(googleStartUrl);
       }, 1000);
