@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { BASE_URL } from '../constants/endpoints';
-import { HTTP_STATUS, RESPONSE_MESSAGE } from '../constants/http';
+import { BASE_URL } from '@/shared/apis/constants/endpoints';
+import { HTTP_STATUS, RESPONSE_MESSAGE } from '@/shared/apis/constants/http';
 import { getAccessToken, clearAccessToken } from '@/shared/utils/token';
 
 const pickMessage = (

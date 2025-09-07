@@ -8,12 +8,6 @@ type Props = {
   className?: string;
 };
 
-/**
- * 모바일 웹 친화적인 좌/우 스와이프 캐러셀
- * - 마우스/터치 모두 지원(Framer Motion pan 제스처)
- * - 가장자리 고무밴드(overscroll) 저항
- * - 인덱스 변경 시 스프링 스냅
- */
 export default function OnboardingCarousel({
   index,
   onChange,
@@ -26,7 +20,6 @@ export default function OnboardingCarousel({
   const animRef = useRef<ReturnType<typeof animate> | null>(null);
   const count = React.Children.count(children);
 
-  // 컨테이너 너비 측정(회전/리사이즈 대응)
   useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -36,7 +29,6 @@ export default function OnboardingCarousel({
     return () => ro.disconnect();
   }, []);
 
-  // 인덱스 바뀔 때 스냅 이동
   useEffect(() => {
     animRef.current?.stop();
     const target = -index * width;
@@ -56,7 +48,6 @@ export default function OnboardingCarousel({
 
   const onPan = (_: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     let dx = info.offset.x;
-    // 가장자리에서 고무밴드 저항
     if ((dx > 0 && !canSwipePrev) || (dx < 0 && !canSwipeNext)) {
       dx *= 0.35;
     }
@@ -68,8 +59,8 @@ export default function OnboardingCarousel({
     info: PanInfo,
   ) => {
     const dx = info.offset.x;
-    const v = info.velocity.x; // px/s
-    const threshold = Math.min(width * 0.28, 180); // 거리 임계치
+    const v = info.velocity.x;
+    const threshold = Math.min(width * 0.28, 180);
 
     let next = index;
     if (dx < -threshold || v < -700) next = Math.min(index + 1, count - 1);
@@ -84,7 +75,7 @@ export default function OnboardingCarousel({
       className={['relative w-full overflow-hidden', className]
         .filter(Boolean)
         .join(' ')}
-      style={{ touchAction: 'pan-y' }} // 세로 스크롤 허용, 가로 스와이프 인식
+      style={{ touchAction: 'pan-y' }}
     >
       <motion.div
         className="flex"

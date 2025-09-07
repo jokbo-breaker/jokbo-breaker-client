@@ -7,13 +7,11 @@ type Props = {
   onChange: (v: number | '') => void;
 };
 
-const NO_LIMIT_PRICE = 20000; // 요청에만 사용할 내부 상수
+const NO_LIMIT_PRICE = 20000;
 
 export default function Step2Budget({ value, onChange }: Props) {
-  // noLimit=true면 UI는 비우되 내부 값은 20000 유지
   const [noLimit, setNoLimit] = useState(false);
 
-  // 외부에서 값이 바뀌면 플래그 동기화(20000이 아니면 noLimit 끔)
   useEffect(() => {
     if (value !== NO_LIMIT_PRICE) setNoLimit(false);
   }, [value]);
@@ -21,21 +19,21 @@ export default function Step2Budget({ value, onChange }: Props) {
   const onInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const onlyDigits = e.target.value.replace(/[^\d]/g, '');
-      setNoLimit(false); // 사용자가 직접 입력하면 표시/값 동기화
+      setNoLimit(false);
       onChange(onlyDigits === '' ? '' : Number(onlyDigits));
     },
     [onChange],
   );
 
   const onBlur = useCallback(() => {
-    if (value === '' || noLimit) return; // noLimit이면 클램프 불필요
+    if (value === '' || noLimit) return;
     const n = Math.min(BUDGET.max, Math.max(BUDGET.min, value));
     if (n !== value) onChange(n);
   }, [value, noLimit, onChange]);
 
   const onNoLimitClick = useCallback(() => {
-    setNoLimit(true); // UI는 비우고
-    onChange(NO_LIMIT_PRICE); // 내부 값(요청용)만 20000으로
+    setNoLimit(true);
+    onChange(NO_LIMIT_PRICE);
   }, [onChange]);
 
   const displayValue = noLimit ? '' : value === '' ? '' : formatKRW(value);

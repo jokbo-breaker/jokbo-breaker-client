@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router-dom';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '@/shared/components/protected-route';
@@ -27,44 +26,44 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
-      { 
-        path: '/login', 
+      {
+        path: '/login',
         element: (
           <PublicRoute>
             <LoginPage />
           </PublicRoute>
-        ) 
+        ),
       },
       { path: '/onboarding', element: <OnboardingPage /> },
       { path: '/auth/success', element: <LoginSucessPage /> },
       { path: '/main/:section', element: <SectionListPage /> },
       { path: '/product/:id', element: <ProductDetailPage /> },
-      { 
-        path: '/checkout/:id', 
+      {
+        path: '/checkout/:id',
         element: (
           <ProtectedRoute>
             <CheckoutPage />
           </ProtectedRoute>
-        ) 
+        ),
       },
       { path: '/map-view', element: <MapViewPage /> },
       { path: '/search', element: <SearchPage /> },
       { path: '/menu', element: <MenuPage /> },
-      { 
-        path: '/mypage', 
+      {
+        path: '/mypage',
         element: (
           <ProtectedRoute>
             <MyPage />
           </ProtectedRoute>
-        ) 
+        ),
       },
-      { 
-        path: '/orders', 
+      {
+        path: '/orders',
         element: (
           <ProtectedRoute>
             <OrderPage />
           </ProtectedRoute>
-        ) 
+        ),
       },
     ],
   },
