@@ -11,13 +11,7 @@ import { getRemainingBadge } from '@/pages/main/checkout/utils/stock';
 import Badge from '@/pages/main/product-detail/components/badge';
 import { useMenuDetailQuery } from '@/shared/apis/discover/discover-queries';
 import LoopLoading from '@/shared/components/loop-loading';
-
-const hhmm = (ts?: string | null) => {
-  if (!ts) return '';
-  const t = ts.split(' ')[1] || '';
-  const [h = '00', m = '00'] = t.split(':');
-  return `${h}:${m}`;
-};
+import { hhmm } from '@/pages/main/product-detail/constants/hhmm';
 
 const MethodText = ({ label, time }: { label: string; time: string }) => (
   <div className="flex items-center gap-[0.4rem]">

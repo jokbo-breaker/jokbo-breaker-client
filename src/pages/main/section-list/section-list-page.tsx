@@ -13,10 +13,7 @@ import TopBar from '@/shared/layouts/top-bar';
 import { useDiscoverQuery } from '@/shared/apis/discover/discover-queries';
 import type { DiscoverResponse } from '@/shared/apis/discover/discover';
 import { toProductCardModel } from '@/pages/main/checkout/utils/map-discover-to-product';
-
-const PLACE = '동작';
-const DEFAULT_LAT = 37.563;
-const DEFAULT_LNG = 126.978;
+import { PLACE, DEFAULT_LAT, DEFAULT_LNG } from '@/pages/main/constants/count';
 
 type ApiSectionKey = keyof Pick<
   DiscoverResponse,

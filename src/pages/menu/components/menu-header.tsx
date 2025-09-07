@@ -1,7 +1,6 @@
 import SearchTextField from '@/shared/components/text-field/search-text-field';
 import SortFilterRow from '@/pages/menu/components/sort-filter-row';
 import type { SortKey } from '@/pages/menu/constants/sort';
-import { useState } from 'react';
 
 type Props = {
   mode: 'map' | 'list';
